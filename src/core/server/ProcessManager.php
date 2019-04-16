@@ -189,16 +189,7 @@ class ProcessManager
     {
         $this->server->worker_pid = $processPid;
     }
-
-    /**
-     * true表示当前的进程是Task工作进程
-     * @return bool
-     */
-    public function isTaskworker(): bool
-    {
-        return $this->server->taskworker;
-    }
-
+    
     /**
      * 获取当前进程
      * @return Process
