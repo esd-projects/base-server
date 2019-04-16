@@ -56,13 +56,13 @@ abstract class Server
      * 端口class类
      * @var string
      */
-    private $portClass;
+    private $defaultPortClass;
 
     /**
      * 进程class类
      * @var string
      */
-    private $processClass;
+    private $defaultProcessClass;
 
     /**
      * 是否已配置
@@ -70,27 +70,32 @@ abstract class Server
      */
     private $configured = false;
 
-    public function __construct(ServerConfig $serverConfig, string $portClass, string $processClass)
+    public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
         $this->serverConfig = $serverConfig;
-        $this->portClass = $portClass;
-        $this->processClass = $processClass;
+        $this->defaultPortClass = $defaultPortClass;
+        $this->defaultProcessClass = $defaultProcessClass;
         $this->ports = [];
     }
 
     /**
      * 通过配置添加一个端口实例和用于初始化实例的class
      * @param PortConfig $portConfig
+     * @param null $portClass
      * @return ServerPort
-     * @throws \Exception
+     * @throws ConfigException
      */
-    public function addPort(PortConfig $portConfig)
+    public function addPort(PortConfig $portConfig,$portClass = null)
     {
         if ($this->isConfigured()) {
             throw new \Exception("配置已锁定，请在调用configure前添加");
         }
-        $serverPort = new $this->portClass($portConfig);
-        if(isset($this->ports[$portConfig->getPort()])){
+        if($portClass==null) {
+            $serverPort = new $this->defaultPortClass($portConfig);
+        }else{
+            $serverPort = new $portClass($portConfig);
+        }
+        if (isset($this->ports[$portConfig->getPort()])) {
             throw new ConfigException("端口号有重复");
         }
         $this->ports[$portConfig->getPort()] = $serverPort;
@@ -100,15 +105,20 @@ abstract class Server
     /**
      * 添加一个进程
      * @param string $name
+     * @param null $processClass 不填写将用默认的
      * @return Process
      * @throws \Exception
      */
-    public function addProcess(string $name)
+    public function addProcess(string $name, $processClass = null)
     {
         if ($this->isConfigured()) {
             throw new \Exception("配置已锁定，请在调用configure前添加");
         }
-        $process = new $this->processClass($this);
+        if ($processClass == null) {
+            $process = new $this->defaultProcessClass($this);
+        } else {
+            $process = new $processClass($this);
+        }
         if ($process instanceof Process) {
             $process->createProcess();
             $process->setName($name);
@@ -166,7 +176,7 @@ abstract class Server
         //配置进程
         $processes = [];
         for ($i = 0; $i < $this->serverConfig->getWorkerNum(); $i++) {
-            $process = new $this->processClass($this);
+            $process = new $this->defaultProcessClass($this);
             if ($process instanceof Process) {
                 $process->setProcessType(Process::PROCESS_TYPE_WORKER);
                 $process->setProcessId($i);
@@ -311,9 +321,11 @@ abstract class Server
      * @param $portNo
      * @return ServerPort|null
      */
-    public function getPortFromPortNo($portNo){
-        return $this->ports[$portNo]??null;
+    public function getPortFromPortNo($portNo)
+    {
+        return $this->ports[$portNo] ?? null;
     }
+
     /**
      * 返回当前服务器主进程的PID。
      * @return int

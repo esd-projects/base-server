@@ -20,26 +20,26 @@ class DefaultServer extends Server
 
     public function onStart()
     {
-        // TODO: Implement onStart() method.
+        print_r("[DefaultServer]\t[onStart]\n");
     }
 
     public function onShutdown()
     {
-        // TODO: Implement onShutdown() method.
+        print_r("[DefaultServer]\t[onShutdown]\n");
     }
 
     public function onWorkerError(Process $process, int $exit_code, int $signal)
     {
-        // TODO: Implement onWorkerError() method.
+        print_r("[DefaultServer]\t[onWorkerError:{$process->getProcessId()}]\t[{$process->getProcessName()}]\n");
     }
 
     public function onManagerStart()
     {
-        // TODO: Implement onManagerStart() method.
+        print_r("[DefaultServer]\t[onManagerStart]\n");
     }
 
     public function onManagerStop()
     {
-        // TODO: Implement onManagerStop() method.
+        print_r("[DefaultServer]\t[onManagerStop]\n");
     }
 }

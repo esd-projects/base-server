@@ -18,16 +18,16 @@ class DefaultProcess extends Process
 
     public function onProcessStart()
     {
-        print_r("processId:" . $this->getProcessId() . "\n");
+        print_r("[DefaultProcess:{$this->getProcessId()}]\t[{$this->getProcessName()}]\t[onProcessStart]\n");
     }
 
     public function onProcessStop()
     {
-        // TODO: Implement onProcessStop() method.
+        print_r("[DefaultProcess:{$this->getProcessId()}]\t[{$this->getProcessName()}]\t[onProcessStop]\n");
     }
 
     public function onPipeMessage(string $message, Process $fromProcess)
     {
-        // TODO: Implement onPipeMessage() method.
+        print_r("[DefaultProcess:{$this->getProcessId()}]\t[{$this->getProcessName()}]\t[onPipeMessage]\t[FromProcess:{$fromProcess->getProcessId()}]\t[$message]\n");
     }
 }
