@@ -1,0 +1,21 @@
+{
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "core\\": "src/core"
+    }
+  },
+  "authors": [
+    {
+      "name": "tmtbe",
+      "email": "896369042@qq.com",
+      "homepage": "https://github.com/tmtbe"
+    }
+  ],
+  "name": "tmtbe/base_server",
+  "type": "library",
+  "keywords": ["server", "swoole"],
+  "description": "base_server",
+  "license": "MIT"
+}
