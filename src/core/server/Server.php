@@ -241,51 +241,6 @@ abstract class Server
         return $this->mainPort;
     }
 
-    /**
-     * 返回当前服务器主进程的PID。
-     * @return int
-     */
-    public function getMasterPid(): int
-    {
-        return $this->server->master_pid;
-    }
-
-    /**
-     * 返回当前服务器管理进程的PID。
-     * @return int
-     */
-    public function getManagerPid(): int
-    {
-        return $this->server->manager_pid;
-    }
-
-    /**
-     * 得到当前Worker进程的编号，包括Task进程。
-     * @return int
-     */
-    public function getWokerId(): int
-    {
-        return $this->server->worker_id;
-    }
-
-    /**
-     * 得到当前Worker进程的操作系统进程ID。
-     * 与posix_getpid()的返回值相同。
-     * @return int
-     */
-    public function getWokerPid(): int
-    {
-        return $this->server->worker_pid;
-    }
-
-    /**
-     * true表示当前的进程是Task工作进程
-     * @return bool
-     */
-    public function isTaskworker(): bool
-    {
-        return $this->server->taskworker;
-    }
 
     /**
      * TCP连接迭代器

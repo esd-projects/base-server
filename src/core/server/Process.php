@@ -180,7 +180,9 @@ abstract class Process
                 $this->onPipeMessage(substr($recv, 4), $fromProcess);
             });
         }
+        $this->server->getProcessManager()->setCurrentProcessId($this->getProcessId());
         $this->setProcessPid(posix_getpid());
+        $this->server->getProcessManager()->setCurrentProcessPid($this->getProcessPid());
         $this->onProcessStart();
     }
 
@@ -241,5 +243,14 @@ abstract class Process
     public function getProcessPid(): int
     {
         return $this->processPid;
+    }
+
+    /**
+     * 获取进程管理器
+     * @return ProcessManager
+     */
+    public function getProcessManager():ProcessManager
+    {
+        return $this->server->getProcessManager();
     }
 }
