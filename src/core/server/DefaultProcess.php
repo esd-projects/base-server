@@ -18,7 +18,7 @@ class DefaultProcess extends Process
 
     public function onProcessStart()
     {
-        print_r("[DefaultProcess:{$this->getProcessId()}]\t[{$this->getProcessName()}]\t[onProcessStart]\n");
+        print_r("[DefaultProcess:{$this->getProcessId()}]\t[{$this->getGroupName()}]\t[{$this->getProcessName()}]\t[onProcessStart]\n");
     }
 
     public function onProcessStop()

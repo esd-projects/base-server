@@ -116,50 +116,6 @@ class ServerConfig
     private $heartbeatIdleTime;
 
     /**
-     * 配置Task进程的数量
-     * @Inject("server.task_worker_num")
-     * @var int
-     */
-    private $taskWorkerNum;
-    /**
-     * 设置task进程的最大任务数。一个task进程在处理完超过此数值的任务后将自动退出。这个参数是为了防止PHP进程内存溢出。如果不希望进程自动退出可以设置为0。
-     * @Inject("server.task_max_request")
-     * @var
-     */
-    private $taskMaxRequest;
-    /**
-     * 设置Task进程与Worker进程之间通信的方式。
-     * 1, 使用Unix Socket通信，默认模式
-     * 2, 使用消息队列通信
-     * 3, 使用消息队列通信，并设置为争抢模式
-     * @Inject("server.task_ipc_mode")
-     * @var int
-     */
-    private $taskIpcMode;
-    /**
-     * 设置task的数据临时目录，在Server中，如果投递的数据超过8180字节，将启用临时文件来保存数据。这里的task_tmpdir就是用来设置临时文件保存的位置。
-     * 底层默认会使用/tmp目录存储task数据，如果你的Linux内核版本过低，/tmp目录不是内存文件系统，可以设置为 /dev/shm/
-     * task_tmpdir目录不存在，底层会尝试自动创建
-     * @Inject("server.task_tmpdir")
-     * @var string
-     */
-    private $taskTmpdir;
-    /**
-     * 开启后自动在onTask回调中创建协程
-     * 开启task_enable_coroutine，Task工作进程支持协程
-     * 未开启task_enable_coroutine，仅支持同步阻塞
-     * @var bool
-     * @Inject("server.task_enable_coroutine")
-     */
-    private $taskEnableCoroutine;
-    /**
-     * 设置消息队列的KEY，仅在task_ipc_mode = 2/3时使用。设置的Key仅作为Task任务队列的KEY，此参数的默认值为ftok($php_script_file, 1)
-     * @Inject("server.message_queue_key")
-     * @var string
-     */
-    private $messageQueueKey;
-
-    /**
      * 设置Worker/TaskWorker子进程的所属用户。
      * 服务器如果需要监听1024以下的端口，必须有root权限。
      * 但程序运行在root用户下，代码中一旦有漏洞，攻击者就可以以root的方式执行远程指令，风险很大。
@@ -169,7 +125,7 @@ class ServerConfig
      */
     private $user;
     /**
-     * 设置worker/task子进程的进程用户组。与user配置相同，此配置是修改进程所属用户组，提升服务器程序的安全性。
+     * 设置worker子进程的进程用户组。与user配置相同，此配置是修改进程所属用户组，提升服务器程序的安全性。
      * @Inject("server.group")
      * @var string
      */
@@ -466,101 +422,6 @@ class ServerConfig
         $this->heartbeatIdleTime = $heartbeatIdleTime;
     }
 
-    /**
-     * @return int
-     */
-    public function getTaskWorkerNum()
-    {
-        return $this->taskWorkerNum;
-    }
-
-    /**
-     * @param int $taskWorkerNum
-     */
-    public function setTaskWorkerNum(int $taskWorkerNum)
-    {
-        $this->taskWorkerNum = $taskWorkerNum;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTaskMaxRequest()
-    {
-        return $this->taskMaxRequest > 1000;
-    }
-
-    /**
-     * @param mixed $taskMaxRequest
-     */
-    public function setTaskMaxRequest($taskMaxRequest)
-    {
-        $this->taskMaxRequest = $taskMaxRequest;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTaskIpcMode()
-    {
-        return $this->taskIpcMode ?? 1;
-    }
-
-    /**
-     * @param int $taskIpcMode
-     */
-    public function setTaskIpcMode(int $taskIpcMode)
-    {
-        $this->taskIpcMode = $taskIpcMode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTaskTmpdir()
-    {
-        return $this->taskTmpdir;
-    }
-
-    /**
-     * @param string $taskTmpdir
-     */
-    public function setTaskTmpdir(string $taskTmpdir)
-    {
-        $this->taskTmpdir = $taskTmpdir;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTaskEnableCoroutine()
-    {
-        return $this->taskEnableCoroutine ?? true;
-    }
-
-    /**
-     * @param bool $taskEnableCoroutine
-     */
-    public function setTaskEnableCoroutine(bool $taskEnableCoroutine)
-    {
-        $this->taskEnableCoroutine = $taskEnableCoroutine;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMessageQueueKey()
-    {
-        return $this->messageQueueKey;
-    }
-
-    /**
-     * @param string $messageQueueKey
-     */
-    public function setMessageQueueKey(string $messageQueueKey)
-    {
-        $this->messageQueueKey = $messageQueueKey;
-    }
 
     /**
      * @return string
@@ -828,16 +689,6 @@ class ServerConfig
                 $build['heartbeat_idle_time'] = $this->getHeartbeatIdleTime();
             }
         }
-        $build['task_worker_num'] = $this->getTaskWorkerNum();
-        $build['task_max_request'] = $this->getTaskMaxRequest();
-        $build['task_ipc_mode'] = $this->getTaskIpcMode();
-        if (!empty($this->getTaskTmpdir())) {
-            $build['task_tmpdir'] = $this->getTaskTmpdir();
-        }
-        if ($this->getTaskIpcMode() != 1 && !empty($this->getMessageQueueKey())) {
-            $build['message_queue_key'] = $this->getMessageQueueKey();
-        }
-        $build['task_enable_coroutine'] = $this->isTaskEnableCoroutine();
         if (!empty($this->getUser())) {
             $build['user'] = $this->getUser();
         }

@@ -17,6 +17,8 @@ use core\utils\Utils;
  */
 abstract class Process
 {
+    const DEFAULT_GROUP = "default_group";
+    const WORKER_GROUP = "worker_group";
     const SOCK_DGRAM = 2;
     const PROCESS_TYPE_WORKER = 1;
     const PROCESS_TYPE_TASK = 2;
@@ -53,14 +55,21 @@ abstract class Process
     private $server;
 
     /**
+     * 进程组名
+     * @var string
+     */
+    private $groupName;
+
+    /**
      * swoole的process类
      * @var \Swoole\Process
      */
     private $swooleProcess;
 
-    public function __construct(Server $server)
+    public function __construct(Server $server, string $groupName = self::DEFAULT_GROUP)
     {
         $this->server = $server;
+        $this->groupName = $groupName;
     }
 
     /**
@@ -123,6 +132,14 @@ abstract class Process
     }
 
     /**
+     * @return string
+     */
+    public function getGroupName(): string
+    {
+        return $this->groupName;
+    }
+
+    /**
      * 执行外部命令.
      *
      * @param $path
@@ -159,8 +176,8 @@ abstract class Process
                 //获取进程id
                 $unpackData = unpack("N", $recv);
                 $processId = $unpackData[1];
-                $fromProcess = $this->server->getProcesses()[$processId];
-                $this->onPipeMessage(substr($recv,4), $fromProcess);
+                $fromProcess = $this->server->getProcessManager()->getProcessFromId($processId);
+                $this->onPipeMessage(substr($recv, 4), $fromProcess);
             });
         }
         $this->setProcessPid(posix_getpid());

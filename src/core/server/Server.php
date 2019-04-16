@@ -29,18 +29,6 @@ abstract class Server
     private $serverConfig;
 
     /**
-     * 端口集合
-     * @var ServerPort[]
-     */
-    private $ports;
-
-    /**
-     * 进程集合
-     * @var Process[]
-     */
-    private $processes = [];
-
-    /**
      * swoole的server
      * @var \Swoole\WebSocket\Server
      */
@@ -53,16 +41,14 @@ abstract class Server
     private $mainPort;
 
     /**
-     * 端口class类
-     * @var string
+     * @var ProcessManager
      */
-    private $defaultPortClass;
+    private $processManager;
 
     /**
-     * 进程class类
-     * @var string
+     * @var PortManager
      */
-    private $defaultProcessClass;
+    private $portManager;
 
     /**
      * 是否已配置
@@ -73,9 +59,8 @@ abstract class Server
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
         $this->serverConfig = $serverConfig;
-        $this->defaultPortClass = $defaultPortClass;
-        $this->defaultProcessClass = $defaultProcessClass;
-        $this->ports = [];
+        $this->portManager = new PortManager($this, $defaultPortClass);
+        $this->processManager = new ProcessManager($this, $defaultProcessClass);
     }
 
     /**
@@ -85,21 +70,12 @@ abstract class Server
      * @return ServerPort
      * @throws ConfigException
      */
-    public function addPort(PortConfig $portConfig,$portClass = null)
+    public function addPort(PortConfig $portConfig, $portClass = null)
     {
         if ($this->isConfigured()) {
             throw new \Exception("配置已锁定，请在调用configure前添加");
         }
-        if($portClass==null) {
-            $serverPort = new $this->defaultPortClass($portConfig);
-        }else{
-            $serverPort = new $portClass($portConfig);
-        }
-        if (isset($this->ports[$portConfig->getPort()])) {
-            throw new ConfigException("端口号有重复");
-        }
-        $this->ports[$portConfig->getPort()] = $serverPort;
-        return $serverPort;
+        return $this->portManager->addPort($portConfig, $portClass);
     }
 
     /**
@@ -114,17 +90,7 @@ abstract class Server
         if ($this->isConfigured()) {
             throw new \Exception("配置已锁定，请在调用configure前添加");
         }
-        if ($processClass == null) {
-            $process = new $this->defaultProcessClass($this);
-        } else {
-            $process = new $processClass($this);
-        }
-        if ($process instanceof Process) {
-            $process->createProcess();
-            $process->setName($name);
-        }
-        $this->processes[] = $process;
-        return $process;
+        return $this->processManager->addCustomProcesses($name, $processClass);
     }
 
     /**
@@ -133,21 +99,21 @@ abstract class Server
      */
     public function configure()
     {
-        if (count($this->ports) == 0) {
+        if (count($this->portManager->getPorts()) == 0) {
             throw new ConfigException("缺少port配置，无法启动服务");
         }
         //主要端口
-        $this->mainPort = array_values($this->ports)[0];
+        $this->mainPort = array_values($this->portManager->getPorts())[0];
         $portConfigData = $this->mainPort->getPortConfig()->buildConfig();
         $serverConfigData = $this->serverConfig->buildConfig();
         $serverConfigData = array_merge($portConfigData, $serverConfigData);
-        if ($this->hasWebSocketPort()) {
+        if ($this->portManager->hasWebSocketPort()) {
             $this->server = new \Swoole\WebSocket\Server($this->mainPort->getPortConfig()->getHost(),
                 $this->mainPort->getPortConfig()->getPort(),
                 SWOOLE_PROCESS,
                 $this->mainPort->getPortConfig()->getSwooleSockType()
             );
-        } else if ($this->hasHttpPort()) {
+        } else if ($this->portManager->hasHttpPort()) {
             $this->server = new \Swoole\Http\Server($this->mainPort->getPortConfig()->getHost(),
                 $this->mainPort->getPortConfig()->getPort(),
                 SWOOLE_PROCESS,
@@ -162,7 +128,7 @@ abstract class Server
         }
         $this->server->set($serverConfigData);
         //多个端口
-        foreach ($this->ports as $serverPort) {
+        foreach ($this->portManager->getPorts() as $serverPort) {
             $serverPort->create($this);
         }
         //配置回调
@@ -174,34 +140,25 @@ abstract class Server
         $this->server->on("workerStart", [$this, "_onWorkerStart"]);
         $this->server->on("workerStop", [$this, "_onWorkerStop"]);
         //配置进程
-        $processes = [];
         for ($i = 0; $i < $this->serverConfig->getWorkerNum(); $i++) {
-            $process = new $this->defaultProcessClass($this);
+            $defaultProcessClass = $this->processManager->getDefaultProcessClass();
+            $process = new $defaultProcessClass($this, Process::WORKER_GROUP);
             if ($process instanceof Process) {
                 $process->setProcessType(Process::PROCESS_TYPE_WORKER);
                 $process->setProcessId($i);
                 $process->setName("worker-" . $i);
             }
-            $processes[$i] = $process;
+            $this->processManager->addProcesses($process);
         }
-        for ($i = $this->serverConfig->getWorkerNum(); $i < $this->serverConfig->getWorkerNum() + $this->serverConfig->getTaskWorkerNum(); $i++) {
-            $process = new $this->processes($this);
-            if ($process instanceof Process) {
-                $process->setProcessType(Process::PROCESS_TYPE_TASK);
-                $process->setProcessId($i);
-                $process->setName("task-" . $i);
-            }
-            $processes[$i] = $process;
-        }
-        $startId = $this->serverConfig->getWorkerNum() + $this->serverConfig->getTaskWorkerNum();
-        foreach ($this->processes as $process) {
+
+        $startId = $this->serverConfig->getWorkerNum();
+        foreach ($this->processManager->getCustomProcesses() as $process) {
             $process->setProcessId($startId);
             $process->setProcessType(Process::PROCESS_TYPE_CUSTOM);
             $this->server->addProcess($process->getSwooleProcess());
-            $processes[$startId] = $process;
+            $this->processManager->addProcesses($process);
             $startId++;
         }
-        $this->processes = $processes;
         //锁定
         $this->setConfigured(true);
     }
@@ -218,7 +175,7 @@ abstract class Server
 
     public function _onWorkerError($serv, int $worker_id, int $worker_pid, int $exit_code, int $signal)
     {
-        $process = $this->processes[$worker_id];
+        $process = $this->processManager->getProcessFromId($worker_id);
         $this->onWorkerError($process, $exit_code, $signal);
     }
 
@@ -234,13 +191,13 @@ abstract class Server
 
     public function _onWorkerStart($server, int $worker_id)
     {
-        $process = $this->processes[$worker_id];
+        $process = $this->processManager->getProcessFromId($worker_id);
         $process->_onProcessStart();
     }
 
     public function _onWorkerStop($server, int $worker_id)
     {
-        $process = $this->processes[$worker_id];
+        $process = $this->processManager->getProcessFromId($worker_id);
         $process->onProcessStop();
     }
 
@@ -265,29 +222,6 @@ abstract class Server
         $this->server->start();
     }
 
-    /**
-     * 端口中是否包含WebSocket端口
-     * @return bool
-     */
-    public function hasWebSocketPort(): bool
-    {
-        foreach ($this->ports as $port) {
-            if ($port->getPortConfig()->isOpenWebsocketProtocol()) return true;
-        }
-        return false;
-    }
-
-    /**
-     * 端口中是否包含Http端口
-     * @return bool
-     */
-    public function hasHttpPort(): bool
-    {
-        foreach ($this->ports as $port) {
-            if ($port->getPortConfig()->isOpenHttpProtocol()) return true;
-        }
-        return false;
-    }
 
     /**
      * 获取swoole的server类
@@ -305,25 +239,6 @@ abstract class Server
     public function getMainPort()
     {
         return $this->mainPort;
-    }
-
-    /**
-     * 获取端口集合
-     * @return ServerPort[]
-     */
-    public function getPorts(): array
-    {
-        return $this->ports;
-    }
-
-    /**
-     * 获取对应端口号的port实例
-     * @param $portNo
-     * @return ServerPort|null
-     */
-    public function getPortFromPortNo($portNo)
-    {
-        return $this->ports[$portNo] ?? null;
     }
 
     /**
@@ -382,14 +297,6 @@ abstract class Server
     }
 
     /**
-     * @return Process[]
-     */
-    public function getProcesses(): array
-    {
-        return $this->processes;
-    }
-
-    /**
      * @return bool
      */
     public function isConfigured(): bool
@@ -403,31 +310,6 @@ abstract class Server
     public function setConfigured(bool $configured): void
     {
         $this->configured = $configured;
-    }
-
-    /**
-     * 通过id获取进程
-     * @param int $processId
-     * @return Process
-     */
-    public function getProcessFromId(int $processId): Process
-    {
-        return $this->getProcesses()[$processId] ?? null;
-    }
-
-    /**
-     * 通过id获取进程
-     * @param string $processName
-     * @return Process
-     */
-    public function getProcessFromName(string $processName): Process
-    {
-        foreach ($this->getProcesses() as $process) {
-            if ($process->getProcessName() == $processName) {
-                return $process;
-            }
-        }
-        return null;
     }
 
     /**
@@ -652,5 +534,21 @@ abstract class Server
     public function wsUnPack(string $data): WebSocketFrame
     {
         return new WebSocketFrame($this->server->unpack($data));
+    }
+
+    /**
+     * @return ProcessManager
+     */
+    public function getProcessManager(): ProcessManager
+    {
+        return $this->processManager;
+    }
+
+    /**
+     * @return PortManager
+     */
+    public function getPortManager(): PortManager
+    {
+        return $this->portManager;
     }
 }
