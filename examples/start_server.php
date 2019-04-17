@@ -2,19 +2,16 @@
 
 use GoSwoole\BaseServer\Server\Config\PortConfig;
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
-use GoSwoole\BaseServer\Server\DefaultProcess;
-use GoSwoole\BaseServer\Server\DefaultServer;
-use GoSwoole\BaseServer\Server\DefaultServerPort;
 use GoSwoole\BaseServer\Utils\Utils;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-class MyPort extends DefaultServerPort
+class MyPort extends \GoSwoole\BaseServer\ExampleClass\Server\DefaultServerPort
 {
 
 }
 
-class MyProcess extends DefaultProcess
+class MyProcess extends \GoSwoole\BaseServer\ExampleClass\Server\DefaultProcess
 {
 
 }
@@ -40,7 +37,7 @@ $serverConfig->setWorkerNum(4);
 $serverConfig->setLogFile(__DIR__ . "/../swoole.log");
 $serverConfig->setPidFile(__DIR__ . "/../pid");
 
-$server = new DefaultServer($serverConfig);
+$server = new \GoSwoole\BaseServer\ExampleClass\Server\DefaultServer($serverConfig);
 
 try {
     //添加端口

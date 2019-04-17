@@ -1,15 +1,17 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/4/16
- * Time: 10:22
+ * User: yf
+ * Date: 2019-04-17
+ * Time: 17:41
  */
 
-namespace GoSwoole\BaseServer\Server;
+namespace GoSwoole\BaseServer\ExampleClass\Server;
 
 
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
+use GoSwoole\BaseServer\Server\Process;
+use GoSwoole\BaseServer\Server\Server;
 
 class DefaultServer extends Server
 {

@@ -158,7 +158,7 @@ abstract class Process
     {
         $this->processName = $name;
         if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
-            if (!empty($name)) {
+            if (!empty($name) && (PHP_OS != 'Darwin')) {
                 $this->swooleProcess->name($name);
             }
         }
