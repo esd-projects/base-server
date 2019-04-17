@@ -13,7 +13,7 @@ class Task extends Runnable
 
     public function __construct($max)
     {
-        parent::__construct(false);
+        parent::__construct(true);
         $this->max = $max;
     }
 
@@ -27,11 +27,13 @@ class Task extends Runnable
 
 go(function () {
     $pool = CoPoolFactory::createCoPool("Executor-1", 5, 10, 1);
+    $tasks = [];
     for ($i = 0; $i < 10; $i++) {
         $task = new Task(2);
+        $tasks[] = $task;
         $pool->execute($task);
-        $pool->execute(function () {
-            print_r("[" . Co::getCid() . "]\t执行完毕\n");
-        });
+    }
+    foreach ($tasks as $task) {
+        print_r("结果->" . $task->getResult() . "\n");
     }
 });

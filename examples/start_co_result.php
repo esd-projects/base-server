@@ -27,11 +27,10 @@ class Task extends Runnable
 
 go(function () {
     $pool = CoPoolFactory::createCoPool("Executor-1", 5, 10, 1);
+    $tasks = [];
     for ($i = 0; $i < 10; $i++) {
         $task = new Task(2);
+        $tasks[] = $task;
         $pool->execute($task);
-        $pool->execute(function () {
-            print_r("[" . Co::getCid() . "]\t执行完毕\n");
-        });
     }
 });

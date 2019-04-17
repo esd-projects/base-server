@@ -99,7 +99,8 @@ class CoroutinePoolExecutor
             });
             if ($runnable != null) {
                 if ($runnable instanceof Runnable) {
-                    $runnable->run();
+                    $result = $runnable->run();
+                    $runnable->sendResult($result);
                 }
                 if (is_callable($runnable)) {
                     $runnable();
@@ -109,7 +110,8 @@ class CoroutinePoolExecutor
                 $runnable = $this->channel->pop($keepAliveTime);
                 if ($runnable === false) break;
                 if ($runnable instanceof Runnable) {
-                    $runnable->run();
+                    $result = $runnable->run();
+                    $runnable->sendResult($result);
                 } else if (is_callable($runnable)) {
                     $runnable();
                 }
