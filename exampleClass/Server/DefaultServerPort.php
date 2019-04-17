@@ -1,18 +1,19 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/4/16
- * Time: 10:23
+ * User: yf
+ * Date: 2019-04-17
+ * Time: 17:38
  */
 
-namespace GoSwoole\BaseServer\Server;
+namespace GoSwoole\BaseServer\ExampleClass\Server;
 
 
 use GoSwoole\BaseServer\Server\Beans\Request;
 use GoSwoole\BaseServer\Server\Beans\Response;
 use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
+use GoSwoole\BaseServer\Server\ServerPort;
 
 class DefaultServerPort extends ServerPort
 {

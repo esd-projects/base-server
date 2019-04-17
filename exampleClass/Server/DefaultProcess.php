@@ -1,18 +1,17 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/4/16
- * Time: 12:04
+ * User: yf
+ * Date: 2019-04-17
+ * Time: 17:39
  */
 
-namespace GoSwoole\BaseServer\Server;
+namespace GoSwoole\BaseServer\ExampleClass\Server;
 
-/**
- * 默认的进程实例
- * Class DefaultProcess
- * @package GoSwoole\BaseServer\Server
- */
+
+use GoSwoole\BaseServer\Server\Process;
+use GoSwoole\BaseServer\Server\Server;
+
 class DefaultProcess extends Process
 {
     private $className;

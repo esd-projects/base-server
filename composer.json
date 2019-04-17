@@ -3,7 +3,8 @@
   },
   "autoload": {
     "psr-4": {
-      "GoSwoole\\BaseServer\\": "src/"
+      "GoSwoole\\BaseServer\\": "src/",
+      "GoSwoole\\BaseServer\\ExampleClass\\": "exampleClass/"
     }
   },
   "authors": [
