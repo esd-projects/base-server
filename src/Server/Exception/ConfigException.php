@@ -21,7 +21,7 @@ class ConfigException extends Exception
     {
         if ($value == null){
             $name = get_class($object);
-            throw new ConfigException("[$name] $field 不能为空");
+            throw new ConfigException("[{$name}] {$field} cannot be empty");
         }
     }
 }
