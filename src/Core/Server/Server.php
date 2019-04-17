@@ -6,19 +6,19 @@
  * Time: 13:43
  */
 
-namespace core\server;
+namespace Core\Server;
 
-use core\server\beans\ClientInfo;
-use core\server\beans\ServerStats;
-use core\server\beans\WebSocketFrame;
-use core\server\config\PortConfig;
-use core\server\config\ServerConfig;
-use core\server\exception\ConfigException;
+use Core\Server\Beans\ClientInfo;
+use Core\Server\Beans\ServerStats;
+use Core\Server\Beans\WebSocketFrame;
+use Core\Server\Config\PortConfig;
+use Core\Server\Config\ServerConfig;
+use Core\Server\Exception\ConfigException;
 
 /**
  * Class Server
  * 封装了Server对象
- * @package core\server
+ * @package Core\Server
  */
 abstract class Server
 {
@@ -378,7 +378,7 @@ abstract class Server
      * 1005 连接不存在，传入$fd 可能是错误的
      * 1007 接收到了超时的数据，TCP关闭连接后，可能会有部分数据残留在管道缓存区内，这部分数据会被丢弃
      * 1008 发送缓存区已满无法执行send操作，出现这个错误表示这个连接的对端无法及时收数据导致发送缓存区已塞满
-     * 1202 发送的数据超过了 server->buffer_output_size 设置
+     * 1202 发送的数据超过了 Server->buffer_output_size 设置
      * @return int
      */
     public function getLastError(): int

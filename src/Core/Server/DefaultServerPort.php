@@ -6,12 +6,12 @@
  * Time: 10:23
  */
 
-namespace core\server;
+namespace Core\Server;
 
 
-use core\server\beans\Request;
-use core\server\beans\Response;
-use core\server\beans\WebSocketFrame;
+use Core\Server\Beans\Request;
+use Core\Server\Beans\Response;
+use Core\Server\Beans\WebSocketFrame;
 
 class DefaultServerPort extends ServerPort
 {

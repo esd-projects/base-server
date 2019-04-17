@@ -6,7 +6,7 @@
  * Time: 13:21
  */
 
-namespace core\utils;
+namespace Core\Utils;
 
 
 class Utils

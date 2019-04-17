@@ -6,7 +6,7 @@
  * Time: 15:52
  */
 
-namespace core\server\beans;
+namespace Core\Server\Beans;
 
 
 class WebSocketCloseFrame extends WebSocketFrame

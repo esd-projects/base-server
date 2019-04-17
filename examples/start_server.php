@@ -1,10 +1,10 @@
 <?php
 
-use core\server\config\PortConfig;
-use core\server\config\ServerConfig;
-use core\server\DefaultServer;
+use Core\Server\Config\PortConfig;
+use Core\Server\Config\ServerConfig;
+use Core\Server\DefaultServer;
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $httpPortConfig = new PortConfig();
 $httpPortConfig->setHost("0.0.0.0");
@@ -22,13 +22,14 @@ $serverConfig = new ServerConfig();
 $serverConfig->setWorkerNum(4);
 $serverConfig->setLogFile(__DIR__ . "/../swoole.log");
 $serverConfig->setPidFile(__DIR__ . "/../pid");
+
 $server = new DefaultServer($serverConfig);
 
-$server->addPort($httpPortConfig);
-$server->addPort($wsPortConfig);
+$httpPort = $server->addPort($httpPortConfig);
+$wsPort = $server->addPort($wsPortConfig);
 
-$server->addProcess("test1");
-$server->addProcess("test2");
+$test1Process = $server->addProcess("test1");
+$test2Process = $server->addProcess("test2");
 
 $server->configure();
 $server->start();

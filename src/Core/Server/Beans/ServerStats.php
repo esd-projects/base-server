@@ -6,12 +6,12 @@
  * Time: 14:40
  */
 
-namespace core\server\beans;
+namespace Core\Server\Beans;
 
 /**
  * 服务器状态
  * Class ServerStats
- * @package core\server\beans
+ * @package Core\Server\Beans
  */
 class ServerStats
 {

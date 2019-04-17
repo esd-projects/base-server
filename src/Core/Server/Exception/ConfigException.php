@@ -6,7 +6,7 @@
  * Time: 15:20
  */
 
-namespace core\server\exception;
+namespace Core\Server\Exception;
 
 
 class ConfigException extends \Exception

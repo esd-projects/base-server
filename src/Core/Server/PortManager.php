@@ -6,11 +6,11 @@
  * Time: 17:58
  */
 
-namespace core\server;
+namespace Core\Server;
 
 
-use core\server\config\PortConfig;
-use core\server\exception\ConfigException;
+use Core\Server\Config\PortConfig;
+use Core\Server\Exception\ConfigException;
 
 class PortManager
 {

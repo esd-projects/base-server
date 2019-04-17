@@ -6,10 +6,10 @@
  * Time: 10:22
  */
 
-namespace core\server;
+namespace Core\Server;
 
 
-use core\server\config\ServerConfig;
+use Core\Server\Config\ServerConfig;
 
 class DefaultServer extends Server
 {

@@ -6,19 +6,19 @@
  * Time: 16:47
  */
 
-namespace core\server;
+namespace Core\Server;
 
 
-use core\server\beans\Request;
-use core\server\beans\Response;
-use core\server\beans\WebSocketCloseFrame;
-use core\server\beans\WebSocketFrame;
-use core\server\config\PortConfig;
+use Core\Server\Beans\Request;
+use Core\Server\Beans\Response;
+use Core\Server\Beans\WebSocketCloseFrame;
+use Core\Server\Beans\WebSocketFrame;
+use Core\Server\Config\PortConfig;
 
 /**
  * ServerPort 端口类
  * Class ServerPort
- * @package core\server
+ * @package Core\Server
  */
 abstract class ServerPort
 {

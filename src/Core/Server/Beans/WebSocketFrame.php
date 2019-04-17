@@ -6,12 +6,12 @@
  * Time: 15:48
  */
 
-namespace core\server\beans;
+namespace Core\Server\Beans;
 
 /**
  * WebSocketFrame结构
  * Class WebSocketFrame
- * @package core\server\beans
+ * @package Core\Server\Beans
  */
 class WebSocketFrame
 {

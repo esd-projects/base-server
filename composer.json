@@ -3,7 +3,7 @@
   },
   "autoload": {
     "psr-4": {
-      "core\\": "src/core"
+      "Core\\": "src/Core"
     }
   },
   "authors": [

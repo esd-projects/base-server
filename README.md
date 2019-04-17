@@ -3,9 +3,9 @@
 
 封装swoole，模块更科学更易用
 ```
-use core\server\config\PortConfig;
-use core\server\config\ServerConfig;
-use core\server\DefaultServer;
+use Core\Server\Config\PortConfig;
+use Core\Server\Config\ServerConfig;
+use Core\Server\DefaultServer;
 
 $httpPortConfig = new PortConfig();
 $httpPortConfig->setHost("0.0.0.0");

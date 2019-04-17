@@ -6,28 +6,28 @@
  * Time: 13:45
  */
 
-namespace core\server\config;
+namespace Core\Server\Config;
 
 
-use core\server\exception\ConfigException;
+use Core\Server\Exception\ConfigException;
 use DI\Annotation\Inject;
 
 /**
  * 服务配置
  * Class ServerConfig
- * @package core\server\config
+ * @package Core\Server\Config
  */
 class ServerConfig
 {
     /**
      * reactor线程数，通过此参数来调节Reactor线程的数量，以充分利用多核
-     * @Inject("server.reactor_num")
+     * @Inject("Server.reactor_num")
      * @var int
      */
     private $reactorNum;
     /**
      * worker进程数,设置启动的Worker进程数量
-     * @Inject("server.worker_num")
+     * @Inject("Server.worker_num")
      * @var int
      */
     private $workerNum;
@@ -39,51 +39,51 @@ class ServerConfig
      * 4，IP分配，根据客户端IP进行取模hash，分配给一个固定的Worker进程。可以保证同一个来源IP的连接数据总会被分配到同一个Worker进程。算法为 ip2long(ClientIP) % worker_num
      * 5，UID分配，需要用户代码中调用 Server->bind() 将一个连接绑定1个uid。然后底层根据UID的值分配到不同的Worker进程。算法为 UID % worker_num，如果需要使用字符串作为UID，可以使用crc32(UID_STRING)
      * 7，stream模式，空闲的Worker会accept连接，并接受Reactor的新请求
-     * @Inject("server.dispatch_mode")
+     * @Inject("Server.dispatch_mode")
      * @var int
      */
     private $dispatchMode;
     /**
      * 最大连接
-     * @Inject("server.max_conn")
+     * @Inject("Server.max_conn")
      * @var int
      */
     private $maxConn;
     /**
      * 守护进程化 daemonize => 1，加入此参数后，将转入后台作为守护进程运行
-     * @Inject("server.daemonize")
+     * @Inject("Server.daemonize")
      * @var bool
      */
     private $daemonize;
     /**
      * 设置异步重启开关。设置为true时，将启用异步安全重启特性，Worker进程会等待异步事件完成后再退出
-     * @Inject("server.reload_async")
+     * @Inject("Server.reload_async")
      * @var bool
      */
     private $reloadAsync;
     /**
      * Worker进程收到停止服务通知后最大等待时间，默认为30秒
-     * @Inject("server.max_wait_time")
+     * @Inject("Server.max_wait_time")
      * @var int
      */
     private $maxWaitTime;
     /**
      * CPU亲和设置 open_cpu_affinity => 1 ,启用CPU亲和设置
      * 在多核的硬件平台中，启用此特性会将swoole的reactor线程/worker进程绑定到固定的一个核上。可以避免进程/线程的运行时在多个核之间互相切换，提高CPU Cache的命中率。
-     * @Inject("server.open_cpu_affinity")
+     * @Inject("Server.open_cpu_affinity")
      * @var bool
      */
     private $openCpuAffinity;
     /**
      * 接受一个数组作为参数，array(0, 1) 表示不使用CPU0,CPU1，专门空出来处理网络中断。
-     * @Inject("server.cpu_affinity_ignore")
+     * @Inject("Server.cpu_affinity_ignore")
      * @var array
      */
     private $cpuAffinityIgnore;
 
     /**
      * log_file => '/data/log/swoole.log', 指定swoole错误日志文件。在swoole运行期发生的异常信息会记录到这个文件中。默认会打印到屏幕。
-     * @Inject("server.log_file")
+     * @Inject("Server.log_file")
      * @var string
      */
     private $logFile;
@@ -98,19 +98,19 @@ class ServerConfig
      * 5 => SWOOLE_LOG_ERROR
      * SWOOLE_LOG_DEBUG和SWOOLE_LOG_TRACE仅在编译为--enable-debug-log和--enable-trace-log版本时可用
      * 默认为SWOOLE_LOG_DEBUG也就是所有级别都打印
-     * @Inject("server.log_level")
+     * @Inject("Server.log_level")
      * @var string
      */
     private $logLevel;
     /**
      * 心跳检测机制 每隔多少秒检测一次，单位秒，Swoole会轮询所有TCP连接，将超过心跳时间的连接关闭掉
-     * @Inject("server.heartbeat_check_interval")
+     * @Inject("Server.heartbeat_check_interval")
      * @var int
      */
     private $heartbeatCheckInterval;
     /**
      * 心跳检测机制 TCP连接的最大闲置时间，单位s , 如果某fd最后一次发包距离现在的时间超过heartbeat_idle_time会把这个连接关闭。
-     * @Inject("server.heartbeat_idle_time")
+     * @Inject("Server.heartbeat_idle_time")
      * @var int
      */
     private $heartbeatIdleTime;
@@ -120,26 +120,26 @@ class ServerConfig
      * 服务器如果需要监听1024以下的端口，必须有root权限。
      * 但程序运行在root用户下，代码中一旦有漏洞，攻击者就可以以root的方式执行远程指令，风险很大。
      * 配置了user项之后，可以让主进程运行在root权限下，子进程运行在普通用户权限下。
-     * @Inject("server.user")
+     * @Inject("Server.user")
      * @var string
      */
     private $user;
     /**
      * 设置worker子进程的进程用户组。与user配置相同，此配置是修改进程所属用户组，提升服务器程序的安全性。
-     * @Inject("server.group")
+     * @Inject("Server.group")
      * @var string
      */
     private $group;
     /**
      * 重定向Worker进程的文件系统根目录。此设置可以使进程对文件系统的读写与实际的操作系统文件系统隔离。提升安全性。
-     * @Inject("server.chroot")
+     * @Inject("Server.chroot")
      * @var string
      */
     private $chroot;
 
     /**
      * 在Server启动时自动将master进程的PID写入到文件，在Server关闭时自动删除PID文件。
-     * @Inject("server.pid_file")
+     * @Inject("Server.pid_file")
      * @var string
      */
     private $pidFile;
@@ -148,7 +148,7 @@ class ServerConfig
      * 配置发送输出缓存区内存尺寸。
      * 注意此函数不应当调整过大，避免拥塞的数据过多，导致吃光机器内存
      * 开启大量Worker进程时，将会占用worker_num * buffer_output_size字节的内存
-     * @Inject("server.buffer_output_size")
+     * @Inject("Server.buffer_output_size")
      * @var int
      */
     private $bufferOutputSize;
@@ -159,14 +159,14 @@ class ServerConfig
      * 如果发送数据过多，客户端阻塞，数据占满缓存区后Server会报如下错误信息：swFactoryProcess_finish: send failed, session#1 output buffer has been overflowed.
      * 发送缓冲区塞满导致send失败，只会影响当前的客户端，其他客户端不受影响
      * 服务器有大量TCP连接时，最差的情况下将会占用serv->max_connection * socket_buffer_size字节的内存
-     * @Inject("server.socket_buffer_size")
+     * @Inject("Server.socket_buffer_size")
      * @var int
      */
     private $socketBufferSize;
 
     /**
      * 设置当前工作进程最大协程数量。超过max_coroutine底层将无法创建新的协程，底层会抛出错误，并直接关闭连接。
-     * @Inject("server.max_coroutine")
+     * @Inject("Server.max_coroutine")
      * @var int
      */
     private $maxCoroutine;

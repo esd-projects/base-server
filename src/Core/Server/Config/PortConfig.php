@@ -6,14 +6,14 @@
  * Time: 14:01
  */
 
-namespace core\server\config;
+namespace Core\Server\Config;
 
-use core\server\exception\ConfigException;
+use Core\Server\Exception\ConfigException;
 
 /**
  * 端口配置
  * Class PortConfig
- * @package core\server\config
+ * @package Core\Server\Config
  */
 class PortConfig
 {

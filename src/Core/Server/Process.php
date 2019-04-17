@@ -6,14 +6,14 @@
  * Time: 9:23
  */
 
-namespace core\server;
+namespace Core\Server;
 
-use core\utils\Utils;
+use Core\Utils\Utils;
 
 /**
  * 进程
  * Class Process
- * @package core\server\process
+ * @package Core\Server\process
  */
 abstract class Process
 {

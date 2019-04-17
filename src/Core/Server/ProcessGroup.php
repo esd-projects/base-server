@@ -6,12 +6,12 @@
  * Time: 18:32
  */
 
-namespace core\server;
+namespace Core\Server;
 
 /**
  * 进程组
  * Class ProcessGroup
- * @package core\server
+ * @package Core\Server
  */
 class ProcessGroup
 {

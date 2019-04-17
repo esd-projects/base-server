@@ -6,12 +6,12 @@
  * Time: 12:04
  */
 
-namespace core\server;
+namespace Core\Server;
 
 /**
  * 默认的进程实例
  * Class DefaultProcess
- * @package core\server
+ * @package Core\Server
  */
 class DefaultProcess extends Process
 {

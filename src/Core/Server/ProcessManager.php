@@ -6,7 +6,7 @@
  * Time: 17:46
  */
 
-namespace core\server;
+namespace Core\Server;
 
 
 class ProcessManager

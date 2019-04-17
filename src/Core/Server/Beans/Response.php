@@ -6,12 +6,12 @@
  * Time: 14:54
  */
 
-namespace core\server\beans;
+namespace Core\Server\Beans;
 
 /**
  * HTTP请求返回对象
  * Class Response
- * @package core\server\beans
+ * @package Core\Server\Beans
  */
 class Response
 {

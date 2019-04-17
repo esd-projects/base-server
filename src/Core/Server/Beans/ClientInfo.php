@@ -6,12 +6,12 @@
  * Time: 14:21
  */
 
-namespace core\server\beans;
+namespace Core\Server\Beans;
 
 /**
  * 连接信息
  * Class ClientInfo
- * @package core\server\beans
+ * @package Core\Server\Beans
  */
 class ClientInfo
 {
