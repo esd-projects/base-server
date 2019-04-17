@@ -6,35 +6,22 @@
  * Time: 16:54
  */
 
-namespace GoSwoole\BaseServer\Coroutine\Beans;
+namespace GoSwoole\BaseServer\Coroutine\Context;
+
+
 class Context
 {
-    /**
-     * @var Context
-     */
-    private $parent;
+
+    const storageKey = "@context";
 
     /**
-     * Context constructor.
-     * @param $parent
+     * 将目标上下文拷贝到下面
+     * @param Context $sourceContext
      */
-    public function __construct($parent)
+    public static function clone(Context $sourceContext)
     {
-        $this->parent = $parent;
-    }
-
-    public static function background(): Context
-    {
-        return new Context(null);
-    }
-
-    public function createChild(): Context
-    {
-        return new Context($this);
-    }
-
-    public function cancelChild()
-    {
-
+        if ($sourceContext != null) {
+            Co::getContext()[self::storageKey] = $sourceContext;
+        }
     }
 }

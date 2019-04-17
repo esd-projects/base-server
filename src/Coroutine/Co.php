@@ -9,6 +9,7 @@
 namespace GoSwoole\BaseServer\Coroutine;
 
 
+use GoSwoole\BaseServer\Coroutine\Context\Context;
 use GoSwoole\BaseServer\Coroutine\Pool\Runnable;
 
 class Co
@@ -62,9 +63,22 @@ class Co
      * 获取当前协程的上下文对象
      * @return array
      */
-    public static function getContext()
+    public static function getSwooleContext()
     {
         return \Swoole\Coroutine::getContext();
+    }
+
+    /**
+     * 获取当前协程的上下文对象
+     * @return Context
+     */
+    public static function getContext(): Context
+    {
+        $result = self::getSwooleContext()[Context::storageKey] ?? null;
+        if ($result == null) {
+            self::getSwooleContext()[Context::storageKey] = new Context();
+        }
+        return self::getSwooleContext()[Context::storageKey];
     }
 
     /**
@@ -125,4 +139,16 @@ class Co
         });
         return $cid;
     }
+
+}
+
+function goWithContext(callable $run)
+{
+    $context = null;
+    if (Co::getCid() > 0) {
+        $context = Co::getContext();
+    }
+    go(function () use ($run, $context) {
+        \GoSwoole\BaseServer\Coroutine\Context\Context::clone($context);
+    });
 }
