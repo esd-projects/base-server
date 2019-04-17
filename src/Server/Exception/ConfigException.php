@@ -9,7 +9,7 @@
 namespace GoSwoole\BaseServer\Server\Exception;
 
 
-class ConfigException extends \Exception
+class ConfigException extends Exception
 {
     /**
      * @param $object
