@@ -40,7 +40,7 @@ class Lock
 
     public function __construct($type)
     {
-        $this->swooleLock = new \swoole_lock($type);
+        $this->swooleLock = new \Swoole\Lock($type);
     }
 
     /**
