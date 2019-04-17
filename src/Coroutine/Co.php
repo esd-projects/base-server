@@ -82,6 +82,15 @@ class Co
     }
 
     /**
+     * 获取当前协程的父级上下文
+     * @return Context|null
+     */
+    public static function getParentContext()
+    {
+        return self::getSwooleContext()[Context::parentStorageKey] ?? null;
+    }
+
+    /**
      * 遍历当前进程内的所有协程。
      * @return \Iterator
      */

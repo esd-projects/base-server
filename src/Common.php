@@ -92,6 +92,49 @@ function goWithContext(callable $run)
         $context = \GoSwoole\BaseServer\Coroutine\Co::getContext();
     }
     go(function () use ($run, $context) {
-        \GoSwoole\BaseServer\Coroutine\Context\Context::clone($context);
+        \GoSwoole\BaseServer\Coroutine\Context\Context::createWithParent($context);
+        $run();
     });
+}
+
+/**
+ * 获取上下文值
+ * @param $key
+ * @return mixed
+ */
+function getContextValue($key)
+{
+    return \GoSwoole\BaseServer\Coroutine\Co::getContext()[$key] ?? null;
+}
+
+/**
+ * 寻找值，会递归到父级
+ * @param $key
+ * @return mixed|null
+ */
+function getContextValueWithParent($key)
+{
+    $context = \GoSwoole\BaseServer\Coroutine\Co::getContext();
+    return _getContextValueWithParent($key, $context);
+}
+
+function _getContextValueWithParent($key, $context)
+{
+    if ($context == null) return null;
+    if (isset($context[$key])) {
+        return $context[$key];
+    }
+    $context = $context->getParentContext();
+    return _getContextValueWithParent($key, $context);
+}
+
+/**
+ * 设置上下文值
+ * @param $key
+ * @param $value
+ * @return mixed
+ */
+function setContextValue($key, $value)
+{
+    \GoSwoole\BaseServer\Coroutine\Co::getContext()[$key] = $value;
 }
