@@ -29,7 +29,7 @@ class Task extends Runnable
     }
 }
 
-go(function () {
+goWithContext(function () {
     $pool = CoPoolFactory::createCoPool("Executor-1", 5, 10, 1);
     $tasks = [];
     for ($i = 0; $i < 10; $i++) {

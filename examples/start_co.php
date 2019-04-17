@@ -28,7 +28,7 @@ class Task extends Runnable
     }
 }
 
-go(function () {
+goWithContext(function () {
     $task = new Task(2);
     $task->justRun();
     print_r("结果->" . $task->getResult() . "\n");

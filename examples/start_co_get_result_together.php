@@ -28,7 +28,7 @@ class Task extends Runnable
     }
 }
 
-go(function () {
+goWithContext(function () {
     $tasks = [];
     for ($i = 0; $i < 10; $i++) {
         $task = new Task(2);

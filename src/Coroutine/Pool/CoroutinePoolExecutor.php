@@ -93,7 +93,7 @@ class CoroutinePoolExecutor
      */
     private function createNewCoroutine($runnable, float $keepAliveTime): void
     {
-        $cid = go(function () use ($runnable, $keepAliveTime) {
+        $cid = goWithContext(function () use ($runnable, $keepAliveTime) {
             defer(function () {
                 unset($this->cids[Co::getCid()]);
             });

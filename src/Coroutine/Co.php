@@ -135,7 +135,7 @@ class Co
      */
     public static function runTask($runnable)
     {
-        $cid = go(function () use ($runnable) {
+        $cid = goWithContext(function () use ($runnable) {
             if ($runnable != null) {
                 if ($runnable instanceof Runnable) {
                     $result = $runnable->run();
