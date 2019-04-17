@@ -10,6 +10,7 @@ namespace Core\Coroutine\Pool;
 
 
 use Core\Coroutine\Channel;
+use Core\Coroutine\Co;
 
 abstract class Runnable
 {
@@ -55,6 +56,14 @@ abstract class Runnable
             return;
         }
         $this->channel->push($result);
+    }
+
+    /**
+     * 直接执行
+     */
+    public function justRun()
+    {
+        Co::runTask($this);
     }
 
     abstract function run();

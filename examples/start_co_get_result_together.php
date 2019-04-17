@@ -29,7 +29,13 @@ class Task extends Runnable
 }
 
 go(function () {
-    $task = new Task(2);
-    $task->justRun();
-    print_r("结果->" . $task->getResult() . "\n");
+    $tasks = [];
+    for ($i = 0; $i < 10; $i++) {
+        $task = new Task(2);
+        $tasks[] = $task;
+        $task->justRun();
+    }
+    foreach ($tasks as $task) {
+        print_r("结果->" . $task->getResult() . "\n");
+    }
 });

@@ -7,13 +7,17 @@ use Core\Coroutine\Pool\Runnable;
 require __DIR__ . '/../vendor/autoload.php';
 \Core\Utils\Utils::enableRuntimeCoroutine();
 
+/**
+ * 用连接池执行任务，统一获取结果
+ * Class Task
+ */
 class Task extends Runnable
 {
     private $max;
 
     public function __construct($max)
     {
-        parent::__construct(false);
+        parent::__construct(true);
         $this->max = $max;
     }
 
@@ -32,5 +36,8 @@ go(function () {
         $task = new Task(2);
         $tasks[] = $task;
         $pool->execute($task);
+    }
+    foreach ($tasks as $task) {
+        print_r("结果->" . $task->getResult() . "\n");
     }
 });

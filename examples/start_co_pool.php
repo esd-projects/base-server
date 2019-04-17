@@ -1,13 +1,14 @@
 <?php
 
 use Core\Coroutine\Co;
+use Core\Coroutine\CoPoolFactory;
 use Core\Coroutine\Pool\Runnable;
 
 require __DIR__ . '/../vendor/autoload.php';
 \Core\Utils\Utils::enableRuntimeCoroutine();
 
 /**
- * 执行任务
+ * 用连接池执行任务
  * Class Task
  */
 class Task extends Runnable
@@ -16,7 +17,7 @@ class Task extends Runnable
 
     public function __construct($max)
     {
-        parent::__construct(true);
+        parent::__construct(false);
         $this->max = $max;
     }
 
@@ -29,7 +30,12 @@ class Task extends Runnable
 }
 
 go(function () {
-    $task = new Task(2);
-    $task->justRun();
-    print_r("结果->" . $task->getResult() . "\n");
+    $pool = CoPoolFactory::createCoPool("Executor-1", 5, 10, 1);
+    for ($i = 0; $i < 10; $i++) {
+        $task = new Task(2);
+        $pool->execute($task);
+        $pool->execute(function () {
+            print_r("[" . Co::getCid() . "]\t执行完毕\n");
+        });
+    }
 });

@@ -9,6 +9,8 @@
 namespace Core\Coroutine;
 
 
+use Core\Coroutine\Pool\Runnable;
+
 class Co
 {
     /**
@@ -101,5 +103,26 @@ class Co
     public static function resume(int $coroutineId)
     {
         \Swoole\Coroutine::resume($coroutineId);
+    }
+
+    /**
+     * 执行任务
+     * @param $runnable
+     * @return int|bool
+     */
+    public static function runTask($runnable)
+    {
+        $cid = go(function () use ($runnable) {
+            if ($runnable != null) {
+                if ($runnable instanceof Runnable) {
+                    $result = $runnable->run();
+                    $runnable->sendResult($result);
+                }
+                if (is_callable($runnable)) {
+                    $runnable();
+                }
+            }
+        });
+        return $cid;
     }
 }
