@@ -17,7 +17,7 @@
       "homepage": "https://github.com/tmtbe"
     }
   ],
-  "name": "tmtbe/base_server",
+  "name": "go-swoole/base-server",
   "type": "library",
   "keywords": ["server", "swoole"],
   "description": "base_server",
