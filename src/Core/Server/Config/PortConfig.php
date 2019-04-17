@@ -649,11 +649,12 @@ class PortConfig
      * @return int
      * @throws ConfigException
      */
-    public function getSwooleSockType() {
+    public function getSwooleSockType()
+    {
         ConfigException::AssertNull($this, "sockType", $this->getSockType());
-        if($this->isEnableSsl()){
-            return $this->getSockType()|self::SWOOLE_SSL;
-        }else{
+        if ($this->isEnableSsl()) {
+            return $this->getSockType() | self::SWOOLE_SSL;
+        } else {
             return $this->getSockType();
         }
     }
@@ -674,7 +675,7 @@ class PortConfig
         $this->customHandShake = $customHandShake;
     }
 
-    
+
     /**
      * 构建配置
      * @return array
@@ -758,9 +759,36 @@ class PortConfig
         if ($count > 1) {
             throw new ConfigException("PortConfig中只能指定一种协议");
         }
-        if($this->isEnableReusePort()){
+        if ($this->isEnableReusePort()) {
             $build['enable_reuse_port'] = $this->isEnableReusePort();
         }
         return $build;
+    }
+
+    /**
+     * 获取类型名称
+     */
+    public function getTypeName()
+    {
+        if ($this->isOpenWebsocketProtocol()) {
+            return "WebSocket";
+        }
+        if ($this->isOpenHttpProtocol()) {
+            return "HTTP";
+        }
+        if ($this->isOpenMqttProtocol()) {
+            return "MQTT";
+        }
+        if ($this->getSwooleSockType() == self::SWOOLE_SOCK_UDP || $this->getSwooleSockType() == self::SWOOLE_SOCK_UDP6) {
+            return "UDP";
+        } else {
+            if ($this->isOpenEofSplit() || $this->isOpenEofCheck()) {
+                return "TCP-EOF";
+            } else if ($this->isOpenLengthCheck()) {
+                return "TCP-Length";
+            } else {
+                return "TCP";
+            }
+        }
     }
 }

@@ -15,19 +15,27 @@ namespace Core\Server;
  */
 class DefaultProcess extends Process
 {
+    private $className;
+
+    public function __construct(Server $server, string $groupName = self::DEFAULT_GROUP)
+    {
+        parent::__construct($server, $groupName);
+        $this->className = get_class($this);
+    }
 
     public function onProcessStart()
     {
-        print_r("[DefaultProcess:{$this->getProcessId()}]\t[{$this->getGroupName()}]\t[{$this->getProcessName()}]\t[onProcessStart]\n");
+        get_class($this);
+        print_r("[$this->className:{$this->getProcessId()}]\t[{$this->getGroupName()}]\t[{$this->getProcessName()}]\t[onProcessStart]\n");
     }
 
     public function onProcessStop()
     {
-        print_r("[DefaultProcess:{$this->getProcessId()}]\t[{$this->getProcessName()}]\t[onProcessStop]\n");
+        print_r("[$this->className:{$this->getProcessId()}]\t[{$this->getProcessName()}]\t[onProcessStop]\n");
     }
 
     public function onPipeMessage(string $message, Process $fromProcess)
     {
-        print_r("[DefaultProcess:{$this->getProcessId()}]\t[{$this->getProcessName()}]\t[onPipeMessage]\t[FromProcess:{$fromProcess->getProcessId()}]\t[$message]\n");
+        print_r("[$this->className:{$this->getProcessId()}]\t[{$this->getProcessName()}]\t[onPipeMessage]\t[FromProcess:{$fromProcess->getProcessId()}]\t[$message]\n");
     }
 }

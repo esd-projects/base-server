@@ -50,6 +50,9 @@ class PortManager
         if (isset($this->ports[$portConfig->getPort()])) {
             throw new ConfigException("端口号有重复");
         }
+        if (!$serverPort instanceof ServerPort) {
+            throw new ConfigException("端口实例必须继承ServerPort");
+        }
         $this->ports[$portConfig->getPort()] = $serverPort;
         return $serverPort;
     }

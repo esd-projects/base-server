@@ -9,6 +9,8 @@
 namespace Core\Server;
 
 
+use Core\Server\Exception\ConfigException;
+
 class ProcessManager
 {
     /**
@@ -80,17 +82,20 @@ class ProcessManager
      * @param string $name
      * @param $processClass
      * @return Process
+     * @throws ConfigException
      */
     public function addCustomProcesses(string $name, $processClass)
     {
         if ($processClass == null) {
             $process = new $this->defaultProcessClass($this->server);
         } else {
-            $process = new $processClass($this);
+            $process = new $processClass($this->server);
         }
         if ($process instanceof Process) {
             $process->createProcess();
             $process->setName($name);
+        } else {
+            throw new ConfigException("进程实例必须继承Process");
         }
         $this->customProcesses[] = $process;
         return $process;
@@ -189,7 +194,7 @@ class ProcessManager
     {
         $this->server->worker_pid = $processPid;
     }
-    
+
     /**
      * 获取当前进程
      * @return Process
