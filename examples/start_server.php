@@ -1,11 +1,11 @@
 <?php
 
-use Core\Server\Config\PortConfig;
-use Core\Server\Config\ServerConfig;
-use Core\Server\DefaultProcess;
-use Core\Server\DefaultServer;
-use Core\Server\DefaultServerPort;
-use Core\Utils\Utils;
+use GoSwoole\BaseServer\Server\Config\PortConfig;
+use GoSwoole\BaseServer\Server\Config\ServerConfig;
+use GoSwoole\BaseServer\Server\DefaultProcess;
+use GoSwoole\BaseServer\Server\DefaultServer;
+use GoSwoole\BaseServer\Server\DefaultServerPort;
+use GoSwoole\BaseServer\Utils\Utils;
 
 require __DIR__ . '/../vendor/autoload.php';
 

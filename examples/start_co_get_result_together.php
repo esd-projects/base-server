@@ -1,10 +1,10 @@
 <?php
 
-use Core\Coroutine\Co;
-use Core\Coroutine\Pool\Runnable;
+use GoSwoole\BaseServer\Coroutine\Co;
+use GoSwoole\BaseServer\Coroutine\Pool\Runnable;
 
 require __DIR__ . '/../vendor/autoload.php';
-\Core\Utils\Utils::enableRuntimeCoroutine();
+\GoSwoole\BaseServer\Utils\Utils::enableRuntimeCoroutine();
 
 /**
  * 执行任务

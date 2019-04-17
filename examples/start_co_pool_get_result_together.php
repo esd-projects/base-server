@@ -1,11 +1,11 @@
 <?php
 
-use Core\Coroutine\Co;
-use Core\Coroutine\CoPoolFactory;
-use Core\Coroutine\Pool\Runnable;
+use GoSwoole\BaseServer\Coroutine\Co;
+use GoSwoole\BaseServer\Coroutine\CoPoolFactory;
+use GoSwoole\BaseServer\Coroutine\Pool\Runnable;
 
 require __DIR__ . '/../vendor/autoload.php';
-\Core\Utils\Utils::enableRuntimeCoroutine();
+\GoSwoole\BaseServer\Utils\Utils::enableRuntimeCoroutine();
 
 /**
  * 用连接池执行任务，统一获取结果
