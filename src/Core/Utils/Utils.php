@@ -60,14 +60,9 @@ class Utils
      * @param array $params
      * @return int
      */
-    public static function addTimerTick(int $msec, callable $callback, array $params = null)
+    public static function addTimerTick(int $msec, callable $callback, ... $params)
     {
-        if ($params == null) {
-            return \swoole_timer_tick($msec, $callback);
-        }
-        return \swoole_timer_tick($msec, function () use ($callback, $params) {
-            call_user_func_array($callback, $params);
-        });
+        return \Swoole\Timer::tick($msec, $callback, ...$params);
     }
 
     /**
@@ -77,7 +72,7 @@ class Utils
      */
     public static function clearTimerTick(int $timerId)
     {
-        return \swoole_timer_clear($timerId);
+        return \Swoole\Timer::clear($timerId);
     }
 
     /**
@@ -87,13 +82,8 @@ class Utils
      * @param array $params
      * @return int
      */
-    public static function addTimerAfter(int $msec, callable $callback, array $params = null)
+    public static function addTimerAfter(int $msec, callable $callback, ... $params)
     {
-        if ($params == null) {
-            return \swoole_timer_after($msec, $callback);
-        }
-        return \swoole_timer_after($msec, function () use ($callback, $params) {
-            call_user_func_array($callback, $params);
-        });
+        return \Swoole\Timer::after($msec, $callback, ...$params);
     }
 }
