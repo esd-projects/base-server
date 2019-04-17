@@ -4,7 +4,7 @@ use GoSwoole\BaseServer\Coroutine\Co;
 use GoSwoole\BaseServer\Coroutine\Pool\Runnable;
 
 require __DIR__ . '/../vendor/autoload.php';
-\GoSwoole\BaseServer\Utils\Utils::enableRuntimeCoroutine();
+enableRuntimeCoroutine();
 
 /**
  * 执行任务

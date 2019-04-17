@@ -5,7 +5,10 @@
     "psr-4": {
       "GoSwoole\\BaseServer\\": "src/",
       "GoSwoole\\BaseServer\\ExampleClass\\": "exampleClass/"
-    }
+    },
+    "files": [
+      "src/Common.php"
+    ]
   },
   "authors": [
     {

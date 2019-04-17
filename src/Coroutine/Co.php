@@ -141,14 +141,3 @@ class Co
     }
 
 }
-
-function goWithContext(callable $run)
-{
-    $context = null;
-    if (Co::getCid() > 0) {
-        $context = Co::getContext();
-    }
-    go(function () use ($run, $context) {
-        \GoSwoole\BaseServer\Coroutine\Context\Context::clone($context);
-    });
-}

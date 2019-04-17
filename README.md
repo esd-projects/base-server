@@ -13,7 +13,7 @@ class MyProcess extends DefaultProcess
 
 }
 
-Utils::enableRuntimeCoroutine();
+enableRuntimeCoroutine();
 
 //----多端口配置----
 $httpPortConfig = new PortConfig();

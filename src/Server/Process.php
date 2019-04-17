@@ -177,7 +177,7 @@ abstract class Process
                 $unpackData = unpack("N", $recv);
                 $processId = $unpackData[1];
                 $fromProcess = $this->server->getProcessManager()->getProcessFromId($processId);
-                $this->onPipeMessage(substr($recv, 4), $fromProcess);
+                $this->onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
             });
         }
         $this->server->getProcessManager()->setCurrentProcessId($this->getProcessId());
@@ -204,7 +204,7 @@ abstract class Process
     {
         if ($toProcess->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
             if (!is_string($message)) {
-                $message = Utils::serverSerialize($message);
+                $message = serverSerialize($message);
             }
             //添加来自哪个进程的ID
             $message = pack("N", $this->getProcessId()) . $message;

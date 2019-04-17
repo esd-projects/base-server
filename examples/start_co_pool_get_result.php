@@ -5,7 +5,7 @@ use GoSwoole\BaseServer\Coroutine\CoPoolFactory;
 use GoSwoole\BaseServer\Coroutine\Pool\Runnable;
 
 require __DIR__ . '/../vendor/autoload.php';
-\GoSwoole\BaseServer\Utils\Utils::enableRuntimeCoroutine();
+enableRuntimeCoroutine();
 
 /**
  * 用连接池执行任务并获取结果
