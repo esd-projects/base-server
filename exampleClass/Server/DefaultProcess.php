@@ -10,6 +10,7 @@ namespace GoSwoole\BaseServer\ExampleClass\Server;
 
 
 use GoSwoole\BaseServer\Event\Event;
+use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Process;
 use GoSwoole\BaseServer\Server\Server;
@@ -50,5 +51,10 @@ class DefaultProcess extends Process
     public function onPipeMessage(Message $message, Process $fromProcess)
     {
         print_r("[$this->className:{$this->getProcessId()}]\t[{$this->getProcessName()}]\t[onPipeMessage]\t[FromProcess:{$fromProcess->getProcessId()}]\t[{$message->toString()}]\n");
+    }
+
+    public function getEventDispatcher(): EventDispatcher
+    {
+        return $this->getContext()->getByClassName(EventDispatcher::class);
     }
 }

@@ -9,6 +9,8 @@
 namespace GoSwoole\BaseServer\Server\Exception;
 
 
+use GoSwoole\BaseServer\Exception;
+
 class ConfigException extends Exception
 {
     /**

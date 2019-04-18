@@ -8,12 +8,15 @@
 
 namespace GoSwoole\BaseServer\Server;
 
+use GoSwoole\BaseServer\Event\EventPlus;
+use GoSwoole\BaseServer\Event\EventTestPlus;
 use GoSwoole\BaseServer\Server\Beans\ClientInfo;
 use GoSwoole\BaseServer\Server\Beans\ServerStats;
 use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
 use GoSwoole\BaseServer\Server\Exception\ConfigException;
+use GoSwoole\BaseServer\Server\Plug\PlugManager;
 
 /**
  * Class Server
@@ -51,16 +54,28 @@ abstract class Server
     private $portManager;
 
     /**
+     * @var PlugManager
+     */
+    private $plugManager;
+
+    /**
      * 是否已配置
      * @var bool
      */
     private $configured = false;
+
+    /**
+     * @var Context
+     */
+    private $context;
 
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
         $this->serverConfig = $serverConfig;
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
+        $this->plugManager = new PlugManager();
+        $this->context = new Context($this);
     }
 
     /**
@@ -96,6 +111,7 @@ abstract class Server
     /**
      * 配置服务
      * @throws ConfigException
+     * @throws \GoSwoole\BaseServer\Exception
      */
     public function configure()
     {
@@ -160,7 +176,13 @@ abstract class Server
             $this->processManager->addProcesses($process);
             $startId++;
         }
-        //锁定
+        //添加Event插件
+        $this->plugManager->addPlug(new EventPlus());
+        //插件排序此时不允许添加插件了
+        $this->plugManager->order();
+        //调用所有插件的beforeServerStart
+        $this->plugManager->beforeServerStart($this->context);
+        //锁定配置
         $this->setConfigured(true);
     }
 
@@ -511,5 +533,13 @@ abstract class Server
     public function getPortManager(): PortManager
     {
         return $this->portManager;
+    }
+
+    /**
+     * @return PlugManager
+     */
+    public function getPlugManager(): PlugManager
+    {
+        return $this->plugManager;
     }
 }

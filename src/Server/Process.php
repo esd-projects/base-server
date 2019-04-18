@@ -8,8 +8,6 @@
 
 namespace GoSwoole\BaseServer\Server;
 
-use GoSwoole\BaseServer\Event\EventDispatcher;
-use GoSwoole\BaseServer\Event\EventMessageProcessor;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
 use GoSwoole\BaseServer\Utils\Utils;
@@ -71,14 +69,15 @@ abstract class Process
     private $swooleProcess;
 
     /**
-     * @var EventDispatcher
+     * @var Context
      */
-    private $eventDispatcher;
+    private $context;
 
     public function __construct(Server $server, string $groupName = self::DEFAULT_GROUP)
     {
         $this->server = $server;
         $this->groupName = $groupName;
+        $this->context = new Context($server);
     }
 
     /**
@@ -149,11 +148,11 @@ abstract class Process
     }
 
     /**
-     * @return EventDispatcher
+     * @return Context
      */
-    public function getEventDispatcher(): EventDispatcher
+    public function getContext(): Context
     {
-        return $this->eventDispatcher;
+        return $this->context;
     }
 
     /**
@@ -183,14 +182,9 @@ abstract class Process
 
     /**
      * 进程启动的回调
-     * @throws \GoSwoole\BaseServer\Exception
      */
     public function _onProcessStart()
     {
-        //创建事件派发器
-        $this->eventDispatcher = new EventDispatcher($this->getServer());
-        //注册事件派发处理函数
-        MessageProcessor::addMessageProcessor(new EventMessageProcessor($this->eventDispatcher));
         if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
             \swoole_process::signal(SIGTERM, [$this, '_onProcessStop']);
             \swoole_event_add($this->swooleProcess->pipe, function ($pipe) {
@@ -205,6 +199,7 @@ abstract class Process
         $this->server->getProcessManager()->setCurrentProcessId($this->getProcessId());
         $this->setProcessPid(posix_getpid());
         $this->server->getProcessManager()->setCurrentProcessPid($this->getProcessPid());
+        $this->server->getPlugManager()->beforeProcessStart($this->context);
         $this->onProcessStart();
     }
 
