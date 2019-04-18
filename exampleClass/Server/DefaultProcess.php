@@ -30,6 +30,7 @@ class DefaultProcess extends Process
         parent::__construct($server, $groupName);
         $this->className = get_class($this);
         $this->log = $this->context->getByClassName(Logger::class);
+        //$this->log->log(Logger::INFO, "__construct");
     }
 
     public function onProcessStart()
