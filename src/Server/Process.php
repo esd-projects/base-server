@@ -19,8 +19,8 @@ use GoSwoole\BaseServer\Utils\Utils;
  */
 abstract class Process
 {
-    const DEFAULT_GROUP = "default_group";
-    const WORKER_GROUP = "worker_group";
+    const DEFAULT_GROUP = "DefaultGroup";
+    const WORKER_GROUP = "WorkerGroup";
     const SOCK_DGRAM = 2;
     const PROCESS_TYPE_WORKER = 1;
     const PROCESS_TYPE_TASK = 2;

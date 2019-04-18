@@ -18,7 +18,7 @@ class MasterProcess extends Process
     public function __construct(Server $server, string $groupName = self::DEFAULT_GROUP)
     {
         parent::__construct($server, $groupName);
-        $this->groupName = "server";
+        $this->groupName = "Server";
         $this->processName = "master";
         $this->processId = 0;
         $this->processPid = posix_getpid();

@@ -72,7 +72,11 @@ class Context
      */
     public function getByClassName($className)
     {
-        return $this->classContain[$className] ?? null;
+        $result = $this->classContain[$className] ?? null;
+        if ($result == null && $this->parentContext != null) {
+            return $this->parentContext->getByClassName($className);
+        }
+        return $result;
     }
 
     /**

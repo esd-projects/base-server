@@ -134,6 +134,16 @@ abstract class Server
      */
     public function configure()
     {
+        //添加Logger/Event插件
+        $this->plugManager->addPlug(new LoggerPlug());
+        $this->plugManager->addPlug(new EventPlug());
+        //插件排序此时不允许添加插件了
+        $this->plugManager->order();
+        //调用所有插件的beforeServerStart
+        $this->plugManager->beforeServerStart($this->context);
+        //锁定配置
+        $this->setConfigured(true);
+
         if (count($this->portManager->getPorts()) == 0) {
             throw new ConfigException("缺少port配置，无法启动服务");
         }
@@ -196,15 +206,6 @@ abstract class Server
             $this->processManager->addProcesses($process);
             $startId++;
         }
-        //添加Logger/Event插件
-        $this->plugManager->addPlug(new LoggerPlug());
-        $this->plugManager->addPlug(new EventPlug());
-        //插件排序此时不允许添加插件了
-        $this->plugManager->order();
-        //调用所有插件的beforeServerStart
-        $this->plugManager->beforeServerStart($this->context);
-        //锁定配置
-        $this->setConfigured(true);
     }
 
     public function _onStart()
