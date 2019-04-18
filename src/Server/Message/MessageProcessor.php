@@ -1,0 +1,78 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: administrato
+ * Date: 2019/4/18
+ * Time: 9:59
+ */
+
+namespace GoSwoole\BaseServer\Server\Message;
+
+use GoSwoole\BaseServer\Event\EventDispatcher;
+use GoSwoole\BaseServer\Exception;
+
+/**
+ * 消息处理器
+ * Class MessageProcessor
+ * @package GoSwoole\BaseServer\Server\Message
+ */
+abstract class MessageProcessor
+{
+    /**
+     * @var MessageProcessor[]
+     */
+    private static $messageProcessorMap = [];
+
+    /**
+     * 消息类型
+     * @var string
+     */
+    protected $type;
+
+    /**
+     * 消息派发器
+     * @var EventDispatcher
+     */
+    protected $eventDispatcher;
+
+    public function __construct(EventDispatcher $eventDispatcher, string $type)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+        $this->type = $type;
+    }
+
+    /**
+     * 添加处理程序
+     * @param MessageProcessor $messageProcessor
+     * @param bool $overwrite
+     * @throws Exception
+     */
+    public static function addMessageProcessor(MessageProcessor $messageProcessor, bool $overwrite = false)
+    {
+        if (isset(self::$messageProcessorMap[$messageProcessor->type]) && !$overwrite) {
+            throw new Exception("拥有类型相同的消息处理程序");
+        }
+        self::$messageProcessorMap[$messageProcessor->type] = $messageProcessor;
+    }
+
+    /**
+     * 分配消息
+     * @param Message $message
+     * @return bool
+     */
+    public static function dispatch(Message $message): bool
+    {
+        $processor = self::$messageProcessorMap[$message->getType()] ?? null;
+        if ($processor != null) {
+            return $processor->handler($message);
+        }
+        return false;
+    }
+
+    /**
+     * 处理消息
+     * @param Message $message
+     * @return mixed
+     */
+    abstract public function handler(Message $message): bool;
+}

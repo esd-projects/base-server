@@ -8,6 +8,10 @@
 
 namespace GoSwoole\BaseServer\Server;
 
+use GoSwoole\BaseServer\Event\EventDispatcher;
+use GoSwoole\BaseServer\Event\EventMessageProcessor;
+use GoSwoole\BaseServer\Server\Message\Message;
+use GoSwoole\BaseServer\Server\Message\MessageProcessor;
 use GoSwoole\BaseServer\Utils\Utils;
 
 /**
@@ -65,6 +69,11 @@ abstract class Process
      * @var \Swoole\Process
      */
     private $swooleProcess;
+
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
 
     public function __construct(Server $server, string $groupName = self::DEFAULT_GROUP)
     {
@@ -140,6 +149,14 @@ abstract class Process
     }
 
     /**
+     * @return EventDispatcher
+     */
+    public function getEventDispatcher(): EventDispatcher
+    {
+        return $this->eventDispatcher;
+    }
+
+    /**
      * 执行外部命令.
      *
      * @param $path
@@ -166,9 +183,14 @@ abstract class Process
 
     /**
      * 进程启动的回调
+     * @throws \GoSwoole\BaseServer\Exception
      */
     public function _onProcessStart()
     {
+        //创建事件派发器
+        $this->eventDispatcher = new EventDispatcher($this->getServer());
+        //注册事件派发处理函数
+        MessageProcessor::addMessageProcessor(new EventMessageProcessor($this->eventDispatcher));
         if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
             \swoole_process::signal(SIGTERM, [$this, '_onProcessStop']);
             \swoole_event_add($this->swooleProcess->pipe, function ($pipe) {
@@ -177,13 +199,25 @@ abstract class Process
                 $unpackData = unpack("N", $recv);
                 $processId = $unpackData[1];
                 $fromProcess = $this->server->getProcessManager()->getProcessFromId($processId);
-                $this->onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
+                $this->_onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
             });
         }
         $this->server->getProcessManager()->setCurrentProcessId($this->getProcessId());
         $this->setProcessPid(posix_getpid());
         $this->server->getProcessManager()->setCurrentProcessPid($this->getProcessPid());
         $this->onProcessStart();
+    }
+
+    /**
+     * 收到消息
+     * @param Message $message
+     * @param Process $fromProcess
+     */
+    public function _onPipeMessage(Message $message, Process $fromProcess)
+    {
+        if (!MessageProcessor::dispatch($message)) {
+            $this->onPipeMessage($message, $fromProcess);
+        }
     }
 
     /**
@@ -197,11 +231,16 @@ abstract class Process
 
     /**
      * 向某一个进程发送消息
-     * @param $message
+     * @param Message $message
      * @param Process $toProcess
      */
-    public function sendMessage($message, Process $toProcess)
+    public function sendMessage(Message $message, Process $toProcess)
     {
+        //如果是自己给自己发，这里处理下
+        if ($this->getProcessId() == $toProcess->getProcessId()) {
+            $this->_onPipeMessage($message, $this);
+            return;
+        }
         if ($toProcess->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
             if (!is_string($message)) {
                 $message = serverSerialize($message);
@@ -219,7 +258,7 @@ abstract class Process
 
     public abstract function onProcessStop();
 
-    public abstract function onPipeMessage(string $message, Process $fromProcess);
+    public abstract function onPipeMessage(Message $message, Process $fromProcess);
 
     /**
      * @return int
@@ -249,7 +288,7 @@ abstract class Process
      * 获取进程管理器
      * @return ProcessManager
      */
-    public function getProcessManager():ProcessManager
+    public function getProcessManager(): ProcessManager
     {
         return $this->server->getProcessManager();
     }

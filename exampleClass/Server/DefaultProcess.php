@@ -9,6 +9,8 @@
 namespace GoSwoole\BaseServer\ExampleClass\Server;
 
 
+use GoSwoole\BaseServer\Event\Event;
+use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Process;
 use GoSwoole\BaseServer\Server\Server;
 
@@ -26,6 +28,18 @@ class DefaultProcess extends Process
     {
         get_class($this);
         print_r("[$this->className:{$this->getProcessId()}]\t[{$this->getGroupName()}]\t[{$this->getProcessName()}]\t[onProcessStart]\n");
+        $message = new Message("message", "test");
+        foreach ($this->getProcessManager()->getProcesses() as $process) {
+            $this->sendMessage($message, $process);
+        }
+        $this->getEventDispatcher()->add("testEvent", function (Event $event) {
+            print_r("[$this->className:{$this->getProcessId()}]\t[Event]\t{$event->getData()}\n");
+        });
+        if ($this->getProcessId() == 0) {
+            sleep(1);
+            $this->getEventDispatcher()->dispatchEvent(new Event("testEvent", "Hello"));
+            $this->getEventDispatcher()->dispatchProcessEvent(new Event("testEvent", "Hello Every Process"), ...$this->getProcessManager()->getProcesses());
+        }
     }
 
     public function onProcessStop()
@@ -33,8 +47,8 @@ class DefaultProcess extends Process
         print_r("[$this->className:{$this->getProcessId()}]\t[{$this->getProcessName()}]\t[onProcessStop]\n");
     }
 
-    public function onPipeMessage(string $message, Process $fromProcess)
+    public function onPipeMessage(Message $message, Process $fromProcess)
     {
-        print_r("[$this->className:{$this->getProcessId()}]\t[{$this->getProcessName()}]\t[onPipeMessage]\t[FromProcess:{$fromProcess->getProcessId()}]\t[$message]\n");
+        print_r("[$this->className:{$this->getProcessId()}]\t[{$this->getProcessName()}]\t[onPipeMessage]\t[FromProcess:{$fromProcess->getProcessId()}]\t[{$message->toString()}]\n");
     }
 }

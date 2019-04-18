@@ -218,4 +218,12 @@ class ProcessManager
         }
         $group->sendMessageToGroup($message);
     }
+
+    /**
+     * @return Process[]
+     */
+    public function getProcesses(): array
+    {
+        return $this->processes;
+    }
 }

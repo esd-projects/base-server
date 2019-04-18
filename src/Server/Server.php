@@ -138,6 +138,7 @@ abstract class Server
         $this->server->on("managerStart", [$this, "_onManagerStart"]);
         $this->server->on("managerStop", [$this, "_onManagerStop"]);
         $this->server->on("workerStart", [$this, "_onWorkerStart"]);
+        $this->server->on("pipeMessage", [$this, "_onPipeMessage"]);
         $this->server->on("workerStop", [$this, "_onWorkerStop"]);
         //配置进程
         for ($i = 0; $i < $this->serverConfig->getWorkerNum(); $i++) {
@@ -193,6 +194,11 @@ abstract class Server
     {
         $process = $this->processManager->getProcessFromId($worker_id);
         $process->_onProcessStart();
+    }
+
+    public function _onPipeMessage($server, int $srcWorkerId, $message)
+    {
+        $this->processManager->getCurrentProcess()->_onPipeMessage($message, $this->processManager->getProcessFromId($srcWorkerId));
     }
 
     public function _onWorkerStop($server, int $worker_id)
