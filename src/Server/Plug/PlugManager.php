@@ -9,7 +9,11 @@
 namespace GoSwoole\BaseServer\Server\Plug;
 
 use GoSwoole\BaseServer\Exception;
+use GoSwoole\BaseServer\Logger\Log;
+use GoSwoole\BaseServer\Logger\LoggerPlug;
 use GoSwoole\BaseServer\Server\Context;
+use GoSwoole\BaseServer\Server\Server;
+use Monolog\Logger;
 
 /**
  * 插件管理器
@@ -34,6 +38,21 @@ class PlugManager implements Plug
     private $fixed = false;
 
     /**
+     * @var Server
+     */
+    private $server;
+
+    /**
+     * @var Logger
+     */
+    private $log;
+
+    public function __construct(Server $server)
+    {
+        $this->server = $server;
+    }
+
+    /**
      * 添加插件
      * @param Plug $plug
      * @throws Exception
@@ -50,7 +69,14 @@ class PlugManager implements Plug
     public function beforeServerStart(Context $context)
     {
         foreach ($this->plugs as $plug) {
+            if ($this->log != null) {
+                $this->log->log(Logger::INFO, "加载[{$plug->getName()}]插件");
+            }
             $plug->beforeServerStart($context);
+            if ($plug instanceof LoggerPlug) {
+                //这时可以获取到Log对象了
+                $this->log = $this->server->getContext()->getByClassName(Logger::class);
+            }
         }
     }
 

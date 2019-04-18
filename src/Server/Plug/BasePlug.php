@@ -39,14 +39,6 @@ abstract class BasePlug implements Plug
     }
 
     /**
-     * 发送准备好的信号，插件全部准备好，服务才能接受访问
-     */
-    public function ready()
-    {
-
-    }
-
-    /**
      * @return mixed
      */
     public function getAfterClass()
@@ -60,7 +52,7 @@ abstract class BasePlug implements Plug
      */
     public function getOrderIndex(): int
     {
-        if ($this->afterClass != null) {
+        if ($this->afterPlug != null) {
             return $this->orderIndex + $this->afterPlug->getOrderIndex();
         }
         return $this->orderIndex;

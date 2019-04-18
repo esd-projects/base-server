@@ -30,54 +30,60 @@ abstract class Process
      * 进程类型
      * @var int
      */
-    private $processType;
+    protected $processType;
 
 
     /**
      * 进程ID
      * @var int
      */
-    private $processId;
+    protected $processId;
 
     /**
      * 进程PID
      * @var int
      */
-    private $processPid;
+    protected $processPid;
 
     /**
      * 进程名
      * @var string
      */
-    private $processName;
+    protected $processName;
 
     /**
      * @var Server
      */
-    private $server;
+    protected $server;
 
     /**
      * 进程组名
      * @var string
      */
-    private $groupName;
+    protected $groupName;
 
     /**
      * swoole的process类
      * @var \Swoole\Process
      */
-    private $swooleProcess;
+    protected $swooleProcess;
 
     /**
      * @var Context
      */
-    private $context;
+    protected $context;
 
+    /**
+     * Process constructor.
+     * @param Server $server
+     * @param string $groupName
+     * @throws \GoSwoole\BaseServer\Exception
+     */
     public function __construct(Server $server, string $groupName = self::DEFAULT_GROUP)
     {
         $this->server = $server;
         $this->groupName = $groupName;
-        $this->context = new Context($server);
+        $this->context = new Context($server, $server->getContext());
     }
 
     /**

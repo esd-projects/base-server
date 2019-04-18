@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: administrato
+ * User: 白猫
  * Date: 2019/4/18
  * Time: 13:52
  */
@@ -9,16 +9,17 @@
 namespace GoSwoole\BaseServer\Event;
 
 
+use GoSwoole\BaseServer\Logger\LoggerPlug;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
 use GoSwoole\BaseServer\Server\Plug\BasePlug;
 
 /**
  * Event 插件加载器
- * Class EventPlus
+ * Class EventPlug
  * @package GoSwoole\BaseServer\Event
  */
-class EventPlus extends BasePlug
+class EventPlug extends BasePlug
 {
     /**
      * @var EventDispatcher
@@ -27,7 +28,7 @@ class EventPlus extends BasePlug
 
     public function __construct()
     {
-
+        $this->atAfter(LoggerPlug::class);
     }
 
     /**
@@ -51,8 +52,6 @@ class EventPlus extends BasePlug
         $context->add("eventDispatcher", $this->eventDispatcher);
         //注册事件派发处理函数
         MessageProcessor::addMessageProcessor(new EventMessageProcessor($this->eventDispatcher));
-        //插件准备妥当
-        $this->ready();
     }
 
     /**

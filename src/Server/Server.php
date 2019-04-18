@@ -8,14 +8,16 @@
 
 namespace GoSwoole\BaseServer\Server;
 
-use GoSwoole\BaseServer\Event\EventPlus;
+use GoSwoole\BaseServer\Event\EventPlug;
 use GoSwoole\BaseServer\Event\EventTestPlus;
+use GoSwoole\BaseServer\Logger\LoggerPlug;
 use GoSwoole\BaseServer\Server\Beans\ClientInfo;
 use GoSwoole\BaseServer\Server\Beans\ServerStats;
 use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
 use GoSwoole\BaseServer\Server\Exception\ConfigException;
+use GoSwoole\BaseServer\Server\NormalProcess\ManagerProcess;
 use GoSwoole\BaseServer\Server\Plug\PlugManager;
 
 /**
@@ -25,6 +27,10 @@ use GoSwoole\BaseServer\Server\Plug\PlugManager;
  */
 abstract class Server
 {
+    /**
+     * @var Server
+     */
+    public static $instance;
     /**
      * 服务器配置
      * @var ServerConfig
@@ -69,13 +75,26 @@ abstract class Server
      */
     private $context;
 
+    /**
+     * @var ManagerProcess
+     */
+    private $managerProcess;
+
+    /**
+     * Server constructor.
+     * @param ServerConfig $serverConfig
+     * @param string $defaultPortClass
+     * @param string $defaultProcessClass
+     * @throws \GoSwoole\BaseServer\Exception
+     */
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
+        self::$instance = $this;
+        $this->context = new Context($this);
         $this->serverConfig = $serverConfig;
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
-        $this->plugManager = new PlugManager();
-        $this->context = new Context($this);
+        $this->plugManager = new PlugManager($this);
     }
 
     /**
@@ -167,7 +186,8 @@ abstract class Server
             }
             $this->processManager->addProcesses($process);
         }
-
+        $this->managerProcess = new ManagerProcess($this);
+        $this->processManager->setManagerProcess($this->managerProcess);
         $startId = $this->serverConfig->getWorkerNum();
         foreach ($this->processManager->getCustomProcesses() as $process) {
             $process->setProcessId($startId);
@@ -176,8 +196,9 @@ abstract class Server
             $this->processManager->addProcesses($process);
             $startId++;
         }
-        //添加Event插件
-        $this->plugManager->addPlug(new EventPlus());
+        //添加Logger/Event插件
+        $this->plugManager->addPlug(new LoggerPlug());
+        $this->plugManager->addPlug(new EventPlug());
         //插件排序此时不允许添加插件了
         $this->plugManager->order();
         //调用所有插件的beforeServerStart
@@ -204,11 +225,13 @@ abstract class Server
 
     public function _onManagerStart()
     {
+        $this->managerProcess->onProcessStart();
         $this->onManagerStart();
     }
 
     public function _onManagerStop()
     {
+        $this->managerProcess->onProcessStop();
         $this->onManagerStop();
     }
 
@@ -541,5 +564,13 @@ abstract class Server
     public function getPlugManager(): PlugManager
     {
         return $this->plugManager;
+    }
+
+    /**
+     * @return Context
+     */
+    public function getContext(): Context
+    {
+        return $this->context;
     }
 }

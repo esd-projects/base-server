@@ -10,6 +10,8 @@ namespace GoSwoole\BaseServer\Server;
 
 
 use GoSwoole\BaseServer\Server\Exception\ConfigException;
+use GoSwoole\BaseServer\Server\NormalProcess\MasterProcess;
+use GoSwoole\BaseServer\Server\NormalProcess\PhpProcess;
 
 class ProcessManager
 {
@@ -25,7 +27,14 @@ class ProcessManager
      * @var Server
      */
     private $server;
-
+    /**
+     * @var Process
+     */
+    private $masterProcess;
+    /**
+     * @var Process
+     */
+    private $managerProcess;
     /**
      * 默认的class
      * @var string
@@ -38,10 +47,17 @@ class ProcessManager
      */
     private $groups = [];
 
+    /**
+     * ProcessManager constructor.
+     * @param Server $server
+     * @param string $processClass
+     * @throws \GoSwoole\BaseServer\Exception
+     */
     public function __construct(Server $server, string $processClass)
     {
         $this->server = $server;
         $this->defaultProcessClass = $processClass;
+        $this->masterProcess = new MasterProcess($server);
     }
 
     /**
@@ -49,7 +65,7 @@ class ProcessManager
      * @param int $processId
      * @return Process
      */
-    public function getProcessFromId(int $processId): Process
+    public function getProcessFromId(int $processId)
     {
         return $this->processes[$processId] ?? null;
     }
@@ -59,7 +75,7 @@ class ProcessManager
      * @param string $processName
      * @return Process
      */
-    public function getProcessFromName(string $processName): Process
+    public function getProcessFromName(string $processName)
     {
         foreach ($this->processes as $process) {
             if ($process->getProcessName() == $processName) {
@@ -135,7 +151,7 @@ class ProcessManager
             }
         }
         if (count($group) > 0) {
-            $processGroup = new ProcessGroup($groupName, $group);
+            $processGroup = new ProcessGroup($this, $groupName, $group);
             $this->groups[$groupName] = $processGroup;
         }
         return null;
@@ -146,27 +162,27 @@ class ProcessManager
      * 返回当前服务器主进程的PID。
      * @return int
      */
-    public function getMasterPid(): int
+    public function getMasterPid()
     {
-        return $this->server->master_pid;
+        return $this->server->master_pid ?? null;
     }
 
     /**
      * 返回当前服务器管理进程的PID。
      * @return int
      */
-    public function getManagerPid(): int
+    public function getManagerPid()
     {
-        return $this->server->manager_pid;
+        return $this->server->manager_pid ?? null;
     }
 
     /**
      * 得到当前Worker进程的编号
      * @return int
      */
-    public function getCurrentProcessId(): int
+    public function getCurrentProcessId()
     {
-        return $this->server->worker_id;
+        return $this->server->worker_id ?? null;
     }
 
     /**
@@ -182,7 +198,7 @@ class ProcessManager
      * 与posix_getpid()的返回值相同。
      * @return int
      */
-    public function getCurrentProcessPid(): int
+    public function getCurrentProcessPid()
     {
         return $this->server->worker_pid;
     }
@@ -201,6 +217,16 @@ class ProcessManager
      */
     public function getCurrentProcess(): Process
     {
+        if ($this->getCurrentProcessId() == null) {
+            if ($this->getMasterPid() == null) {
+                //说明还没启动
+                return $this->masterProcess;
+            } else if ($this->getManagerPid() != null) {
+                return $this->managerProcess;
+            } else {
+                return null;
+            }
+        }
         return $this->getProcessFromId($this->getCurrentProcessId());
     }
 
@@ -225,5 +251,13 @@ class ProcessManager
     public function getProcesses(): array
     {
         return $this->processes;
+    }
+
+    /**
+     * @param Process $managerProcess
+     */
+    public function setManagerProcess(Process $managerProcess): void
+    {
+        $this->managerProcess = $managerProcess;
     }
 }

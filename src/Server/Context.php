@@ -27,13 +27,26 @@ class Context
     private $classContain = [];
 
     /**
+     * @var Context
+     */
+    private $parentContext;
+
+    /**
+     * @var Server
+     */
+    private $server;
+
+    /**
      * Context constructor.
      * @param Server $server
+     * @param Context|null $parentContext
      * @throws Exception
      */
-    public function __construct(Server $server)
+    public function __construct(Server $server, Context $parentContext = null)
     {
+        $this->server = $server;
         $this->add("server", $server);
+        $this->parentContext = $parentContext;
     }
 
     /**
@@ -68,7 +81,7 @@ class Context
      */
     public function getServer(): Server
     {
-        return $this->get("server");
+        return $this->server;
     }
 
     /**
@@ -78,6 +91,10 @@ class Context
      */
     public function get($name)
     {
-        return $this->contain[$name] ?? null;
+        $result = $this->contain[$name] ?? null;
+        if ($result == null && $this->parentContext != null) {
+            return $this->parentContext->get($name);
+        }
+        return null;
     }
 }
