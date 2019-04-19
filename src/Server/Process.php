@@ -8,6 +8,7 @@
 
 namespace GoSwoole\BaseServer\Server;
 
+use GoSwoole\BaseServer\Coroutine\Co;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
 use GoSwoole\BaseServer\Utils\Utils;
@@ -203,8 +204,16 @@ abstract class Process
      */
     public function _onPipeMessage(Message $message, Process $fromProcess)
     {
-        if (!MessageProcessor::dispatch($message)) {
-            $this->onPipeMessage($message, $fromProcess);
+        if (Co::getCid() < 0) {
+            goWithContext(function () use ($message, $fromProcess) {
+                if (!MessageProcessor::dispatch($message)) {
+                    $this->onPipeMessage($message, $fromProcess);
+                }
+            });
+        } else {
+            if (!MessageProcessor::dispatch($message)) {
+                $this->onPipeMessage($message, $fromProcess);
+            }
         }
     }
 
