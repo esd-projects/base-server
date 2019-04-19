@@ -27,7 +27,7 @@ class DefaultServerPort extends ServerPort
     public function __construct(Server $server, PortConfig $portConfig)
     {
         parent::__construct($server, $portConfig);
-        $this->log = $this->context->getByClassName(Logger::class);
+        $this->log = $this->context->getDeepByClassName(Logger::class);
         $this->log->log(Logger::INFO, "{$this->getPortConfig()->getTypeName()}\t[{$this->getPortConfig()->getHost()}]\t[{$this->getPortConfig()->getPort()}]");
     }
 

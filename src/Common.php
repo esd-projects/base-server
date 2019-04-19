@@ -6,6 +6,9 @@
  * Time: 17:58
  */
 
+use GoSwoole\BaseServer\Coroutine\Co;
+use GoSwoole\BaseServer\Server\Context;
+use GoSwoole\BaseServer\Server\Server;
 const HOOK_TCP = SWOOLE_HOOK_TCP;//TCP Socket类型的stream
 const HOOK_UDP = SWOOLE_HOOK_UDP;//UDP Socket类型的stream
 const HOOK_UNIX = SWOOLE_HOOK_UNIX;//Unix Stream Socket类型的stream
@@ -84,57 +87,90 @@ function addTimerAfter(int $msec, callable $callback, ... $params)
 /**
  * 继承父级的上下文
  * @param callable $run
+ * @throws \GoSwoole\BaseServer\Exception
  */
 function goWithContext(callable $run)
 {
-    $context = null;
-    if (\GoSwoole\BaseServer\Coroutine\Co::getCid() > 0) {
-        $context = \GoSwoole\BaseServer\Coroutine\Co::getContext();
-    }
+    $context = getContext();
     go(function () use ($run, $context) {
-        \GoSwoole\BaseServer\Coroutine\Context\Context::createWithParent($context);
+        $currentContext = Co::getContext();
+        //重新设置他的父类为上级协程
+        $currentContext->setParentContext($context);
         $run();
     });
+}
+
+/**
+ * 获取上下文
+ * @return \GoSwoole\BaseServer\Server\Context
+ * @throws \GoSwoole\BaseServer\Exception
+ */
+function getContext()
+{
+    $context = null;
+    if (Server::$isStart) {
+        $context = Server::$instance->getProcessManager()->getCurrentProcess()->getContext();;
+    }
+    if (Co::getCid() > 0) {
+        $context = Co::getContext();
+    }
+    return $context ?? new Context(null);
 }
 
 /**
  * 获取上下文值
  * @param $key
  * @return mixed
+ * @throws \GoSwoole\BaseServer\Exception
  */
 function getContextValue($key)
 {
-    return \GoSwoole\BaseServer\Coroutine\Co::getContext()[$key] ?? null;
+    return getContext()->get($key);
 }
 
 /**
- * 寻找值，会递归到父级
+ * 获取上下文值
  * @param $key
- * @return mixed|null
+ * @return mixed
+ * @throws \GoSwoole\BaseServer\Exception
  */
-function getContextValueWithParent($key)
+function getContextValueByClassName($key)
 {
-    $context = \GoSwoole\BaseServer\Coroutine\Co::getContext();
-    return _getContextValueWithParent($key, $context);
+    return getContext()->getByClassName($key);
 }
 
-function _getContextValueWithParent($key, $context)
-{
-    if ($context == null) return null;
-    if (isset($context[$key])) {
-        return $context[$key];
-    }
-    $context = $context->getParentContext();
-    return _getContextValueWithParent($key, $context);
-}
 
 /**
- * 设置上下文值
+ * 获取上下文值
  * @param $key
  * @param $value
  * @return mixed
+ * @throws \GoSwoole\BaseServer\Exception
  */
 function setContextValue($key, $value)
 {
-    \GoSwoole\BaseServer\Coroutine\Co::getContext()[$key] = $value;
+    getContext()->add($key, $value);
 }
+
+/**
+ * 递归父级获取上下文值
+ * @param $key
+ * @return mixed
+ * @throws \GoSwoole\BaseServer\Exception
+ */
+function getDeepContextValue($key)
+{
+    return getContext()->getDeep($key);
+}
+
+/**
+ * 递归父级获取上下文值
+ * @param $key
+ * @return mixed
+ * @throws \GoSwoole\BaseServer\Exception
+ */
+function getDeepContextValueByClassName($key)
+{
+    return getContext()->getDeepByClassName($key);
+}
+

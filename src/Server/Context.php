@@ -17,6 +17,7 @@ use GoSwoole\BaseServer\Exception;
  */
 class Context
 {
+    const storageKey = "@context";
     /**
      * @var array
      */
@@ -42,10 +43,12 @@ class Context
      * @param Context|null $parentContext
      * @throws Exception
      */
-    public function __construct(Server $server, Context $parentContext = null)
+    public function __construct($server, Context $parentContext = null)
     {
         $this->server = $server;
-        $this->add("server", $server);
+        if ($server != null) {
+            $this->add("server", $server);
+        }
         $this->parentContext = $parentContext;
     }
 
@@ -62,7 +65,9 @@ class Context
             throw new Exception("已经存在相同名字的上下文");
         }
         $this->contain[$name] = $value;
-        $this->classContain[get_class($value)] = $value;
+        if ($value instanceof \stdClass) {
+            $this->classContain[get_class($value)] = $value;
+        }
     }
 
     /**
@@ -72,18 +77,28 @@ class Context
      */
     public function getByClassName($className)
     {
+        return $this->classContain[$className] ?? null;
+    }
+
+    /**
+     * 通过类名递归获取
+     * @param $className
+     * @return mixed|null
+     */
+    public function getDeepByClassName($className)
+    {
         $result = $this->classContain[$className] ?? null;
         if ($result == null && $this->parentContext != null) {
-            return $this->parentContext->getByClassName($className);
+            return $this->parentContext->getDeepByClassName($className);
         }
         return $result;
     }
 
     /**
      * 获取Server
-     * @return Server
+     * @return Server|null
      */
-    public function getServer(): Server
+    public function getServer()
     {
         return $this->server;
     }
@@ -95,10 +110,28 @@ class Context
      */
     public function get($name)
     {
+        return $this->contain[$name] ?? null;
+    }
+
+    /**
+     * 递归父级获取
+     * @param $name
+     * @return null
+     */
+    public function getDeep($name)
+    {
         $result = $this->contain[$name] ?? null;
         if ($result == null && $this->parentContext != null) {
-            return $this->parentContext->get($name);
+            return $this->parentContext->getDeep($name);
         }
-        return null;
+        return $result;
+    }
+
+    /**
+     * @param Context $parentContext
+     */
+    public function setParentContext(Context $parentContext): void
+    {
+        $this->parentContext = $parentContext;
     }
 }

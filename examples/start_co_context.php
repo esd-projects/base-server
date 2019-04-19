@@ -12,8 +12,8 @@ goWithContext(function () {
         //获取自己的上下文
         var_dump(getContextValue("one")); //2
         //会递归到父类
-        var_dump(getContextValueWithParent("one")); //2
-        var_dump(getContextValueWithParent("two")); //3
+        var_dump(getDeepContextValue("one")); //2
+        var_dump(getDeepContextValue("two")); //3
     });
     var_dump(getContextValue("one")); //1
 });

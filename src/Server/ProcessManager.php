@@ -10,7 +10,6 @@ namespace GoSwoole\BaseServer\Server;
 
 
 use GoSwoole\BaseServer\Server\Config\ProcessConfig;
-use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
 
 class ProcessManager
 {
@@ -50,13 +49,11 @@ class ProcessManager
      * ProcessManager constructor.
      * @param Server $server
      * @param string $processClass
-     * @throws \GoSwoole\BaseServer\Exception
      */
     public function __construct(Server $server, string $processClass)
     {
         $this->server = $server;
         $this->defaultProcessClass = $processClass;
-        $this->masterProcess = new MasterProcess($server);
     }
 
     /**
@@ -209,7 +206,7 @@ class ProcessManager
      * 获取当前进程
      * @return Process
      */
-    public function getCurrentProcess(): Process
+    public function getCurrentProcess()
     {
         if ($this->getCurrentProcessId() == null) {
             if ($this->getMasterPid() == null) {
@@ -253,5 +250,29 @@ class ProcessManager
     public function setManagerProcess(Process $managerProcess): void
     {
         $this->managerProcess = $managerProcess;
+    }
+
+    /**
+     * @param Process $masterProcess
+     */
+    public function setMasterProcess(Process $masterProcess): void
+    {
+        $this->masterProcess = $masterProcess;
+    }
+
+    /**
+     * @return Process
+     */
+    public function getManagerProcess(): Process
+    {
+        return $this->managerProcess;
+    }
+
+    /**
+     * @return Process
+     */
+    public function getMasterProcess(): Process
+    {
+        return $this->masterProcess;
     }
 }

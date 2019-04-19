@@ -179,6 +179,7 @@ abstract class Process
      */
     public function _onProcessStart()
     {
+        Server::$isStart = true;
         if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
             \swoole_process::signal(SIGTERM, [$this, '_onProcessStop']);
             \swoole_event_add($this->swooleProcess->pipe, function ($pipe) {
@@ -201,6 +202,7 @@ abstract class Process
      * 收到消息
      * @param Message $message
      * @param Process $fromProcess
+     * @throws \GoSwoole\BaseServer\Exception
      */
     public function _onPipeMessage(Message $message, Process $fromProcess)
     {
@@ -230,6 +232,7 @@ abstract class Process
      * 向某一个进程发送消息
      * @param Message $message
      * @param Process $toProcess
+     * @throws \GoSwoole\BaseServer\Exception
      */
     public function sendMessage(Message $message, Process $toProcess)
     {

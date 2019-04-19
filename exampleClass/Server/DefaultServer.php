@@ -33,7 +33,7 @@ class DefaultServer extends Server
      */
     public function configureReady()
     {
-        $this->log = $this->getContext()->getByClassName(Logger::class);
+        $this->log = $this->getContext()->getDeepByClassName(Logger::class);
     }
 
     public function onStart()

@@ -75,7 +75,7 @@ class PlugManager implements Plug
             $plug->beforeServerStart($context);
             if ($plug instanceof LoggerPlug) {
                 //这时可以获取到Log对象了
-                $this->log = $this->server->getContext()->getByClassName(Logger::class);
+                $this->log = $this->server->getContext()->getDeepByClassName(Logger::class);
             }
         }
     }

@@ -26,13 +26,12 @@ class DefaultProcess extends Process
     public function __construct(Server $server, int $processId, string $name = null, string $groupName = self::DEFAULT_GROUP)
     {
         parent::__construct($server, $processId, $name, $groupName);
-        $this->log = $this->context->getByClassName(Logger::class);
+        $this->log = $this->context->getDeepByClassName(Logger::class);
         $this->log->log(Logger::INFO, "$name");
     }
 
     public function onProcessStart()
     {
-        $this->log = $this->context->getByClassName(Logger::class);
         $this->log->log(Logger::INFO, "start");
         $message = new Message("message", "test");
         foreach ($this->getProcessManager()->getProcesses() as $process) {
@@ -60,6 +59,6 @@ class DefaultProcess extends Process
 
     public function getEventDispatcher(): EventDispatcher
     {
-        return $this->getContext()->getByClassName(EventDispatcher::class);
+        return $this->getContext()->getDeepByClassName(EventDispatcher::class);
     }
 }

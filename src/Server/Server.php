@@ -19,6 +19,7 @@ use GoSwoole\BaseServer\Server\Config\ServerConfig;
 use GoSwoole\BaseServer\Server\Exception\ConfigException;
 use GoSwoole\BaseServer\Server\Plug\PlugManager;
 use GoSwoole\BaseServer\Server\ServerProcess\ManagerProcess;
+use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
 
 /**
  * Class Server
@@ -31,6 +32,12 @@ abstract class Server
      * @var Server
      */
     public static $instance;
+
+    /**
+     * 是否启动
+     * @var bool
+     */
+    public static $isStart = false;
     /**
      * 服务器配置
      * @var ServerConfig
@@ -74,11 +81,6 @@ abstract class Server
      * @var Context
      */
     private $context;
-
-    /**
-     * @var ManagerProcess
-     */
-    private $managerProcess;
 
     /**
      * Server constructor.
@@ -135,6 +137,11 @@ abstract class Server
      */
     public function configure()
     {
+        //设置主要进程
+        $managerProcess = new ManagerProcess($this);
+        $masterProcess = new MasterProcess($this);
+        $this->processManager->setMasterProcess($masterProcess);
+        $this->processManager->setManagerProcess($managerProcess);
         //添加Logger/Event插件
         $this->plugManager->addPlug(new LoggerPlug());
         $this->plugManager->addPlug(new EventPlug());
@@ -190,8 +197,6 @@ abstract class Server
             $process = new $defaultProcessClass($this, $i, "worker-" . $i, Process::WORKER_GROUP);
             $this->processManager->addProcesses($process);
         }
-        $this->managerProcess = new ManagerProcess($this);
-        $this->processManager->setManagerProcess($this->managerProcess);
         $startId = $this->serverConfig->getWorkerNum();
         foreach ($this->processManager->getCustomProcessConfigs() as $processConfig) {
             $processClass = $processConfig->getClassName();
@@ -215,6 +220,8 @@ abstract class Server
 
     public function _onStart()
     {
+        Server::$isStart = true;
+        $this->processManager->getMasterProcess()->onProcessStart();
         $this->onStart();
     }
 
@@ -231,18 +238,20 @@ abstract class Server
 
     public function _onManagerStart()
     {
-        $this->managerProcess->onProcessStart();
+        Server::$isStart = true;
+        $this->processManager->getManagerProcess()->onProcessStart();
         $this->onManagerStart();
     }
 
     public function _onManagerStop()
     {
-        $this->managerProcess->onProcessStop();
+        $this->processManager->getManagerProcess()->onProcessStop();
         $this->onManagerStop();
     }
 
     public function _onWorkerStart($server, int $worker_id)
     {
+        Server::$isStart = true;
         $process = $this->processManager->getProcessFromId($worker_id);
         $process->_onProcessStart();
     }

@@ -8,9 +8,9 @@
 
 namespace GoSwoole\BaseServer\Coroutine;
 
-
-use GoSwoole\BaseServer\Coroutine\Context\Context;
 use GoSwoole\BaseServer\Coroutine\Pool\Runnable;
+use GoSwoole\BaseServer\Server\Context;
+use GoSwoole\BaseServer\Server\Server;
 
 class Co
 {
@@ -71,12 +71,18 @@ class Co
     /**
      * 获取当前协程的上下文对象
      * @return Context
+     * @throws \GoSwoole\BaseServer\Exception
      */
     public static function getContext(): Context
     {
         $result = self::getSwooleContext()[Context::storageKey] ?? null;
         if ($result == null) {
-            self::getSwooleContext()[Context::storageKey] = new Context();
+            //每次获取的父类都先默认为进程的Context
+            $parentContext = null;
+            if (Server::$isStart) {
+                $parentContext = Server::$instance->getProcessManager()->getCurrentProcess()->getContext();
+            }
+            self::getSwooleContext()[Context::storageKey] = new Context(Server::$instance, $parentContext);
         }
         return self::getSwooleContext()[Context::storageKey];
     }
