@@ -9,8 +9,9 @@
 namespace GoSwoole\BaseServer\Server\Plug;
 
 use GoSwoole\BaseServer\Coroutine\Channel;
+use GoSwoole\BaseServer\Event\EventDispatcher;
+use GoSwoole\BaseServer\Event\EventPlug;
 use GoSwoole\BaseServer\Exception;
-use GoSwoole\BaseServer\Logger\Log;
 use GoSwoole\BaseServer\Logger\LoggerPlug;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Server;
@@ -47,6 +48,11 @@ class PlugManager implements Plug
      * @var Logger
      */
     private $log;
+
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
 
     /**
      * @var Channel
@@ -104,6 +110,17 @@ class PlugManager implements Plug
             if (!$plug->getReadyChannel()->pop(5)) {
                 $plug->getReadyChannel()->close();
                 $this->log->error("{$plug->getName()}插件加载失败");
+                if ($this->eventDispatcher != null) {
+                    $this->eventDispatcher->dispatchEvent(new PlugEvent(PlugEvent::PlugFailEvent, $plug));
+                }
+            } else {
+                if ($plug instanceof EventPlug) {
+                    //这时可以获取到EventDispatcher对象了
+                    $this->eventDispatcher = $this->server->getContext()->getDeepByClassName(EventDispatcher::class);
+                }
+                if ($this->eventDispatcher != null) {
+                    $this->eventDispatcher->dispatchEvent(new PlugEvent(PlugEvent::PlugSuccessEvent, $plug));
+                }
             }
         }
         $this->readyChannel->push("ready");

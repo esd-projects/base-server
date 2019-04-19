@@ -8,6 +8,7 @@
 
 namespace GoSwoole\BaseServer\Server;
 
+use GoSwoole\BaseServer\Coroutine\Co;
 use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
@@ -196,9 +197,9 @@ abstract class Process
         go(function () {
             $this->_onProcessStart();
         });
-        /*while (true) {
+        while (true) {
             Co::yield();
-        }*/
+        }
     }
 
     /**
