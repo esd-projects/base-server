@@ -30,7 +30,10 @@ abstract class ServerPort
      * @var Server
      */
     private $server;
-
+    /**
+     * @var Context
+     */
+    protected $context;
     /**
      * swoole的port对象
      * @var \Swoole\Server\Port
@@ -41,6 +44,7 @@ abstract class ServerPort
     {
         $this->portConfig = $portConfig;
         $this->server = $server;
+        $this->context = $this->server->getContext();
     }
 
     /**

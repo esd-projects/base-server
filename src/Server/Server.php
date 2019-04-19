@@ -204,7 +204,14 @@ abstract class Server
             $this->processManager->addProcesses($process);
             $startId++;
         }
+        $this->configureReady();
     }
+
+    /**
+     * 所有的配置插件已初始化好
+     * @return mixed
+     */
+    abstract public function configureReady();
 
     public function _onStart()
     {

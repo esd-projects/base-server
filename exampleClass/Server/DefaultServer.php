@@ -12,36 +12,53 @@ namespace GoSwoole\BaseServer\ExampleClass\Server;
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
 use GoSwoole\BaseServer\Server\Process;
 use GoSwoole\BaseServer\Server\Server;
+use Monolog\Logger;
 
 class DefaultServer extends Server
 {
+    /**
+     * @var Logger
+     */
+    private $log;
+
     public function __construct(ServerConfig $serverConfig, string $portClass = DefaultServerPort::class, string $processClass = DefaultProcess::class)
     {
         parent::__construct($serverConfig, $portClass, $processClass);
+        //这里获取不到log，因为插件还没有加载
+    }
+
+    /**
+     * 所有的配置插件已初始化好
+     * @return mixed
+     */
+    public function configureReady()
+    {
+        $this->log = $this->getContext()->getByClassName(Logger::class);
     }
 
     public function onStart()
     {
-        print_r("[DefaultServer]\t[onStart]\n");
+        $this->log->log(Logger::INFO, "start");
     }
 
     public function onShutdown()
     {
-        print_r("[DefaultServer]\t[onShutdown]\n");
+        $this->log->log(Logger::INFO, "shutdown");
     }
 
     public function onWorkerError(Process $process, int $exit_code, int $signal)
     {
-        print_r("[DefaultServer]\t[onWorkerError:{$process->getProcessId()}]\t[{$process->getProcessName()}]\n");
+        $this->log->log(Logger::INFO, "{$process->getProcessName()}");
     }
 
     public function onManagerStart()
     {
-        print_r("[DefaultServer]\t[onManagerStart]\n");
+        $this->log->log(Logger::INFO, "managerStart");
     }
 
     public function onManagerStop()
     {
-        print_r("[DefaultServer]\t[onManagerStop]\n");
+        $this->log->log(Logger::INFO, "managerStop");
     }
+
 }

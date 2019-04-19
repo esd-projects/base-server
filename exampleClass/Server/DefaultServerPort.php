@@ -15,67 +15,71 @@ use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
 use GoSwoole\BaseServer\Server\Server;
 use GoSwoole\BaseServer\Server\ServerPort;
+use Monolog\Logger;
 
 class DefaultServerPort extends ServerPort
 {
-    private $className;
+    /**
+     * @var Logger
+     */
+    private $log;
 
     public function __construct(Server $server, PortConfig $portConfig)
     {
         parent::__construct($server, $portConfig);
-        $this->className = get_class($this);
-        print_r("[$this->className]\t{$this->getPortConfig()->getTypeName()}\t[{$this->getPortConfig()->getHost()}]\t[{$this->getPortConfig()->getPort()}]\n");
+        $this->log = $this->context->getByClassName(Logger::class);
+        $this->log->log(Logger::INFO, "[{$this->getPortConfig()->getTypeName()}\t[{$this->getPortConfig()->getHost()}]\t[{$this->getPortConfig()->getPort()}]");
     }
 
     public function onTcpConnect(int $fd, int $reactorId)
     {
-        print_r("[$this->className:{$this->getPortConfig()->getPort()}]\t[onTcpConnect]\t[$fd]\n");
+        $this->log->log(Logger::INFO, "");
     }
 
     public function onTcpClose(int $fd, int $reactorId)
     {
-        print_r("[$this->className:{$this->getPortConfig()->getPort()}]\t[onTcpClose]\t[$fd]\n");
+        $this->log->log(Logger::INFO, "");
     }
 
     public function onTcpReceive(int $fd, int $reactorId, string $data)
     {
-        print_r("[$this->className:{$this->getPortConfig()->getPort()}]\t[onTcpReceive]\t[$fd]\n");
+        $this->log->log(Logger::INFO, "");
     }
 
     public function onTcpBufferFull(int $fd)
     {
-        print_r("[$this->className:{$this->getPortConfig()->getPort()}]\t[onTcpBufferFull]\t[$fd]\n");
+        $this->log->log(Logger::INFO, "");
     }
 
     public function onTcpBufferEmpty(int $fd)
     {
-        print_r("[$this->className:{$this->getPortConfig()->getPort()}]\t[onTcpBufferEmpty]\t[$fd]\n");
+        $this->log->log(Logger::INFO, "");
     }
 
     public function onUdpPacket(string $data, array $client_info)
     {
-        print_r("[$this->className:{$this->getPortConfig()->getPort()}]\t[onUdpPacket]\t[$fd]\n");
+        $this->log->log(Logger::INFO, "");
     }
 
     public function onHttpRequest(Request $request, Response $response)
     {
         $response->end("HelloWorld");
-        print_r("[$this->className:{$this->getPortConfig()->getPort()}]\t[onHttpRequest]\t[$fd]\n");
+        $this->log->log(Logger::INFO, "");
     }
 
     public function onWsMessage(WebSocketFrame $frame)
     {
-        print_r("[$this->className:{$this->getPortConfig()->getPort()}]\t[onWsMessage]\t[$fd]\n");
+        $this->log->log(Logger::INFO, "");
     }
 
     public function onWsOpen(Request $request)
     {
-        print_r("[$this->className:{$this->getPortConfig()->getPort()}]\t[onWsOpen]\t[$fd]\n");
+        $this->log->log(Logger::INFO, "");
     }
 
     public function onWsPassCustomHandshake(Request $request): bool
     {
-        print_r("[$this->className:{$this->getPortConfig()->getPort()}]\t[onWsPassCustomHandshake]\t[$fd]\n");
+        $this->log->log(Logger::INFO, "");
         return true;
     }
 }
