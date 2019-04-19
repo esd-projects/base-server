@@ -181,8 +181,8 @@ abstract class Process
         Server::$isStart = true;
         if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
             $this->getProcessManager()->setCurrentProcessId($this->processId);
-            \swoole_process::signal(SIGTERM, [$this, '_onProcessStop']);
-            \swoole_event_add($this->swooleProcess->pipe, function () {
+            \Swoole\Process::signal(SIGTERM, [$this, '_onProcessStop']);
+            \Swoole\Event::add($this->swooleProcess->pipe, function () {
                 $recv = $this->swooleProcess->read();
                 //获取进程id
                 $unpackData = unpack("N", $recv);
