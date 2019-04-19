@@ -8,6 +8,8 @@
 
 namespace GoSwoole\BaseServer\Server;
 
+use GoSwoole\BaseServer\Event\AppactionEvent;
+use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Event\EventPlug;
 use GoSwoole\BaseServer\Event\EventTestPlus;
 use GoSwoole\BaseServer\Logger\LoggerPlug;
@@ -42,13 +44,13 @@ abstract class Server
      * 服务器配置
      * @var ServerConfig
      */
-    private $serverConfig;
+    protected $serverConfig;
 
     /**
      * swoole的server
      * @var \Swoole\WebSocket\Server
      */
-    private $server;
+    protected $server;
 
     /**
      * 主要端口
@@ -59,17 +61,17 @@ abstract class Server
     /**
      * @var ProcessManager
      */
-    private $processManager;
+    protected $processManager;
 
     /**
      * @var PortManager
      */
-    private $portManager;
+    protected $portManager;
 
     /**
      * @var PlugManager
      */
-    private $plugManager;
+    protected $plugManager;
 
     /**
      * 是否已配置
@@ -80,7 +82,12 @@ abstract class Server
     /**
      * @var Context
      */
-    private $context;
+    protected $context;
+
+    /**
+     * @var EventDispatcher
+     */
+    protected $eventDispatcher;
 
     /**
      * 这里context获取不到任何插件，因为插件还没有加载
@@ -150,6 +157,8 @@ abstract class Server
         $this->plugManager->order();
         //调用所有插件的beforeServerStart
         $this->plugManager->beforeServerStart($this->context);
+        //获取EventDispatcher
+        $this->eventDispatcher = $this->context->getDeepByClassName(EventDispatcher::class);
         //锁定配置
         $this->setConfigured(true);
         //创建端口实例
@@ -214,13 +223,21 @@ abstract class Server
      */
     abstract public function configureReady();
 
+    /**
+     * 启动
+     */
     public function _onStart()
     {
         Server::$isStart = true;
+        //发送ApplicationStartingEvent事件
+        $this->eventDispatcher->dispatchEvent(new AppactionEvent(AppactionEvent::ApplicationStartingEvent, $this));
         $this->processManager->getMasterProcess()->onProcessStart();
         $this->onStart();
     }
 
+    /**
+     * 关闭
+     */
     public function _onShutdown()
     {
         $this->onShutdown();
@@ -583,5 +600,13 @@ abstract class Server
     public function getContext(): Context
     {
         return $this->context;
+    }
+
+    /**
+     * @return EventDispatcher
+     */
+    public function getEventDispatcher(): EventDispatcher
+    {
+        return $this->eventDispatcher;
     }
 }

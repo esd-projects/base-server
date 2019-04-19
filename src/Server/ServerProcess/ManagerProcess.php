@@ -25,7 +25,7 @@ class ManagerProcess extends Process
 
     public function onProcessStart()
     {
-        $this->processPid = posix_getpid();
+        $this->processPid = getmypid();
         $this->server->getProcessManager()->setCurrentProcessId($this->processId);
     }
 

@@ -34,10 +34,13 @@ class EventPlug extends BasePlug
     /**
      * 在服务启动前
      * @param Context $context
+     * @throws \GoSwoole\BaseServer\Exception
      */
     public function beforeServerStart(Context $context)
     {
-
+        //创建事件派发器
+        $this->eventDispatcher = new EventDispatcher($context->getServer());
+        $context->add("eventDispatcher", $this->eventDispatcher);
     }
 
     /**

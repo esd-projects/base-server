@@ -10,7 +10,6 @@ namespace GoSwoole\BaseServer\ExampleClass\Server;
 
 
 use GoSwoole\BaseServer\Event\Event;
-use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Process;
 use Monolog\Logger;
@@ -21,10 +20,6 @@ class DefaultProcess extends Process
      * @var Logger
      */
     private $log;
-    /**
-     * @var EventDispatcher
-     */
-    private $eventDispatcher;
 
     /**
      * 在onProcessStart之前，用于初始化成员变量
@@ -34,7 +29,6 @@ class DefaultProcess extends Process
     {
         $this->log = getDeepContextValueByClassName(Logger::class);
         $this->log->info($this->processName);
-        $this->eventDispatcher = getDeepContextValueByClassName(EventDispatcher::class);
     }
 
     public function onProcessStart()

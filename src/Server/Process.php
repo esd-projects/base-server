@@ -8,7 +8,7 @@
 
 namespace GoSwoole\BaseServer\Server;
 
-use GoSwoole\BaseServer\Coroutine\Co;
+use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
 use GoSwoole\BaseServer\Utils\Utils;
@@ -75,6 +75,16 @@ abstract class Process
     protected $context;
 
     /**
+     * @var EventDispatcher
+     */
+    protected $eventDispatcher;
+
+    /**
+     * @var \Swoole\Coroutine\Socket
+     */
+    private $socket;
+
+    /**
      * Process constructor.
      * @param Server $server
      * @param int $processId
@@ -102,9 +112,6 @@ abstract class Process
     public function createProcess(): Process
     {
         $this->swooleProcess = new \Swoole\Process([$this, "_onProcessStart"], false, self::SOCK_DGRAM, true);
-        if ($this->processName != null) {
-            $this->setName($this->processName);
-        }
         return $this;
     }
 
@@ -149,6 +156,14 @@ abstract class Process
     }
 
     /**
+     * @return EventDispatcher
+     */
+    public function getEventDispatcher(): EventDispatcher
+    {
+        return $this->eventDispatcher;
+    }
+
+    /**
      * 执行外部命令.
      *
      * @param $path
@@ -179,23 +194,32 @@ abstract class Process
     public function _onProcessStart()
     {
         Server::$isStart = true;
+        if ($this->processName != null) {
+            $this->setName($this->processName);
+        }
+
+        $this->server->getProcessManager()->setCurrentProcessId($this->processId);
+        $this->processPid = getmypid();
+        $this->server->getProcessManager()->setCurrentProcessPid($this->processPid);
+        $this->server->getPlugManager()->beforeProcessStart($this->context);
+        //获取EventDispatcher
+        $this->eventDispatcher = $this->getContext()->getDeepByClassName(EventDispatcher::class);
+        $this->init();
         if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
             $this->getProcessManager()->setCurrentProcessId($this->processId);
             \Swoole\Process::signal(SIGTERM, [$this, '_onProcessStop']);
-            \Swoole\Event::add($this->swooleProcess->pipe, function () {
-                $recv = $this->swooleProcess->read();
+            $this->socket = $this->swooleProcess->exportSocket();
+            go(function () {
+                $recv = $this->socket->recv();
                 //获取进程id
                 $unpackData = unpack("N", $recv);
                 $processId = $unpackData[1];
                 $fromProcess = $this->server->getProcessManager()->getProcessFromId($processId);
-                $this->_onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
+                go(function () use ($recv, $fromProcess) {
+                    $this->_onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
+                });
             });
         }
-        $this->server->getProcessManager()->setCurrentProcessId($this->processId);
-        $this->processPid = posix_getpid();
-        $this->server->getProcessManager()->setCurrentProcessPid($this->processPid);
-        $this->server->getPlugManager()->beforeProcessStart($this->context);
-        $this->init();
         $this->onProcessStart();
     }
 
@@ -212,16 +236,8 @@ abstract class Process
      */
     public function _onPipeMessage(Message $message, Process $fromProcess)
     {
-        if (Co::getCid() < 0) {
-            goWithContext(function () use ($message, $fromProcess) {
-                if (!MessageProcessor::dispatch($message)) {
-                    $this->onPipeMessage($message, $fromProcess);
-                }
-            });
-        } else {
-            if (!MessageProcessor::dispatch($message)) {
-                $this->onPipeMessage($message, $fromProcess);
-            }
+        if (!MessageProcessor::dispatch($message)) {
+            $this->onPipeMessage($message, $fromProcess);
         }
     }
 
