@@ -28,7 +28,7 @@ class DefaultServerPort extends ServerPort
     {
         parent::__construct($server, $portConfig);
         $this->log = $this->context->getByClassName(Logger::class);
-        $this->log->log(Logger::INFO, "[{$this->getPortConfig()->getTypeName()}\t[{$this->getPortConfig()->getHost()}]\t[{$this->getPortConfig()->getPort()}]");
+        $this->log->log(Logger::INFO, "{$this->getPortConfig()->getTypeName()}\t[{$this->getPortConfig()->getHost()}]\t[{$this->getPortConfig()->getPort()}]");
     }
 
     public function onTcpConnect(int $fd, int $reactorId)

@@ -35,12 +35,12 @@ class LoggerPlug extends BasePlug
     private function buildLogger(Context $context)
     {
         $this->logger = new Logger('log');
-        $output = "%datetime% \033[32m%level_name%\033[0m --- \033[35m[%extra.processGroup%|%extra.processName%|%extra.cid%]\033[0m  \033[36m%extra.class%::%extra.function%\033[0m : %message% %context% \n";
+        $output = "%datetime% \033[32m%level_name%\033[0m --- %extra.about_process%  %extra.class_and_func% : %message% %context% \n";
         $formatter = new LineFormatter($output, null, false, true);
         $streamHandler = new StreamHandler('php://stderr', Logger::DEBUG);
         $streamHandler->setFormatter($formatter);
-        $this->logger->pushProcessor(new IntrospectionProcessor());
         $this->logger->pushProcessor(new GoSwooleProcessor());
+        $this->logger->pushProcessor(new IntrospectionProcessor());
         $this->logger->pushHandler($streamHandler);
         $context->add("logger", $this->logger);
     }
