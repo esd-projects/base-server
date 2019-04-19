@@ -88,13 +88,15 @@ class GoSwooleProcessor implements ProcessorInterface
     {
         $processName = sprintf('%10s', $processName);
         $cid = sprintf('%4s', $cid);
-        $result = "[" . sprintf('%30s', "$processGroup|$processName|$cid") . "]";
+        $result = "[" . sprintf("%30s", "$processGroup|$processName|$cid") . "]";
         if ($this->color) {
             return "\e[35m" . $result . "\e[0m";
         } else {
             return $result;
         }
     }
+
+    private $classNameMax = 40;
 
     private function handleClassName($class, $func)
     {
@@ -115,7 +117,8 @@ class GoSwooleProcessor implements ProcessorInterface
             $func = "{closure}";
         }
         $result = $class . "::" . $func;
-        $result = sprintf('%-40s', $result);
+        $this->classNameMax = max($this->classNameMax, strlen($result));
+        $result = sprintf("%-{$this->classNameMax}s", $result);
         if ($this->color) {
             return "\e[36m" . $result . "\e[0m";
         } else {
