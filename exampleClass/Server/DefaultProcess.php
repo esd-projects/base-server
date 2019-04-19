@@ -12,22 +12,15 @@ namespace GoSwoole\BaseServer\ExampleClass\Server;
 use GoSwoole\BaseServer\Event\Event;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Process;
-use Monolog\Logger;
 
 class DefaultProcess extends Process
 {
-    /**
-     * @var Logger
-     */
-    private $log;
-
     /**
      * 在onProcessStart之前，用于初始化成员变量
      * @return mixed
      */
     public function init()
     {
-        $this->log = getDeepContextValueByClassName(Logger::class);
         $this->log->info($this->processName);
     }
 

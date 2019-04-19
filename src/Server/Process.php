@@ -13,6 +13,7 @@ use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
 use GoSwoole\BaseServer\Utils\Utils;
+use Monolog\Logger;
 
 /**
  * 进程
@@ -85,6 +86,10 @@ abstract class Process
      */
     private $socket;
 
+    /**
+     * @var Logger
+     */
+    protected $log;
     /**
      * Process constructor.
      * @param Server $server
@@ -215,8 +220,10 @@ abstract class Process
         $this->processPid = getmypid();
         $this->server->getProcessManager()->setCurrentProcessPid($this->processPid);
         $this->server->getPlugManager()->beforeProcessStart($this->context);
+        $this->log = getDeepContextValueByClassName(Logger::class);
         $this->init();
         sleep(1);
+        $this->log->info("ready");
         //获取EventDispatcher
         $this->eventDispatcher = $this->getContext()->getDeepByClassName(EventDispatcher::class);
 
