@@ -28,6 +28,7 @@ class EventPlug extends BasePlug
 
     public function __construct()
     {
+        parent::__construct();
         $this->atAfter(LoggerPlug::class);
     }
 
@@ -55,6 +56,8 @@ class EventPlug extends BasePlug
         $context->add("eventDispatcher", $this->eventDispatcher);
         //注册事件派发处理函数
         MessageProcessor::addMessageProcessor(new EventMessageProcessor($this->eventDispatcher));
+        //ready
+        $this->ready();
     }
 
     /**

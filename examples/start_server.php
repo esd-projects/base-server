@@ -58,8 +58,8 @@ $wsPort = $server->getPortManager()->getPortFromName("ws");
 $server->getEventDispatcher()->add(ApplicationEvent::ApplicationStartingEvent, function () {
     var_dump("ApplicationEvent::ApplicationStartingEvent");
 });
-$server->getEventDispatcher()->add(ApplicationEvent::ApplicationStoppingEvent, function () {
-    var_dump("ApplicationEvent::ApplicationStoppingEvent");
+$server->getEventDispatcher()->add(ApplicationEvent::ApplicationShutdownEvent, function () {
+    var_dump("ApplicationEvent::ApplicationShutdownEvent");
 });
 //启动
 $server->start();

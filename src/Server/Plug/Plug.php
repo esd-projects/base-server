@@ -9,10 +9,16 @@
 namespace GoSwoole\BaseServer\Server\Plug;
 
 
+use GoSwoole\BaseServer\Coroutine\Channel;
 use GoSwoole\BaseServer\Server\Context;
 
 interface Plug
 {
+    /**
+     * @return Channel
+     */
+    public function getReadyChannel();
+
     /**
      * @return int
      */

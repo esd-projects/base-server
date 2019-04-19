@@ -8,6 +8,7 @@
 
 namespace GoSwoole\BaseServer\Server\Plug;
 
+use GoSwoole\BaseServer\Coroutine\Channel;
 use GoSwoole\BaseServer\Exception;
 use GoSwoole\BaseServer\Logger\Log;
 use GoSwoole\BaseServer\Logger\LoggerPlug;
@@ -47,9 +48,15 @@ class PlugManager implements Plug
      */
     private $log;
 
+    /**
+     * @var Channel
+     */
+    private $readyChannel;
+
     public function __construct(Server $server)
     {
         $this->server = $server;
+        $this->readyChannel = new Channel();
     }
 
     /**
@@ -66,6 +73,11 @@ class PlugManager implements Plug
         $this->plugClasses[get_class($plug)] = $plug;
     }
 
+    /**
+     * 在服务启动之前
+     * @param Context $context
+     * @return mixed|void
+     */
     public function beforeServerStart(Context $context)
     {
         foreach ($this->plugs as $plug) {
@@ -80,11 +92,21 @@ class PlugManager implements Plug
         }
     }
 
+    /**
+     * 在进程启动之前
+     * @param Context $context
+     * @return mixed|void
+     */
     public function beforeProcessStart(Context $context)
     {
         foreach ($this->plugs as $plug) {
             $plug->beforeProcessStart($context);
+            if (!$plug->getReadyChannel()->pop(5)) {
+                $plug->getReadyChannel()->close();
+                $this->log->error("{$plug->getName()}插件加载失败");
+            }
         }
+        $this->readyChannel->push("ready");
     }
 
     /**
@@ -167,4 +189,13 @@ class PlugManager implements Plug
     {
         return;
     }
+
+    /**
+     * @return Channel
+     */
+    public function getReadyChannel(): Channel
+    {
+        return $this->readyChannel;
+    }
+
 }

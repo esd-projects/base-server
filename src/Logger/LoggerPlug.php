@@ -27,6 +27,12 @@ class LoggerPlug extends BasePlug
      */
     private $logger;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->atAfter(null);
+    }
+
     /**
      * @param Context $context
      * @throws \GoSwoole\BaseServer\Exception
@@ -63,7 +69,7 @@ class LoggerPlug extends BasePlug
      */
     public function beforeProcessStart(Context $context)
     {
-        return;
+        $this->ready();
     }
 
     /**

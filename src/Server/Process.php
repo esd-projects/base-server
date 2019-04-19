@@ -111,7 +111,7 @@ abstract class Process
      */
     public function createProcess(): Process
     {
-        $this->swooleProcess = new \Swoole\Process([$this, "_onProcessStart"], false, self::SOCK_DGRAM, true);
+        $this->swooleProcess = new \Swoole\Process([$this, "__onProcessStart"], false, self::SOCK_DGRAM, true);
         return $this;
     }
 
@@ -189,6 +189,19 @@ abstract class Process
     }
 
     /**
+     * 自定义进程需要一个死循环防止退出
+     */
+    public function __onProcessStart()
+    {
+        go(function () {
+            $this->_onProcessStart();
+        });
+        /*while (true) {
+            Co::yield();
+        }*/
+    }
+
+    /**
      * 进程启动的回调
      */
     public function _onProcessStart()
@@ -197,14 +210,15 @@ abstract class Process
         if ($this->processName != null) {
             $this->setName($this->processName);
         }
-
         $this->server->getProcessManager()->setCurrentProcessId($this->processId);
         $this->processPid = getmypid();
         $this->server->getProcessManager()->setCurrentProcessPid($this->processPid);
         $this->server->getPlugManager()->beforeProcessStart($this->context);
+        $this->init();
+        sleep(1);
         //获取EventDispatcher
         $this->eventDispatcher = $this->getContext()->getDeepByClassName(EventDispatcher::class);
-        $this->init();
+
         if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
             $this->getProcessManager()->setCurrentProcessId($this->processId);
             \Swoole\Process::signal(SIGTERM, [$this, '_onProcessStop']);

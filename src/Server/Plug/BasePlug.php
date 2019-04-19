@@ -9,6 +9,9 @@
 namespace GoSwoole\BaseServer\Server\Plug;
 
 
+use GoSwoole\BaseServer\Coroutine\Channel;
+use GoSwoole\BaseServer\Event\EventPlug;
+
 /**
  * 基础插件，插件类需要继承
  * Class BasePlug
@@ -28,6 +31,20 @@ abstract class BasePlug implements Plug
      * @var int
      */
     private $orderIndex = 1;
+
+    /**
+     * @var Channel
+     */
+    private $readyChannel;
+
+    public function __construct()
+    {
+        $this->readyChannel = new Channel();
+        //默认都要在Event插件后加载
+        if (get_class($this) !== EventPlug::class) {
+            $this->atAfter(EventPlug::class);
+        }
+    }
 
     /**
      * 在哪个之后
@@ -64,5 +81,18 @@ abstract class BasePlug implements Plug
     public function setAfterPlug($afterPlug): void
     {
         $this->afterPlug = $afterPlug;
+    }
+
+    /**
+     * @return Channel
+     */
+    public function getReadyChannel(): Channel
+    {
+        return $this->readyChannel;
+    }
+
+    public function ready()
+    {
+        $this->readyChannel->push("ready");
     }
 }
