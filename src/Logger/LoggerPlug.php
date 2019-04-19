@@ -43,6 +43,7 @@ class LoggerPlug extends BasePlug
         $this->logger->pushProcessor(new IntrospectionProcessor());
         $this->logger->pushHandler($streamHandler);
         $context->add("logger", $this->logger);
+        $this->logger->info("加载[Logger]插件");
     }
 
     /**

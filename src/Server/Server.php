@@ -83,6 +83,7 @@ abstract class Server
     private $context;
 
     /**
+     * 这里context获取不到任何插件，因为插件还没有加载
      * Server constructor.
      * @param ServerConfig $serverConfig
      * @param string $defaultPortClass
