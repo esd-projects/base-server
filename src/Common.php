@@ -106,6 +106,9 @@ function goWithContext(callable $run)
 function getContext()
 {
     $context = null;
+    if (Server::$instance != null) {
+        $context = Server::$instance->getContext();
+    }
     if (Server::$isStart) {
         $context = Server::$instance->getProcessManager()->getCurrentProcess()->getContext();
     }

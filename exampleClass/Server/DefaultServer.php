@@ -33,7 +33,7 @@ class DefaultServer extends Server
      */
     public function configureReady()
     {
-        $this->log = $this->getContext()->getDeepByClassName(Logger::class);
+        $this->log = getDeepContextValueByClassName(Logger::class);
     }
 
     public function onStart()
@@ -43,22 +43,22 @@ class DefaultServer extends Server
 
     public function onShutdown()
     {
-        $this->log->log(Logger::INFO, "shutdown");
+        $this->log->info("shutdown");
     }
 
     public function onWorkerError(Process $process, int $exit_code, int $signal)
     {
-        $this->log->log(Logger::INFO, "{$process->getProcessName()}");
+        $this->log->info("{$process->getProcessName()}");
     }
 
     public function onManagerStart()
     {
-        $this->log->log(Logger::INFO, "managerStart");
+        $this->log->info("managerStart");
     }
 
     public function onManagerStop()
     {
-        $this->log->log(Logger::INFO, "managerStop");
+        $this->log->info("managerStop");
     }
 
 }

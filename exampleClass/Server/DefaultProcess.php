@@ -13,7 +13,6 @@ use GoSwoole\BaseServer\Event\Event;
 use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Process;
-use GoSwoole\BaseServer\Server\Server;
 use Monolog\Logger;
 
 class DefaultProcess extends Process
@@ -33,20 +32,20 @@ class DefaultProcess extends Process
      */
     public function init()
     {
-        $this->log = $this->context->getDeepByClassName(Logger::class);
-        $this->log->log(Logger::INFO, $this->processName);
-        $this->eventDispatcher = Server::$instance->getProcessManager()->getCurrentProcess()->getContext()->getDeepByClassName(EventDispatcher::class);
+        $this->log = getDeepContextValueByClassName(Logger::class);
+        $this->log->info($this->processName);
+        $this->eventDispatcher = getDeepContextValueByClassName(EventDispatcher::class);
     }
 
     public function onProcessStart()
     {
-        $this->log->log(Logger::INFO, "start");
+        $this->log->info("start");
         $message = new Message("message", "test");
         foreach ($this->getProcessManager()->getProcesses() as $process) {
             $this->sendMessage($message, $process);
         }
         $this->eventDispatcher->add("testEvent", function (Event $event) {
-            $this->log->log(Logger::INFO, "[Event] {$event->getData()}");
+            $this->log->info("[Event] {$event->getData()}");
         });
         if ($this->getProcessId() == 0) {
             sleep(1);
@@ -57,12 +56,12 @@ class DefaultProcess extends Process
 
     public function onProcessStop()
     {
-        $this->log->log(Logger::INFO, "stop");
+        $this->log->info("stop");
     }
 
     public function onPipeMessage(Message $message, Process $fromProcess)
     {
-        $this->log->log(Logger::INFO, "[FromProcess:{$fromProcess->getProcessId()}] [{$message->toString()}]");
+        $this->log->info("[FromProcess:{$fromProcess->getProcessId()}] [{$message->toString()}]");
     }
 
 }

@@ -27,59 +27,59 @@ class DefaultServerPort extends ServerPort
     public function __construct(Server $server, PortConfig $portConfig)
     {
         parent::__construct($server, $portConfig);
-        $this->log = $this->context->getDeepByClassName(Logger::class);
-        $this->log->log(Logger::INFO, "{$this->getPortConfig()->getTypeName()}\t[{$this->getPortConfig()->getHost()}]\t[{$this->getPortConfig()->getPort()}]");
+        $this->log = getDeepContextValueByClassName(Logger::class);
+        $this->log->info("{$this->getPortConfig()->getTypeName()}\t[{$this->getPortConfig()->getHost()}]\t[{$this->getPortConfig()->getPort()}]");
     }
 
     public function onTcpConnect(int $fd, int $reactorId)
     {
-        $this->log->log(Logger::INFO, "");
+        $this->log->info("");
     }
 
     public function onTcpClose(int $fd, int $reactorId)
     {
-        $this->log->log(Logger::INFO, "");
+        $this->log->info("");
     }
 
     public function onTcpReceive(int $fd, int $reactorId, string $data)
     {
-        $this->log->log(Logger::INFO, "");
+        $this->log->info("");
     }
 
     public function onTcpBufferFull(int $fd)
     {
-        $this->log->log(Logger::INFO, "");
+        $this->log->info("");
     }
 
     public function onTcpBufferEmpty(int $fd)
     {
-        $this->log->log(Logger::INFO, "");
+        $this->log->info("");
     }
 
     public function onUdpPacket(string $data, array $client_info)
     {
-        $this->log->log(Logger::INFO, "");
+        $this->log->info("");
     }
 
     public function onHttpRequest(Request $request, Response $response)
     {
         $response->end("HelloWorld");
-        $this->log->log(Logger::INFO, "");
+        $this->log->info("");
     }
 
     public function onWsMessage(WebSocketFrame $frame)
     {
-        $this->log->log(Logger::INFO, "");
+        $this->log->info("");
     }
 
     public function onWsOpen(Request $request)
     {
-        $this->log->log(Logger::INFO, "");
+        $this->log->info("");
     }
 
     public function onWsPassCustomHandshake(Request $request): bool
     {
-        $this->log->log(Logger::INFO, "");
+        $this->log->info("");
         return true;
     }
 }
