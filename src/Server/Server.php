@@ -91,6 +91,7 @@ abstract class Server
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
         self::$instance = $this;
+        print_r($serverConfig->getBannel() . "\n");
         $this->context = new Context($this);
         $this->serverConfig = $serverConfig;
         $this->portManager = new PortManager($this, $defaultPortClass);

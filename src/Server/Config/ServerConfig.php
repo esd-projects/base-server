@@ -215,6 +215,19 @@ class ServerConfig
     private $openWebsocketCloseFrame = false;
 
     /**
+     * Bannel
+     * @var string
+     */
+    private $bannel = "
+  ________        _________                    .__          
+ /  _____/  ____ /   _____/_  _  ______   ____ |  |   ____  
+/   \  ___ /  _ \\_____  \\ \/ \/ /  _ \ /  _ \|  | _/ __ \ 
+\    \_\  (  <_> )        \\     (  <_> |  <_> )  |_\  ___/ 
+ \______  /\____/_______  / \/\_/ \____/ \____/|____/\___  >
+        \/              \/                               \/  
+        ";
+
+    /**
      * @return int
      */
     public function getReactorNum()
@@ -724,6 +737,22 @@ class ServerConfig
         }
         $build['open_websocket_close_frame'] = $this->isOpenWebsocketCloseFrame();
         return $build;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBannel(): string
+    {
+        return $this->bannel;
+    }
+
+    /**
+     * @param string $bannel
+     */
+    public function setBannel(string $bannel): void
+    {
+        $this->bannel = $bannel;
     }
 
 }
