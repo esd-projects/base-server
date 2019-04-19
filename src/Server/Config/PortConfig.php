@@ -45,6 +45,15 @@ class PortConfig
     const SWOOLE_DTLSv1_CLIENT_METHOD = SWOOLE_DTLSv1_CLIENT_METHOD;
 
     /**
+     * 名称
+     * @var string
+     */
+    private $name;
+    /**
+     * @var string
+     */
+    private $portClass;
+    /**
      * 需要监听的ip地址默认为"0.0.0.0"
      * IPv4使用 127.0.0.1表示监听本机，0.0.0.0表示监听所有地址
      * IPv6使用::1表示监听本机，:: (相当于0:0:0:0:0:0:0:0) 表示监听所有地址
@@ -790,5 +799,37 @@ class PortConfig
                 return "TCP";
             }
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPortClass()
+    {
+        return $this->portClass;
+    }
+
+    /**
+     * @param string $portClass
+     */
+    public function setPortClass(string $portClass): void
+    {
+        $this->portClass = $portClass;
     }
 }

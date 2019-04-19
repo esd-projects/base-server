@@ -9,16 +9,15 @@
 namespace GoSwoole\BaseServer\Server;
 
 
-use GoSwoole\BaseServer\Server\Exception\ConfigException;
-use GoSwoole\BaseServer\Server\NormalProcess\MasterProcess;
-use GoSwoole\BaseServer\Server\NormalProcess\PhpProcess;
+use GoSwoole\BaseServer\Server\Config\ProcessConfig;
+use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
 
 class ProcessManager
 {
     /**
-     * @var Process[]
+     * @var ProcessConfig[]
      */
-    private $customProcesses = [];
+    private $customProcessConfigs = [];
     /**
      * @var Process[]
      */
@@ -86,35 +85,30 @@ class ProcessManager
     }
 
     /**
-     * @return Process[]
+     * @return ProcessConfig[]
      */
-    public function getCustomProcesses(): array
+    public function getCustomProcessConfigs(): array
     {
-        return $this->customProcesses;
+        return $this->customProcessConfigs;
     }
 
     /**
      * 添加自定义进程
      * @param string $name
-     * @param $processClass
-     * @return Process
-     * @throws ConfigException
+     * @param string $processClass
+     * @param string $groupName
+     * @return ProcessConfig
+     * @throws Exception\ConfigException
      */
-    public function addCustomProcesses(string $name, $processClass)
+    public function addCustomProcesses(string $name, $processClass, string $groupName)
     {
-        if ($processClass == null) {
-            $process = new $this->defaultProcessClass($this->server);
+        if ($processClass != null) {
+            $processConfig = new ProcessConfig($processClass, $name, $groupName);
         } else {
-            $process = new $processClass($this->server);
+            $processConfig = new ProcessConfig($this->defaultProcessClass, $name, $groupName);
         }
-        if ($process instanceof Process) {
-            $process->createProcess();
-            $process->setName($name);
-        } else {
-            throw new ConfigException("进程实例必须继承Process");
-        }
-        $this->customProcesses[] = $process;
-        return $process;
+        $this->customProcessConfigs[] = $processConfig;
+        return $processConfig;
     }
 
     /**

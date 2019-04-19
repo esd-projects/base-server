@@ -17,8 +17,8 @@ use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
 use GoSwoole\BaseServer\Server\Exception\ConfigException;
-use GoSwoole\BaseServer\Server\NormalProcess\ManagerProcess;
 use GoSwoole\BaseServer\Server\Plug\PlugManager;
+use GoSwoole\BaseServer\Server\ServerProcess\ManagerProcess;
 
 /**
  * Class Server
@@ -99,35 +99,36 @@ abstract class Server
 
     /**
      * 通过配置添加一个端口实例和用于初始化实例的class
+     * @param string $name
      * @param PortConfig $portConfig
      * @param null $portClass
-     * @return ServerPort
      * @throws ConfigException
      */
-    public function addPort(PortConfig $portConfig, $portClass = null)
+    public function addPort(string $name, PortConfig $portConfig, $portClass = null)
     {
         if ($this->isConfigured()) {
-            throw new \Exception("配置已锁定，请在调用configure前添加");
+            throw new ConfigException("配置已锁定，请在调用configure前添加");
         }
-        return $this->portManager->addPort($portConfig, $portClass);
+        $this->portManager->addPortConfig($name, $portConfig, $portClass);
     }
 
     /**
      * 添加一个进程
      * @param string $name
      * @param null $processClass 不填写将用默认的
-     * @return Process
-     * @throws \Exception
+     * @param string $groupName
+     * @throws ConfigException
      */
-    public function addProcess(string $name, $processClass = null)
+    public function addProcess(string $name, $processClass = null, string $groupName = Process::DEFAULT_GROUP)
     {
         if ($this->isConfigured()) {
-            throw new \Exception("配置已锁定，请在调用configure前添加");
+            throw new ConfigException("配置已锁定，请在调用configure前添加");
         }
-        return $this->processManager->addCustomProcesses($name, $processClass);
+        $this->processManager->addCustomProcesses($name, $processClass, $groupName);
     }
 
     /**
+     * 添加插件和添加配置只能在configure之前
      * 配置服务
      * @throws ConfigException
      * @throws \GoSwoole\BaseServer\Exception
@@ -143,10 +144,8 @@ abstract class Server
         $this->plugManager->beforeServerStart($this->context);
         //锁定配置
         $this->setConfigured(true);
-
-        if (count($this->portManager->getPorts()) == 0) {
-            throw new ConfigException("缺少port配置，无法启动服务");
-        }
+        //创建端口实例
+        $this->getPortManager()->createPorts();
         //主要端口
         $this->mainPort = array_values($this->portManager->getPorts())[0];
         $portConfigData = $this->mainPort->getPortConfig()->buildConfig();
@@ -174,7 +173,7 @@ abstract class Server
         $this->server->set($serverConfigData);
         //多个端口
         foreach ($this->portManager->getPorts() as $serverPort) {
-            $serverPort->create($this);
+            $serverPort->create();
         }
         //配置回调
         $this->server->on("start", [$this, "_onStart"]);
@@ -188,20 +187,19 @@ abstract class Server
         //配置进程
         for ($i = 0; $i < $this->serverConfig->getWorkerNum(); $i++) {
             $defaultProcessClass = $this->processManager->getDefaultProcessClass();
-            $process = new $defaultProcessClass($this, Process::WORKER_GROUP);
-            if ($process instanceof Process) {
-                $process->setProcessType(Process::PROCESS_TYPE_WORKER);
-                $process->setProcessId($i);
-                $process->setName("worker-" . $i);
-            }
+            $process = new $defaultProcessClass($this, $i, "worker-" . $i, Process::WORKER_GROUP);
             $this->processManager->addProcesses($process);
         }
         $this->managerProcess = new ManagerProcess($this);
         $this->processManager->setManagerProcess($this->managerProcess);
         $startId = $this->serverConfig->getWorkerNum();
-        foreach ($this->processManager->getCustomProcesses() as $process) {
-            $process->setProcessId($startId);
-            $process->setProcessType(Process::PROCESS_TYPE_CUSTOM);
+        foreach ($this->processManager->getCustomProcessConfigs() as $processConfig) {
+            $processClass = $processConfig->getClassName();
+            $process = new $processClass($this, $startId, $processConfig->getName(), $processConfig->getGroupName());
+            if (!$process instanceof Process) {
+                throw new ConfigException("进程实例应该继承Process");
+            }
+            $process->createProcess();
             $this->server->addProcess($process->getSwooleProcess());
             $this->processManager->addProcesses($process);
             $startId++;

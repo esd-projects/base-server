@@ -21,9 +21,9 @@ abstract class Process
 {
     const DEFAULT_GROUP = "DefaultGroup";
     const WORKER_GROUP = "WorkerGroup";
+    const SERVER_GROUP = "ServerGroup";
     const SOCK_DGRAM = 2;
     const PROCESS_TYPE_WORKER = 1;
-    const PROCESS_TYPE_TASK = 2;
     const PROCESS_TYPE_CUSTOM = 3;
 
     /**
@@ -76,13 +76,22 @@ abstract class Process
     /**
      * Process constructor.
      * @param Server $server
+     * @param int $processId
+     * @param string $name
      * @param string $groupName
      * @throws \GoSwoole\BaseServer\Exception
      */
-    public function __construct(Server $server, string $groupName = self::DEFAULT_GROUP)
+    public function __construct(Server $server, int $processId, string $name = null, string $groupName = self::DEFAULT_GROUP)
     {
         $this->server = $server;
         $this->groupName = $groupName;
+        $this->processId = $processId;
+        if ($groupName == self::WORKER_GROUP) {
+            $this->processType = self::PROCESS_TYPE_WORKER;
+        } else {
+            $this->processType = self::PROCESS_TYPE_CUSTOM;
+        }
+        $this->processName = $name;
         $this->context = new Context($server, $server->getContext());
     }
 
@@ -93,7 +102,9 @@ abstract class Process
     public function createProcess(): Process
     {
         $this->swooleProcess = new \Swoole\Process([$this, "_onProcessStart"], false, self::SOCK_DGRAM, true);
-        $this->setProcessType(self::PROCESS_TYPE_CUSTOM);
+        if ($this->processName != null) {
+            $this->setName($this->processName);
+        }
         return $this;
     }
 
@@ -103,30 +114,6 @@ abstract class Process
     public function getSwooleProcess(): \Swoole\Process
     {
         return $this->swooleProcess;
-    }
-
-    /**
-     * @param int $processId
-     */
-    public function setProcessId(int $processId): void
-    {
-        $this->processId = $processId;
-    }
-
-    /**
-     * @param int $processPid
-     */
-    public function setProcessPid(int $processPid): void
-    {
-        $this->processPid = $processPid;
-    }
-
-    /**
-     * @param int $processType
-     */
-    public function setProcessType(int $processType): void
-    {
-        $this->processType = $processType;
     }
 
     /**
@@ -176,7 +163,7 @@ abstract class Process
      * 设置进程的名字
      * @param $name
      */
-    public function setName($name)
+    protected function setName($name)
     {
         $this->processName = $name;
         if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
@@ -202,9 +189,9 @@ abstract class Process
                 $this->_onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
             });
         }
-        $this->server->getProcessManager()->setCurrentProcessId($this->getProcessId());
-        $this->setProcessPid(posix_getpid());
-        $this->server->getProcessManager()->setCurrentProcessPid($this->getProcessPid());
+        $this->server->getProcessManager()->setCurrentProcessId($this->processId);
+        $this->processPid = posix_getpid();
+        $this->server->getProcessManager()->setCurrentProcessPid($this->processPid);
         $this->server->getPlugManager()->beforeProcessStart($this->context);
         $this->onProcessStart();
     }

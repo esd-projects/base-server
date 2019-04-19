@@ -13,15 +13,16 @@ use GoSwoole\BaseServer\Server\Beans\Request;
 use GoSwoole\BaseServer\Server\Beans\Response;
 use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
+use GoSwoole\BaseServer\Server\Server;
 use GoSwoole\BaseServer\Server\ServerPort;
 
 class DefaultServerPort extends ServerPort
 {
     private $className;
 
-    public function __construct(PortConfig $portConfig)
+    public function __construct(Server $server, PortConfig $portConfig)
     {
-        parent::__construct($portConfig);
+        parent::__construct($server, $portConfig);
         $this->className = get_class($this);
         print_r("[$this->className]\t{$this->getPortConfig()->getTypeName()}\t[{$this->getPortConfig()->getHost()}]\t[{$this->getPortConfig()->getPort()}]\n");
     }

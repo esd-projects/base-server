@@ -1,5 +1,6 @@
 <?php
 
+use GoSwoole\BaseServer\ExampleClass\Server\DefaultServer;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
 use GoSwoole\BaseServer\Utils\Utils;
@@ -37,20 +38,20 @@ $serverConfig->setWorkerNum(4);
 $serverConfig->setLogFile(__DIR__ . "/../swoole.log");
 $serverConfig->setPidFile(__DIR__ . "/../pid");
 
-$server = new \GoSwoole\BaseServer\ExampleClass\Server\DefaultServer($serverConfig);
 
-try {
-    //添加端口
-    $httpPort = $server->addPort($httpPortConfig, MyPort::class);//使用自定义实例
-    $wsPort = $server->addPort($wsPortConfig);//使用默认实例
-    //添加进程
-    $test1Process = $server->addProcess("test1");
-    $test2Process = $server->addProcess("test2", MyProcess::class);//使用自定义实例
-    //配置
-    $server->configure();
-    //启动
-    $server->start();
-} catch (Exception $e) {
-    var_dump($e->getTrace());
-}
-
+$server = new DefaultServer($serverConfig);
+//添加端口
+$server->addPort("http", $httpPortConfig, MyPort::class);//使用自定义实例
+$server->addPort("ws", $wsPortConfig);//使用默认实例
+//添加进程
+$server->addProcess("test1");
+$server->addProcess("test2", MyProcess::class);//使用自定义实例
+//配置
+$server->configure();
+//configure后可以获取实例
+$test1Process = $server->getProcessManager()->getProcessFromName("test1");
+$test2Process = $server->getProcessManager()->getProcessFromName("test2");
+$httpPort = $server->getPortManager()->getPortFromName("http");
+$wsPort = $server->getPortManager()->getPortFromName("ws");
+//启动
+$server->start();

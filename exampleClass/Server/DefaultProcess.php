@@ -18,25 +18,22 @@ use Monolog\Logger;
 
 class DefaultProcess extends Process
 {
-    private $className;
-
     /**
      * @var Logger
      */
     private $log;
 
-    public function __construct(Server $server, string $groupName = self::DEFAULT_GROUP)
+    public function __construct(Server $server, int $processId, string $name = null, string $groupName = self::DEFAULT_GROUP)
     {
-        parent::__construct($server, $groupName);
-        $this->className = get_class($this);
+        parent::__construct($server, $processId, $name, $groupName);
         $this->log = $this->context->getByClassName(Logger::class);
-        //$this->log->log(Logger::INFO, "__construct");
+        $this->log->log(Logger::INFO, "__construct");
     }
 
     public function onProcessStart()
     {
         $this->log = $this->context->getByClassName(Logger::class);
-        $this->log->log(Logger::INFO, "onProcessStart");
+        $this->log->log(Logger::INFO, "start");
         $message = new Message("message", "test");
         foreach ($this->getProcessManager()->getProcesses() as $process) {
             $this->sendMessage($message, $process);
@@ -53,12 +50,12 @@ class DefaultProcess extends Process
 
     public function onProcessStop()
     {
-        $this->log->log(Logger::INFO, "onProcessStop");
+        $this->log->log(Logger::INFO, "stop");
     }
 
     public function onPipeMessage(Message $message, Process $fromProcess)
     {
-        $this->log->log(Logger::INFO, "onPipeMessage [FromProcess:{$fromProcess->getProcessId()}] [{$message->toString()}]");
+        $this->log->log(Logger::INFO, "[FromProcess:{$fromProcess->getProcessId()}] [{$message->toString()}]");
     }
 
     public function getEventDispatcher(): EventDispatcher

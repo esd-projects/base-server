@@ -15,9 +15,17 @@ use GoSwoole\BaseServer\Server\Exception\ConfigException;
 class PortManager
 {
     /**
+     * @var PortConfig[]
+     */
+    private $portConfigs = [];
+    /**
      * @var ServerPort[]
      */
     private $ports = [];
+    /**
+     * @var ServerPort[]
+     */
+    private $namePorts = [];
     /**
      * @var Server
      */
@@ -34,27 +42,45 @@ class PortManager
     }
 
     /**
-     * 通过配置添加一个端口实例和用于初始化实例的class
+     * 添加端口配置
+     * @param $name
      * @param PortConfig $portConfig
      * @param null $portClass
-     * @return ServerPort
+     */
+    public function addPortConfig($name, PortConfig $portConfig, $portClass = null)
+    {
+        $portConfig->setName($name);
+        if ($portClass != null) {
+            $portConfig->setPortClass($portClass);
+        }
+        $this->portConfigs[$name] = $portConfig;
+    }
+
+    /**
+     * 创建端口实例
      * @throws ConfigException
      */
-    public function addPort(PortConfig $portConfig, $portClass = null)
+    public function createPorts()
     {
-        if ($portClass == null) {
-            $serverPort = new $this->defaultPortClass($portConfig);
-        } else {
-            $serverPort = new $portClass($portConfig);
+        if (count($this->portConfigs) == 0) {
+            throw new ConfigException("缺少port配置，无法启动服务");
         }
-        if (isset($this->ports[$portConfig->getPort()])) {
-            throw new ConfigException("端口号有重复");
+        foreach ($this->portConfigs as $portConfig) {
+            $portClass = $portConfig->getPortClass();
+            if ($portClass == null) {
+                $serverPort = new $this->defaultPortClass($this->server, $portConfig);
+            } else {
+                $serverPort = new $portClass($this->server, $portConfig);
+            }
+            if (isset($this->ports[$portConfig->getPort()])) {
+                throw new ConfigException("端口号有重复");
+            }
+            if (!$serverPort instanceof ServerPort) {
+                throw new ConfigException("端口实例必须继承ServerPort");
+            }
+            $this->ports[$portConfig->getPort()] = $serverPort;
+            $this->namePorts[$portConfig->getName()] = $serverPort;
         }
-        if (!$serverPort instanceof ServerPort) {
-            throw new ConfigException("端口实例必须继承ServerPort");
-        }
-        $this->ports[$portConfig->getPort()] = $serverPort;
-        return $serverPort;
     }
 
     /**
@@ -73,6 +99,16 @@ class PortManager
     public function getPortFromPortNo($portNo)
     {
         return $this->ports[$portNo] ?? null;
+    }
+
+    /**
+     * 获取对应端口号的port实例
+     * @param $name
+     * @return ServerPort|null
+     */
+    public function getPortFromName($name)
+    {
+        return $this->namePorts[$name] ?? null;
     }
 
     /**

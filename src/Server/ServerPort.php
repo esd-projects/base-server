@@ -37,9 +37,10 @@ abstract class ServerPort
      */
     private $swoolePort;
 
-    public function __construct(PortConfig $portConfig)
+    public function __construct(Server $server, PortConfig $portConfig)
     {
         $this->portConfig = $portConfig;
+        $this->server = $server;
     }
 
     /**
@@ -60,13 +61,11 @@ abstract class ServerPort
 
     /**
      * 创建端口
-     * @param Server $server
      * @throws exception\ConfigException
      */
-    public function create($server): void
+    public function create(): void
     {
-        $this->server = $server;
-        if ($server->getMainPort() == $this) {
+        if ($this->server->getMainPort() == $this) {
             //端口已经被swoole创建了，直接获取port实例
             $this->swoolePort = $this->server->getServer()->ports[0];
             //监听者是server

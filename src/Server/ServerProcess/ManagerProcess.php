@@ -6,7 +6,7 @@
  * Time: 18:12
  */
 
-namespace GoSwoole\BaseServer\Server\NormalProcess;
+namespace GoSwoole\BaseServer\Server\ServerProcess;
 
 
 use GoSwoole\BaseServer\Server\Message\Message;
@@ -15,12 +15,9 @@ use GoSwoole\BaseServer\Server\Server;
 
 class ManagerProcess extends Process
 {
-    public function __construct(Server $server, string $groupName = self::DEFAULT_GROUP)
+    public function __construct(Server $server)
     {
-        parent::__construct($server, $groupName);
-        $this->groupName = "Server";
-        $this->processName = "manager";
-        $this->processId = 0;
+        parent::__construct($server, 0, "manager", Process::SERVER_GROUP);
     }
 
     public function onProcessStart()
