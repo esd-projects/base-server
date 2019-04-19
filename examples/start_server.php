@@ -1,5 +1,6 @@
 <?php
 
+use GoSwoole\BaseServer\Event\ApplicationEvent;
 use GoSwoole\BaseServer\ExampleClass\Server\DefaultServer;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
@@ -53,5 +54,12 @@ $test1Process = $server->getProcessManager()->getProcessFromName("test1");
 $test2Process = $server->getProcessManager()->getProcessFromName("test2");
 $httpPort = $server->getPortManager()->getPortFromName("http");
 $wsPort = $server->getPortManager()->getPortFromName("ws");
+//监听事件
+$server->getEventDispatcher()->add(ApplicationEvent::ApplicationStartingEvent, function () {
+    var_dump("ApplicationEvent::ApplicationStartingEvent");
+});
+$server->getEventDispatcher()->add(ApplicationEvent::ApplicationStoppingEvent, function () {
+    var_dump("ApplicationEvent::ApplicationStoppingEvent");
+});
 //启动
 $server->start();

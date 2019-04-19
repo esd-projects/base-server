@@ -9,7 +9,8 @@
 namespace GoSwoole\BaseServer\Event;
 
 
-class AppactionEvent extends Event
+class ApplicationEvent extends Event
 {
     const ApplicationStartingEvent = "ApplicationStartingEvent";
+    const ApplicationShutdownEvent = "ApplicationShutdownEvent";
 }

@@ -8,7 +8,7 @@
 
 namespace GoSwoole\BaseServer\Server;
 
-use GoSwoole\BaseServer\Event\AppactionEvent;
+use GoSwoole\BaseServer\Event\ApplicationEvent;
 use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Event\EventPlug;
 use GoSwoole\BaseServer\Event\EventTestPlus;
@@ -230,7 +230,7 @@ abstract class Server
     {
         Server::$isStart = true;
         //发送ApplicationStartingEvent事件
-        $this->eventDispatcher->dispatchEvent(new AppactionEvent(AppactionEvent::ApplicationStartingEvent, $this));
+        $this->eventDispatcher->dispatchEvent(new ApplicationEvent(ApplicationEvent::ApplicationStartingEvent, $this));
         $this->processManager->getMasterProcess()->onProcessStart();
         $this->onStart();
     }
@@ -240,6 +240,8 @@ abstract class Server
      */
     public function _onShutdown()
     {
+        //发送ApplicationShutdownEvent事件
+        $this->eventDispatcher->dispatchEvent(new ApplicationEvent(ApplicationEvent::ApplicationShutdownEvent, $this));
         $this->onShutdown();
     }
 
