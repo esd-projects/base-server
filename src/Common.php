@@ -87,7 +87,6 @@ function addTimerAfter(int $msec, callable $callback, ... $params)
 /**
  * 继承父级的上下文
  * @param callable $run
- * @throws \GoSwoole\BaseServer\Exception
  */
 function goWithContext(callable $run)
 {
@@ -103,13 +102,12 @@ function goWithContext(callable $run)
 /**
  * 获取上下文
  * @return \GoSwoole\BaseServer\Server\Context
- * @throws \GoSwoole\BaseServer\Exception
  */
 function getContext()
 {
     $context = null;
     if (Server::$isStart) {
-        $context = Server::$instance->getProcessManager()->getCurrentProcess()->getContext();;
+        $context = Server::$instance->getProcessManager()->getCurrentProcess()->getContext();
     }
     if (Co::getCid() > 0) {
         $context = Co::getContext();
@@ -121,7 +119,6 @@ function getContext()
  * 获取上下文值
  * @param $key
  * @return mixed
- * @throws \GoSwoole\BaseServer\Exception
  */
 function getContextValue($key)
 {
@@ -132,7 +129,6 @@ function getContextValue($key)
  * 获取上下文值
  * @param $key
  * @return mixed
- * @throws \GoSwoole\BaseServer\Exception
  */
 function getContextValueByClassName($key)
 {
@@ -156,7 +152,6 @@ function setContextValue($key, $value)
  * 递归父级获取上下文值
  * @param $key
  * @return mixed
- * @throws \GoSwoole\BaseServer\Exception
  */
 function getDeepContextValue($key)
 {
@@ -167,7 +162,6 @@ function getDeepContextValue($key)
  * 递归父级获取上下文值
  * @param $key
  * @return mixed
- * @throws \GoSwoole\BaseServer\Exception
  */
 function getDeepContextValueByClassName($key)
 {

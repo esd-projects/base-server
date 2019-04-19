@@ -71,7 +71,6 @@ class Co
     /**
      * 获取当前协程的上下文对象
      * @return Context
-     * @throws \GoSwoole\BaseServer\Exception
      */
     public static function getContext(): Context
     {

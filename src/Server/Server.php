@@ -87,7 +87,6 @@ abstract class Server
      * @param ServerConfig $serverConfig
      * @param string $defaultPortClass
      * @param string $defaultProcessClass
-     * @throws \GoSwoole\BaseServer\Exception
      */
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
@@ -201,11 +200,6 @@ abstract class Server
         foreach ($this->processManager->getCustomProcessConfigs() as $processConfig) {
             $processClass = $processConfig->getClassName();
             $process = new $processClass($this, $startId, $processConfig->getName(), $processConfig->getGroupName());
-            if (!$process instanceof Process) {
-                throw new ConfigException("进程实例应该继承Process");
-            }
-            $process->createProcess();
-            $this->server->addProcess($process->getSwooleProcess());
             $this->processManager->addProcesses($process);
             $startId++;
         }

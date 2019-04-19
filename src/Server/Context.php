@@ -41,13 +41,13 @@ class Context
      * Context constructor.
      * @param Server $server
      * @param Context|null $parentContext
-     * @throws Exception
      */
     public function __construct($server, Context $parentContext = null)
     {
         $this->server = $server;
         if ($server != null) {
-            $this->add("server", $server);
+            $this->contain["server"] = $server;
+            $this->classContain[get_class($server)] = $server;
         }
         $this->parentContext = $parentContext;
     }
@@ -61,11 +61,12 @@ class Context
      */
     public function add($name, $value, $overwrite = false)
     {
+        if ($value == null) return;
         if (isset($this->contain[$name]) && !$overwrite) {
             throw new Exception("已经存在相同名字的上下文");
         }
         $this->contain[$name] = $value;
-        if ($value instanceof \stdClass) {
+        if (!is_string($value) && !is_int($value) && !is_bool($value) && !is_float($value) && !is_double($value) && !is_array($value) && !is_callable($value) && !is_long($value)) {
             $this->classContain[get_class($value)] = $value;
         }
     }
@@ -133,5 +134,21 @@ class Context
     public function setParentContext(Context $parentContext): void
     {
         $this->parentContext = $parentContext;
+    }
+
+    /**
+     * @return Context|null
+     */
+    public function getParentContext()
+    {
+        return $this->parentContext;
+    }
+
+    /**
+     * @return array
+     */
+    public function getKeys()
+    {
+        return array_keys($this->contain);
     }
 }

@@ -22,12 +22,20 @@ class DefaultProcess extends Process
      * @var Logger
      */
     private $log;
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
 
-    public function __construct(Server $server, int $processId, string $name = null, string $groupName = self::DEFAULT_GROUP)
+    /**
+     * 在onProcessStart之前，用于初始化成员变量
+     * @return mixed
+     */
+    public function init()
     {
-        parent::__construct($server, $processId, $name, $groupName);
         $this->log = $this->context->getDeepByClassName(Logger::class);
-        $this->log->log(Logger::INFO, "$name");
+        $this->log->log(Logger::INFO, $this->processName);
+        $this->eventDispatcher = Server::$instance->getProcessManager()->getCurrentProcess()->getContext()->getDeepByClassName(EventDispatcher::class);
     }
 
     public function onProcessStart()
@@ -37,13 +45,13 @@ class DefaultProcess extends Process
         foreach ($this->getProcessManager()->getProcesses() as $process) {
             $this->sendMessage($message, $process);
         }
-        $this->getEventDispatcher()->add("testEvent", function (Event $event) {
+        $this->eventDispatcher->add("testEvent", function (Event $event) {
             $this->log->log(Logger::INFO, "[Event] {$event->getData()}");
         });
         if ($this->getProcessId() == 0) {
             sleep(1);
-            $this->getEventDispatcher()->dispatchEvent(new Event("testEvent", "Hello"));
-            $this->getEventDispatcher()->dispatchProcessEvent(new Event("testEvent", "Hello Every Process"), ...$this->getProcessManager()->getProcesses());
+            $this->eventDispatcher->dispatchEvent(new Event("testEvent", "Hello"));
+            $this->eventDispatcher->dispatchProcessEvent(new Event("testEvent", "Hello Every Process"), ...$this->getProcessManager()->getProcesses());
         }
     }
 
@@ -57,8 +65,4 @@ class DefaultProcess extends Process
         $this->log->log(Logger::INFO, "[FromProcess:{$fromProcess->getProcessId()}] [{$message->toString()}]");
     }
 
-    public function getEventDispatcher(): EventDispatcher
-    {
-        return $this->getContext()->getDeepByClassName(EventDispatcher::class);
-    }
 }

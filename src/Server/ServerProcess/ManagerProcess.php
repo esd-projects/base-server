@@ -15,14 +15,18 @@ use GoSwoole\BaseServer\Server\Server;
 
 class ManagerProcess extends Process
 {
+    const name = "manager";
+    const id = "-2";
+
     public function __construct(Server $server)
     {
-        parent::__construct($server, 0, "manager", Process::SERVER_GROUP);
+        parent::__construct($server, self::id, self::name, Process::SERVER_GROUP);
     }
 
     public function onProcessStart()
     {
         $this->processPid = posix_getpid();
+        $this->server->getProcessManager()->setCurrentProcessId($this->processId);
     }
 
     public function onProcessStop()
@@ -31,6 +35,15 @@ class ManagerProcess extends Process
     }
 
     public function onPipeMessage(Message $message, Process $fromProcess)
+    {
+        return;
+    }
+
+    /**
+     * 在onProcessStart之前，用于初始化成员变量
+     * @return mixed
+     */
+    public function init()
     {
         return;
     }

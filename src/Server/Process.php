@@ -80,7 +80,6 @@ abstract class Process
      * @param int $processId
      * @param string $name
      * @param string $groupName
-     * @throws \GoSwoole\BaseServer\Exception
      */
     public function __construct(Server $server, int $processId, string $name = null, string $groupName = self::DEFAULT_GROUP)
     {
@@ -181,8 +180,9 @@ abstract class Process
     {
         Server::$isStart = true;
         if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
+            $this->getProcessManager()->setCurrentProcessId($this->processId);
             \swoole_process::signal(SIGTERM, [$this, '_onProcessStop']);
-            \swoole_event_add($this->swooleProcess->pipe, function ($pipe) {
+            \swoole_event_add($this->swooleProcess->pipe, function () {
                 $recv = $this->swooleProcess->read();
                 //获取进程id
                 $unpackData = unpack("N", $recv);
@@ -195,14 +195,20 @@ abstract class Process
         $this->processPid = posix_getpid();
         $this->server->getProcessManager()->setCurrentProcessPid($this->processPid);
         $this->server->getPlugManager()->beforeProcessStart($this->context);
+        $this->init();
         $this->onProcessStart();
     }
+
+    /**
+     * 在onProcessStart之前，用于初始化成员变量
+     * @return mixed
+     */
+    public abstract function init();
 
     /**
      * 收到消息
      * @param Message $message
      * @param Process $fromProcess
-     * @throws \GoSwoole\BaseServer\Exception
      */
     public function _onPipeMessage(Message $message, Process $fromProcess)
     {
@@ -232,7 +238,6 @@ abstract class Process
      * 向某一个进程发送消息
      * @param Message $message
      * @param Process $toProcess
-     * @throws \GoSwoole\BaseServer\Exception
      */
     public function sendMessage(Message $message, Process $toProcess)
     {

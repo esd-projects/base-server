@@ -10,6 +10,8 @@ namespace GoSwoole\BaseServer\Server;
 
 
 use GoSwoole\BaseServer\Server\Config\ProcessConfig;
+use GoSwoole\BaseServer\Server\ServerProcess\ManagerProcess;
+use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
 
 class ProcessManager
 {
@@ -63,6 +65,8 @@ class ProcessManager
      */
     public function getProcessFromId(int $processId)
     {
+        if ($processId == MasterProcess::id) return $this->masterProcess;
+        if ($processId == ManagerProcess::id) return $this->managerProcess;
         return $this->processes[$processId] ?? null;
     }
 
@@ -114,6 +118,10 @@ class ProcessManager
      */
     public function addProcesses(Process $process)
     {
+        if ($process->getProcessType() == Process::PROCESS_TYPE_CUSTOM) {
+            $process->createProcess();
+            $this->server->getServer()->addProcess($process->getSwooleProcess());
+        }
         $this->processes[$process->getProcessId()] = $process;
     }
 
@@ -208,11 +216,11 @@ class ProcessManager
      */
     public function getCurrentProcess()
     {
-        if ($this->getCurrentProcessId() == null) {
-            if ($this->getMasterPid() == null) {
+        if ($this->getCurrentProcessId() === null) {
+            if ($this->getMasterPid() === null) {
                 //说明还没启动
                 return $this->masterProcess;
-            } else if ($this->getManagerPid() != null) {
+            } else if ($this->getManagerPid() !== null) {
                 return $this->managerProcess;
             } else {
                 return null;
