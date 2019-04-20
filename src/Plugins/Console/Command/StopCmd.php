@@ -6,7 +6,7 @@
  * Time: 上午10:59
  */
 
-namespace GoSwoole\BaseServer\Plugs\Console\Command;
+namespace GoSwoole\BaseServer\Plugins\Console\Command;
 
 use GoSwoole\BaseServer\Server\Context;
 use Symfony\Component\Console\Command\Command;

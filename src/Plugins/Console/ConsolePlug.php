@@ -6,18 +6,17 @@
  * Time: 10:38
  */
 
-namespace GoSwoole\BaseServer\Plugs\Console;
+namespace GoSwoole\BaseServer\Plugins\Console;
 
-
-use GoSwoole\BaseServer\Plugs\Console\Command\StartCmd;
-use GoSwoole\BaseServer\Plugs\Console\Command\StopCmd;
+use GoSwoole\BaseServer\Plugins\Console\Command\StartCmd;
+use GoSwoole\BaseServer\Plugins\Console\Command\StopCmd;
 use GoSwoole\BaseServer\Server\Context;
-use GoSwoole\BaseServer\Server\Plug\BasePlug;
+use GoSwoole\BaseServer\Server\PlugIn\AbstractPlug;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-class ConsolePlug extends BasePlug
+class ConsolePlug extends AbstractPlug
 {
     const NOEXIT = -255;
     /**
