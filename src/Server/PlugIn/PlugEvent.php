@@ -6,7 +6,7 @@
  * Time: 16:12
  */
 
-namespace GoSwoole\BaseServer\Server\Plug;
+namespace GoSwoole\BaseServer\Server\PlugIn;
 
 
 use GoSwoole\BaseServer\Event\Event;

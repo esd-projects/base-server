@@ -6,11 +6,11 @@
  * Time: 12:24
  */
 
-namespace GoSwoole\BaseServer\Server\Plug;
+namespace GoSwoole\BaseServer\Server\PlugIn;
 
 use GoSwoole\BaseServer\Coroutine\Channel;
 use GoSwoole\BaseServer\Event\EventDispatcher;
-use GoSwoole\BaseServer\Event\EventPlug;
+use GoSwoole\BaseServer\Event\EventPlugin;
 use GoSwoole\BaseServer\Exception;
 use GoSwoole\BaseServer\Logger\LoggerPlug;
 use GoSwoole\BaseServer\Server\Context;
@@ -22,15 +22,15 @@ use Monolog\Logger;
  * Class PlugManager
  * @package GoSwoole\BaseServer\Server\Plug
  */
-class PlugManager implements Plug
+class PlugInterfaceManager implements PlugInterface
 {
     /**
-     * @var Plug[]
+     * @var PlugInterface[]
      */
     private $plugs = [];
 
     /**
-     * @var Plug[]
+     * @var PlugInterface[]
      */
     private $plugClasses = [];
 
@@ -67,10 +67,10 @@ class PlugManager implements Plug
 
     /**
      * 添加插件
-     * @param Plug $plug
+     * @param PlugInterface $plug
      * @throws Exception
      */
-    public function addPlug(Plug $plug)
+    public function addPlug(PlugInterface $plug)
     {
         if ($this->fixed) {
             throw new Exception("已经锁定不能添加插件");
@@ -114,7 +114,7 @@ class PlugManager implements Plug
                     $this->eventDispatcher->dispatchEvent(new PlugEvent(PlugEvent::PlugFailEvent, $plug));
                 }
             } else {
-                if ($plug instanceof EventPlug) {
+                if ($plug instanceof EventPlugin) {
                     //这时可以获取到EventDispatcher对象了
                     $this->eventDispatcher = $this->server->getContext()->getDeepByClassName(EventDispatcher::class);
                 }
@@ -147,10 +147,10 @@ class PlugManager implements Plug
     }
 
     /**
-     * @param Plug $plug
-     * @return Plug|null
+     * @param PlugInterface $plug
+     * @return PlugInterface|null
      */
-    private function getPlugAfterClass(Plug $plug)
+    private function getPlugAfterClass(PlugInterface $plug)
     {
         if ($plug->getAfterClass() == null) return null;
         return $this->plugClasses[$plug->getAfterClass()] ?? null;
