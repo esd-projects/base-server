@@ -6,25 +6,25 @@
  * Time: 14:19
  */
 
-namespace GoSwoole\BaseServer\Server\Plug;
+namespace GoSwoole\BaseServer\Server\PlugIn;
 
 
 use GoSwoole\BaseServer\Coroutine\Channel;
-use GoSwoole\BaseServer\Event\EventPlug;
+use GoSwoole\BaseServer\Event\EventPlugin;
 
 /**
  * 基础插件，插件类需要继承
  * Class BasePlug
  * @package GoSwoole\BaseServer\Server\Plug
  */
-abstract class BasePlug implements Plug
+abstract class BasePlugInterface implements PlugInterface
 {
     /**
      * @var string
      */
     private $afterClass;
     /**
-     * @var Plug
+     * @var PlugInterface
      */
     private $afterPlug;
     /**
@@ -41,8 +41,8 @@ abstract class BasePlug implements Plug
     {
         $this->readyChannel = new Channel();
         //默认都要在Event插件后加载
-        if (get_class($this) !== EventPlug::class) {
-            $this->atAfter(EventPlug::class);
+        if (get_class($this) !== EventPlugin::class) {
+            $this->atAfter(EventPlugin::class);
         }
     }
 

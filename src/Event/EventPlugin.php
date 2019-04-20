@@ -12,14 +12,14 @@ namespace GoSwoole\BaseServer\Event;
 use GoSwoole\BaseServer\Logger\LoggerPlug;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
-use GoSwoole\BaseServer\Server\Plug\BasePlug;
+use GoSwoole\BaseServer\Server\PlugIn\BasePlugInterface;
 
 /**
  * Event 插件加载器
  * Class EventPlug
  * @package GoSwoole\BaseServer\Event
  */
-class EventPlug extends BasePlug
+class EventPlugin extends BasePlugInterface
 {
     /**
      * @var EventDispatcher

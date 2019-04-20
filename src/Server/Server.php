@@ -10,8 +10,7 @@ namespace GoSwoole\BaseServer\Server;
 
 use GoSwoole\BaseServer\Event\ApplicationEvent;
 use GoSwoole\BaseServer\Event\EventDispatcher;
-use GoSwoole\BaseServer\Event\EventPlug;
-use GoSwoole\BaseServer\Event\EventTestPlus;
+use GoSwoole\BaseServer\Event\EventPlugin;
 use GoSwoole\BaseServer\Logger\LoggerPlug;
 use GoSwoole\BaseServer\Server\Beans\ClientInfo;
 use GoSwoole\BaseServer\Server\Beans\ServerStats;
@@ -19,7 +18,7 @@ use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
 use GoSwoole\BaseServer\Server\Exception\ConfigException;
-use GoSwoole\BaseServer\Server\Plug\PlugManager;
+use GoSwoole\BaseServer\Server\PlugIn\PlugInterfaceManager;
 use GoSwoole\BaseServer\Server\ServerProcess\ManagerProcess;
 use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
 
@@ -69,7 +68,7 @@ abstract class Server
     protected $portManager;
 
     /**
-     * @var PlugManager
+     * @var PlugInterfaceManager
      */
     protected $plugManager;
 
@@ -104,7 +103,7 @@ abstract class Server
         $this->serverConfig = $serverConfig;
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
-        $this->plugManager = new PlugManager($this);
+        $this->plugManager = new PlugInterfaceManager($this);
     }
 
     /**
@@ -152,7 +151,7 @@ abstract class Server
         $this->processManager->setManagerProcess($managerProcess);
         //添加Logger/Event插件
         $this->plugManager->addPlug(new LoggerPlug());
-        $this->plugManager->addPlug(new EventPlug());
+        $this->plugManager->addPlug(new EventPlugin());
         //插件排序此时不允许添加插件了
         $this->plugManager->order();
         //调用所有插件的beforeServerStart
@@ -589,9 +588,9 @@ abstract class Server
     }
 
     /**
-     * @return PlugManager
+     * @return PlugInterfaceManager
      */
-    public function getPlugManager(): PlugManager
+    public function getPlugManager(): PlugInterfaceManager
     {
         return $this->plugManager;
     }

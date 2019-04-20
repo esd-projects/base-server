@@ -6,13 +6,13 @@
  * Time: 12:25
  */
 
-namespace GoSwoole\BaseServer\Server\Plug;
+namespace GoSwoole\BaseServer\Server\PlugIn;
 
 
 use GoSwoole\BaseServer\Coroutine\Channel;
 use GoSwoole\BaseServer\Server\Context;
 
-interface Plug
+interface PlugInterface
 {
     /**
      * @return Channel
