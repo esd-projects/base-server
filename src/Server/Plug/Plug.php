@@ -33,7 +33,7 @@ interface Plug
      * 获取插件名字
      * @return string
      */
-    function getName(): string;
+    public function getName(): string;
 
     /**
      * 在服务启动前

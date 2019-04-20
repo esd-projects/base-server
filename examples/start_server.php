@@ -2,6 +2,7 @@
 
 use GoSwoole\BaseServer\Event\ApplicationEvent;
 use GoSwoole\BaseServer\ExampleClass\Server\DefaultServer;
+use GoSwoole\BaseServer\Plugs\Console\ConsolePlug;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
 use GoSwoole\BaseServer\Utils\Utils;
@@ -47,6 +48,8 @@ $server->addPort("ws", $wsPortConfig);//使用默认实例
 //添加进程
 $server->addProcess("test1");
 $server->addProcess("test2", MyProcess::class);//使用自定义实例
+//添加插件
+$server->getPlugManager()->addPlug(new ConsolePlug());
 //配置
 $server->configure();
 //configure后可以获取实例

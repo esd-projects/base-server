@@ -20,6 +20,11 @@ use GoSwoole\BaseServer\Server\Exception\ConfigException;
 class ServerConfig
 {
     /**
+     * 服务器名称
+     * @var string
+     */
+    private $name = "goSwoole";
+    /**
      * reactor线程数，通过此参数来调节Reactor线程的数量，以充分利用多核
      * @Inject("Server.reactor_num")
      * @var int
@@ -753,6 +758,22 @@ class ServerConfig
     public function setBannel(string $bannel): void
     {
         $this->bannel = $bannel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
     }
 
 }

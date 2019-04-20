@@ -89,6 +89,7 @@ abstract class Process
      * @var Logger
      */
     protected $log;
+
     /**
      * Process constructor.
      * @param Server $server
@@ -186,11 +187,7 @@ abstract class Process
     protected function setName($name)
     {
         $this->processName = $name;
-        if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
-            if (!empty($name) && (PHP_OS != 'Darwin')) {
-                $this->swooleProcess->name($name);
-            }
-        }
+        self::setProcessTitle($name);
     }
 
     /**
@@ -321,5 +318,38 @@ abstract class Process
     public function getProcessManager(): ProcessManager
     {
         return $this->server->getProcessManager();
+    }
+
+    /**
+     * 是否是mac系统
+     * @return bool
+     */
+    public static function isDarwin()
+    {
+        if (PHP_OS == "Darwin") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Set process name.
+     *
+     * @param string $title
+     * @return void
+     */
+    public static function setProcessTitle($title)
+    {
+        if (self::isDarwin()) {
+            return;
+        }
+        // >=php 5.5
+        if (function_exists('cli_set_process_title')) {
+            @cli_set_process_title($title);
+        } // Need proctitle when php<=5.5 .
+        else {
+            @swoole_set_process_name($title);
+        }
     }
 }

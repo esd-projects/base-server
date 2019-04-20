@@ -145,6 +145,8 @@ abstract class Server
      */
     public function configure()
     {
+        //设置进程名称
+        Process::setProcessTitle($this->serverConfig->getName());
         //设置主要进程
         $managerProcess = new ManagerProcess($this);
         $masterProcess = new MasterProcess($this);
@@ -610,5 +612,13 @@ abstract class Server
     public function getEventDispatcher(): EventDispatcher
     {
         return $this->eventDispatcher;
+    }
+
+    /**
+     * @return ServerConfig
+     */
+    public function getServerConfig(): ServerConfig
+    {
+        return $this->serverConfig;
     }
 }
