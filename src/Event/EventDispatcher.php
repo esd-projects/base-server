@@ -127,7 +127,9 @@ class EventDispatcher
             return;
         }
         foreach ($listeners as $listener) {
-            $listener($event);
+            goWithContext(function () use ($listener, $event) {
+                $listener($event);
+            });
         }
     }
 
