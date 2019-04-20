@@ -41,7 +41,7 @@ abstract class AbstractPlug implements PlugInterface
     {
         $this->readyChannel = new Channel();
         //默认都要在Event插件后加载
-        if (get_class($this) !== EventPlugin::class) {
+        if (static::class !== EventPlugin::class) {
             $this->atAfter(EventPlugin::class);
         }
     }
