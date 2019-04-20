@@ -215,4 +215,13 @@ class PlugManager implements Plug
         return $this->readyChannel;
     }
 
+    /**
+     * 等待
+     */
+    public function waitReady()
+    {
+        $this->readyChannel->pop();
+        $this->readyChannel->close();
+    }
+
 }

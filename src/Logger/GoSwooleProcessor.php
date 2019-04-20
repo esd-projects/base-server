@@ -69,19 +69,18 @@ class GoSwooleProcessor implements ProcessorInterface
 
     private function handleLevelName($level, $level_name)
     {
+        $level_name = sprintf('%-7s', $level_name);
         if ($this->color) {
             if ($level >= Logger::ERROR) {
-                return "\e[31m" . $level_name . "\e[0m";
+                $level_name = "\e[31m" . $level_name . "\e[0m";
             }
             if ($level >= Logger::WARNING) {
-                return "\e[33m" . $level_name . "\e[0m";
+                $level_name = "\e[33m" . $level_name . "\e[0m";
             } else {
-                return "\e[32m" . $level_name . "\e[0m";
+                $level_name = "\e[32m" . $level_name . "\e[0m";
             }
-        } else {
-            return $level_name;
         }
-
+        return $level_name;
     }
 
     private function handleProcess($processGroup, $processName, $cid)

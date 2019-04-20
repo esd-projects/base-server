@@ -125,6 +125,16 @@ class Co
     }
 
     /**
+     * sleep
+     * @param float $se
+     */
+    public static function sleep(float $se)
+    {
+        \Swoole\Coroutine::sleep($se);
+    }
+
+
+    /**
      * 让出当前协程的执行权。
      * @param int $coroutineId
      */

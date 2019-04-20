@@ -163,7 +163,7 @@ class ProcessManager
      */
     public function getMasterPid()
     {
-        return $this->server->master_pid ?? null;
+        return $this->server->getServer()->master_pid ?? null;
     }
 
     /**
@@ -172,7 +172,7 @@ class ProcessManager
      */
     public function getManagerPid()
     {
-        return $this->server->manager_pid ?? null;
+        return $this->server->getServer()->manager_pid ?? null;
     }
 
     /**
@@ -181,7 +181,7 @@ class ProcessManager
      */
     public function getCurrentProcessId()
     {
-        return $this->server->worker_id ?? null;
+        return $this->server->getServer()->worker_id ?? null;
     }
 
     /**
@@ -189,7 +189,7 @@ class ProcessManager
      */
     public function setCurrentProcessId($processId)
     {
-        $this->server->worker_id = $processId;
+        $this->server->getServer()->worker_id = $processId;
     }
 
     /**
@@ -199,7 +199,7 @@ class ProcessManager
      */
     public function getCurrentProcessPid()
     {
-        return $this->server->worker_pid;
+        return $this->server->getServer()->worker_pid;
     }
 
     /**
@@ -207,7 +207,7 @@ class ProcessManager
      */
     public function setCurrentProcessPid($processPid)
     {
-        $this->server->worker_pid = $processPid;
+        $this->server->getServer()->worker_pid = $processPid;
     }
 
     /**

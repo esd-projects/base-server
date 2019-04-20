@@ -8,7 +8,6 @@
 
 namespace GoSwoole\BaseServer\Server;
 
-use GoSwoole\BaseServer\Coroutine\Co;
 use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
@@ -117,7 +116,7 @@ abstract class Process
      */
     public function createProcess(): Process
     {
-        $this->swooleProcess = new \Swoole\Process([$this, "__onProcessStart"], false, self::SOCK_DGRAM, true);
+        $this->swooleProcess = new \Swoole\Process([$this, "_onProcessStart"], false, self::SOCK_DGRAM, true);
         return $this;
     }
 
@@ -195,19 +194,6 @@ abstract class Process
     }
 
     /**
-     * 自定义进程需要一个死循环防止退出
-     */
-    public function __onProcessStart()
-    {
-        go(function () {
-            $this->_onProcessStart();
-        });
-        while (true) {
-            Co::yield();
-        }
-    }
-
-    /**
      * 进程启动的回调
      */
     public function _onProcessStart()
@@ -220,26 +206,27 @@ abstract class Process
         $this->processPid = getmypid();
         $this->server->getProcessManager()->setCurrentProcessPid($this->processPid);
         $this->server->getPlugManager()->beforeProcessStart($this->context);
+        $this->server->getPlugManager()->waitReady();
         $this->log = getDeepContextValueByClassName(Logger::class);
         $this->init();
-        sleep(1);
         $this->log->info("ready");
         //获取EventDispatcher
         $this->eventDispatcher = $this->getContext()->getDeepByClassName(EventDispatcher::class);
-
         if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
             $this->getProcessManager()->setCurrentProcessId($this->processId);
             \Swoole\Process::signal(SIGTERM, [$this, '_onProcessStop']);
             $this->socket = $this->swooleProcess->exportSocket();
             go(function () {
-                $recv = $this->socket->recv();
-                //获取进程id
-                $unpackData = unpack("N", $recv);
-                $processId = $unpackData[1];
-                $fromProcess = $this->server->getProcessManager()->getProcessFromId($processId);
-                go(function () use ($recv, $fromProcess) {
-                    $this->_onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
-                });
+                while (true) {
+                    $recv = $this->socket->recv();
+                    //获取进程id
+                    $unpackData = unpack("N", $recv);
+                    $processId = $unpackData[1];
+                    $fromProcess = $this->server->getProcessManager()->getProcessFromId($processId);
+                    go(function () use ($recv, $fromProcess) {
+                        $this->_onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
+                    });
+                }
             });
         }
         $this->onProcessStart();
