@@ -41,7 +41,7 @@ class LoggerPlug extends BasePlug
     private function buildLogger(Context $context)
     {
         $this->logger = new Logger('log');
-        $output = "%datetime% \033[32m%level_name%\033[0m --- %extra.about_process%  %extra.class_and_func% : %message% %context% \n";
+        $output = "%datetime% \033[32m%level_name%\033[0m %extra.about_process% %extra.class_and_func% : %message% %context% \n";
         $formatter = new LineFormatter($output, null, false, true);
         $streamHandler = new StreamHandler('php://stderr', Logger::DEBUG);
         $streamHandler->setFormatter($formatter);
