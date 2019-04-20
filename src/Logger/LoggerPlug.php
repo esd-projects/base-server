@@ -9,7 +9,7 @@
 namespace GoSwoole\BaseServer\Logger;
 
 use GoSwoole\BaseServer\Server\Context;
-use GoSwoole\BaseServer\Server\PlugIn\BasePlugInterface;
+use GoSwoole\BaseServer\Server\PlugIn\AbstractPlug;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -20,7 +20,7 @@ use Monolog\Processor\IntrospectionProcessor;
  * Class EventPlug
  * @package GoSwoole\BaseServer\Event
  */
-class LoggerPlug extends BasePlugInterface
+class LoggerPlug extends AbstractPlug
 {
     /**
      * @var Logger

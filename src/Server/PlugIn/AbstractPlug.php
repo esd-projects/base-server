@@ -17,7 +17,7 @@ use GoSwoole\BaseServer\Event\EventPlugin;
  * Class BasePlug
  * @package GoSwoole\BaseServer\Server\Plug
  */
-abstract class BasePlugInterface implements PlugInterface
+abstract class AbstractPlug implements PlugInterface
 {
     /**
      * @var string
