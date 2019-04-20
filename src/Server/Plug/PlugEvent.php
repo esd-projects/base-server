@@ -15,4 +15,5 @@ class PlugEvent extends Event
 {
     const PlugSuccessEvent = "PlugSuccessEvent";
     const PlugFailEvent = "PlugFailEvent";
+    const PlugReady = "PlugReady";
 }

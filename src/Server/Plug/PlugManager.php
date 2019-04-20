@@ -222,6 +222,8 @@ class PlugManager implements Plug
     {
         $this->readyChannel->pop();
         $this->readyChannel->close();
+        //发出PlugEvent:PlugReady
+        $this->eventDispatcher->dispatchEvent(new PlugEvent(PlugEvent::PlugReady, $this));
     }
 
 }
