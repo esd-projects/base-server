@@ -21,6 +21,7 @@ use GoSwoole\BaseServer\Server\Exception\ConfigException;
 use GoSwoole\BaseServer\Server\Plugin\PluginInterfaceManager;
 use GoSwoole\BaseServer\Server\ServerProcess\ManagerProcess;
 use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
+use Monolog\Logger;
 
 /**
  * Class Server
@@ -94,6 +95,11 @@ abstract class Server
     protected $eventDispatcher;
 
     /**
+     * @var Logger
+     */
+    protected $log;
+
+    /**
      * 这里context获取不到任何插件，因为插件还没有加载
      * Server constructor.
      * @param ServerConfig $serverConfig
@@ -112,8 +118,9 @@ abstract class Server
         $this->basePlugManager->addPlug(new EventPlugin());
         $this->basePlugManager->order();
         $this->basePlugManager->beforeServerStart($this->context);
-        //获取EventDispatcher
+        //获取EventDispatcher/Logger
         $this->eventDispatcher = $this->context->getDeepByClassName(EventDispatcher::class);
+        $this->log = $this->context->getDeepByClassName(Logger::class);
         $this->serverConfig = $serverConfig;
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
