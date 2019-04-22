@@ -8,8 +8,10 @@
 
 namespace GoSwoole\BaseServer\Event;
 
+use GoSwoole\BaseServer\Coroutine\Channel;
 use GoSwoole\BaseServer\Server\Process;
 use GoSwoole\BaseServer\Server\Server;
+use Monolog\Logger;
 
 /**
  * 事件派发器
@@ -18,7 +20,11 @@ use GoSwoole\BaseServer\Server\Server;
  */
 class EventDispatcher
 {
-    private $eventListeners = [];
+    private $eventChannels = [];
+    /**
+     * @var Logger
+     */
+    private $log;
 
     /**
      * @var Server
@@ -28,38 +34,44 @@ class EventDispatcher
     public function __construct(Server $server)
     {
         $this->server = $server;
+        $this->log = $server->getContext()->getDeepByClassName(Logger::class);
     }
 
     /**
      * Registers an event listener at a certain object.
      *
      * @param string $type
-     * @param callable $listener
+     * @param Channel|null $channel
+     * @return Channel
      */
-    public function add($type, $listener)
+    public function listen($type, $channel = null): Channel
     {
-        if (!array_key_exists($type, $this->eventListeners)) {
-            $this->eventListeners [$type] = [];
+        if (!array_key_exists($type, $this->eventChannels)) {
+            $this->eventChannels [$type] = [];
         }
-        array_push($this->eventListeners[$type], $listener);
+        if ($channel == null) {
+            $channel = new Channel();
+        }
+        array_push($this->eventChannels[$type], $channel);
+        return $channel;
     }
 
     /**
      * Removes an event listener from the object.
      *
      * @param string $type
-     * @param callable $listener
+     * @param Channel $channel
      */
-    public function remove($type, $listener)
+    public function remove($type, Channel $channel)
     {
-        if (array_key_exists($type, $this->eventListeners)) {
-            $index = array_search($listener, $this->eventListeners [$type]);
+        if (array_key_exists($type, $this->eventChannels)) {
+            $index = array_search($channel, $this->eventChannels [$type]);
             if ($index !== null) {
-                unset ($this->eventListeners [$type] [$index]);
+                unset ($this->eventChannels [$type] [$index]);
             }
-            $numListeners = count($this->eventListeners [$type]);
+            $numListeners = count($this->eventChannels [$type]);
             if ($numListeners == 0) {
-                unset ($this->eventListeners [$type]);
+                unset ($this->eventChannels [$type]);
             }
         }
     }
@@ -73,9 +85,9 @@ class EventDispatcher
     public function removeAll($type = null)
     {
         if ($type) {
-            unset ($this->eventListeners [$type]);
+            unset ($this->eventChannels [$type]);
         } else {
-            $this->eventListeners = array();
+            $this->eventChannels = array();
         }
     }
 
@@ -104,7 +116,7 @@ class EventDispatcher
      */
     public function dispatchEvent(Event $event)
     {
-        if (!array_key_exists($event->getType(), $this->eventListeners)) {
+        if (!array_key_exists($event->getType(), $this->eventChannels)) {
             return; // no need to do anything
         }
         $this->invokeEvent($event);
@@ -121,15 +133,17 @@ class EventDispatcher
      */
     private function invokeEvent($event)
     {
-        if (array_key_exists($event->getType(), $this->eventListeners)) {
-            $listeners = $this->eventListeners [$event->getType()];
+        if (array_key_exists($event->getType(), $this->eventChannels)) {
+            $channels = $this->eventChannels [$event->getType()];
         } else {
             return;
         }
-        foreach ($listeners as $listener) {
-            goWithContext(function () use ($listener, $event) {
-                $listener($event);
-            });
+        foreach ($channels as $channel) {
+            if ($channel instanceof Channel) {
+                goWithContext(function () use ($channel, $event) {
+                    $channel->push($event);
+                });
+            }
         }
     }
 

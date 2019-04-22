@@ -31,8 +31,12 @@ class DefaultProcess extends Process
         foreach ($this->getProcessManager()->getProcesses() as $process) {
             $this->sendMessage($message, $process);
         }
-        $this->eventDispatcher->add("testEvent", function (Event $event) {
-            $this->log->info("[Event] {$event->getData()}");
+        $channel = $this->eventDispatcher->listen("testEvent");
+        goWithContext(function () use ($channel) {
+            while (true) {
+                $event = $channel->pop();
+                $this->log->info("[Event] {$event->getData()}");
+            }
         });
         if ($this->getProcessId() == 0) {
             sleep(1);
