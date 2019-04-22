@@ -6,7 +6,7 @@
  * Time: 14:19
  */
 
-namespace GoSwoole\BaseServer\Server\PlugIn;
+namespace GoSwoole\BaseServer\Server\Plugin;
 
 
 use GoSwoole\BaseServer\Coroutine\Channel;
@@ -17,7 +17,7 @@ use GoSwoole\BaseServer\Event\EventPlugin;
  * Class BasePlug
  * @package GoSwoole\BaseServer\Server\Plug
  */
-abstract class AbstractPlug implements PlugInterface
+abstract class AbstractPlugin implements PlugInterface
 {
     /**
      * @var string

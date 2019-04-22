@@ -9,17 +9,17 @@
 namespace GoSwoole\BaseServer\Event;
 
 
-use GoSwoole\BaseServer\Logger\LoggerPlug;
+use GoSwoole\BaseServer\Logger\LoggerPlugin;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
-use GoSwoole\BaseServer\Server\PlugIn\AbstractPlug;
+use GoSwoole\BaseServer\Server\Plugin\AbstractPlugin;
 
 /**
  * Event 插件加载器
  * Class EventPlug
  * @package GoSwoole\BaseServer\Event
  */
-class EventPlugin extends AbstractPlug
+class EventPlugin extends AbstractPlugin
 {
     /**
      * @var EventDispatcher
@@ -29,7 +29,7 @@ class EventPlugin extends AbstractPlug
     public function __construct()
     {
         parent::__construct();
-        $this->atAfter(LoggerPlug::class);
+        $this->atAfter(LoggerPlugin::class);
     }
 
     /**

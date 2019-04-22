@@ -6,13 +6,13 @@
  * Time: 12:24
  */
 
-namespace GoSwoole\BaseServer\Server\PlugIn;
+namespace GoSwoole\BaseServer\Server\Plugin;
 
 use GoSwoole\BaseServer\Coroutine\Channel;
 use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Event\EventPlugin;
 use GoSwoole\BaseServer\Exception;
-use GoSwoole\BaseServer\Logger\LoggerPlug;
+use GoSwoole\BaseServer\Logger\LoggerPlugin;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Server;
 use Monolog\Logger;
@@ -91,7 +91,7 @@ class PlugInterfaceManager implements PlugInterface
                 $this->log->log(Logger::INFO, "加载[{$plug->getName()}]插件");
             }
             $plug->beforeServerStart($context);
-            if ($plug instanceof LoggerPlug) {
+            if ($plug instanceof LoggerPlugin) {
                 //这时可以获取到Log对象了
                 $this->log = $this->server->getContext()->getDeepByClassName(Logger::class);
             }

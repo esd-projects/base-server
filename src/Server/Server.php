@@ -11,14 +11,14 @@ namespace GoSwoole\BaseServer\Server;
 use GoSwoole\BaseServer\Event\ApplicationEvent;
 use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Event\EventPlugin;
-use GoSwoole\BaseServer\Logger\LoggerPlug;
+use GoSwoole\BaseServer\Logger\LoggerPlugin;
 use GoSwoole\BaseServer\Server\Beans\ClientInfo;
 use GoSwoole\BaseServer\Server\Beans\ServerStats;
 use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
 use GoSwoole\BaseServer\Server\Exception\ConfigException;
-use GoSwoole\BaseServer\Server\PlugIn\PlugInterfaceManager;
+use GoSwoole\BaseServer\Server\Plugin\PlugInterfaceManager;
 use GoSwoole\BaseServer\Server\ServerProcess\ManagerProcess;
 use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
 
@@ -106,7 +106,7 @@ abstract class Server
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
         $this->plugManager = new PlugInterfaceManager($this);
         //添加Logger/Event插件
-        $this->plugManager->addPlug(new LoggerPlug());
+        $this->plugManager->addPlug(new LoggerPlugin());
         $this->plugManager->addPlug(new EventPlugin());
     }
 

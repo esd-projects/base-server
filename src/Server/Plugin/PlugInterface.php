@@ -6,7 +6,7 @@
  * Time: 12:25
  */
 
-namespace GoSwoole\BaseServer\Server\PlugIn;
+namespace GoSwoole\BaseServer\Server\Plugin;
 
 
 use GoSwoole\BaseServer\Coroutine\Channel;
