@@ -8,6 +8,8 @@
 
 namespace GoSwoole\BaseServer\Plugins\Console;
 
+use GoSwoole\BaseServer\Plugins\Console\Command\ReloadCmd;
+use GoSwoole\BaseServer\Plugins\Console\Command\RestartCmd;
 use GoSwoole\BaseServer\Plugins\Console\Command\StartCmd;
 use GoSwoole\BaseServer\Plugins\Console\Command\StopCmd;
 use GoSwoole\BaseServer\Server\Context;
@@ -18,6 +20,8 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 class ConsolePlug extends AbstractPlug
 {
+    const SUCCESS_EXIT = 0;
+    const FAIL_EXIT = 1;
     const NOEXIT = -255;
     /**
      * @var Application
@@ -47,7 +51,9 @@ class ConsolePlug extends AbstractPlug
         $output = new ConsoleOutput();
         $this->application->addCommands([
             new StartCmd($context),
-            new StopCmd($context)
+            new StopCmd($context),
+            new ReloadCmd($context),
+            new RestartCmd($context)
         ]);
         $exitCode = $this->application->run($input, $output);
         if ($exitCode >= 0) {
