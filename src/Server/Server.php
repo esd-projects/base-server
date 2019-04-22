@@ -94,6 +94,7 @@ abstract class Server
      * @param ServerConfig $serverConfig
      * @param string $defaultPortClass
      * @param string $defaultProcessClass
+     * @throws \GoSwoole\BaseServer\Exception
      */
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
@@ -104,6 +105,9 @@ abstract class Server
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
         $this->plugManager = new PlugInterfaceManager($this);
+        //添加Logger/Event插件
+        $this->plugManager->addPlug(new LoggerPlug());
+        $this->plugManager->addPlug(new EventPlugin());
     }
 
     /**
@@ -151,9 +155,6 @@ abstract class Server
         $masterProcess = new MasterProcess($this);
         $this->processManager->setMasterProcess($masterProcess);
         $this->processManager->setManagerProcess($managerProcess);
-        //添加Logger/Event插件
-        $this->plugManager->addPlug(new LoggerPlug());
-        $this->plugManager->addPlug(new EventPlugin());
         //插件排序此时不允许添加插件了
         $this->plugManager->order();
         //调用所有插件的beforeServerStart

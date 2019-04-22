@@ -27,6 +27,7 @@ class DefaultServer extends Server
      * @param ServerConfig $serverConfig
      * @param string $portClass
      * @param string $processClass
+     * @throws \GoSwoole\BaseServer\Exception
      */
     public function __construct(ServerConfig $serverConfig, string $portClass = DefaultServerPort::class, string $processClass = DefaultProcess::class)
     {
@@ -67,5 +68,4 @@ class DefaultServer extends Server
     {
         $this->log->info("managerStop");
     }
-
 }

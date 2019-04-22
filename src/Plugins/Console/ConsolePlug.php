@@ -37,6 +37,13 @@ class ConsolePlug extends AbstractPlug
         return "Console";
     }
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->application = new Application("GO-SWOOLE");
+        $this->application->setAutoExit(false);
+    }
+
     /**
      * 在服务启动前
      * @param Context $context
@@ -45,8 +52,6 @@ class ConsolePlug extends AbstractPlug
      */
     public function beforeServerStart(Context $context)
     {
-        $this->application = new Application("GO-SWOOLE");
-        $this->application->setAutoExit(false);
         $input = new ArgvInput();
         $output = new ConsoleOutput();
         $this->application->addCommands([
@@ -69,5 +74,13 @@ class ConsolePlug extends AbstractPlug
     public function beforeProcessStart(Context $context)
     {
         $this->ready();
+    }
+
+    /**
+     * @return Application
+     */
+    public function getApplication(): Application
+    {
+        return $this->application;
     }
 }
