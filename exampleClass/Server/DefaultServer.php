@@ -16,10 +16,6 @@ use Monolog\Logger;
 
 class DefaultServer extends Server
 {
-    /**
-     * @var Logger
-     */
-    private $log;
 
     /**
      * 这里context获取不到任何插件，因为插件还没有加载
@@ -32,7 +28,6 @@ class DefaultServer extends Server
     public function __construct(ServerConfig $serverConfig, string $portClass = DefaultServerPort::class, string $processClass = DefaultProcess::class)
     {
         parent::__construct($serverConfig, $portClass, $processClass);
-        //这里获取不到log，因为插件还没有加载
     }
 
     /**
