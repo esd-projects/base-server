@@ -42,16 +42,18 @@ class GoSwooleProcessor implements ProcessorInterface
             return $record;
         }
         $process = Server::$instance->getProcessManager()->getCurrentProcess();
-        // we should have the call source now
-        $record['extra'] = array_merge(
-            $record['extra'],
-            array(
-                'processId' => $process->getProcessId(),
-                'processName' => $process->getProcessName(),
-                'processGroup' => $process->getGroupName(),
-                'cid' => Co::getCid()
-            )
-        );
+        if ($process != null) {
+            // we should have the call source now
+            $record['extra'] = array_merge(
+                $record['extra'],
+                array(
+                    'processId' => $process->getProcessId(),
+                    'processName' => $process->getProcessName(),
+                    'processGroup' => $process->getGroupName(),
+                    'cid' => Co::getCid()
+                )
+            );
+        }
         $this->setLength($record);
         return $record;
     }

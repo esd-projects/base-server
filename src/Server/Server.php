@@ -73,6 +73,11 @@ abstract class Server
     protected $plugManager;
 
     /**
+     * @var PluginInterfaceManager
+     */
+    protected $basePlugManager;
+
+    /**
      * 是否已配置
      * @var bool
      */
@@ -101,13 +106,23 @@ abstract class Server
         self::$instance = $this;
         print_r($serverConfig->getBannel() . "\n");
         $this->context = new Context($this);
+        $this->basePlugManager = new PluginInterfaceManager($this);
+        //初始化默认插件添加Logger/Event插件
+        $this->basePlugManager->addPlug(new LoggerPlugin());
+        $this->basePlugManager->addPlug(new EventPlugin());
+        $this->basePlugManager->order();
+        $this->basePlugManager->beforeServerStart($this->context);
+        //获取EventDispatcher
+        $this->eventDispatcher = $this->context->getDeepByClassName(EventDispatcher::class);
         $this->serverConfig = $serverConfig;
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
         $this->plugManager = new PluginInterfaceManager($this);
-        //添加Logger/Event插件
-        $this->plugManager->addPlug(new LoggerPlugin());
-        $this->plugManager->addPlug(new EventPlugin());
+        //设置主要进程
+        $managerProcess = new ManagerProcess($this);
+        $masterProcess = new MasterProcess($this);
+        $this->processManager->setMasterProcess($masterProcess);
+        $this->processManager->setManagerProcess($managerProcess);
     }
 
     /**
@@ -150,17 +165,10 @@ abstract class Server
     {
         //设置进程名称
         Process::setProcessTitle($this->serverConfig->getName());
-        //设置主要进程
-        $managerProcess = new ManagerProcess($this);
-        $masterProcess = new MasterProcess($this);
-        $this->processManager->setMasterProcess($masterProcess);
-        $this->processManager->setManagerProcess($managerProcess);
         //插件排序此时不允许添加插件了
         $this->plugManager->order();
         //调用所有插件的beforeServerStart
         $this->plugManager->beforeServerStart($this->context);
-        //获取EventDispatcher
-        $this->eventDispatcher = $this->context->getDeepByClassName(EventDispatcher::class);
         //锁定配置
         $this->setConfigured(true);
         //创建端口实例
@@ -620,5 +628,13 @@ abstract class Server
     public function getServerConfig(): ServerConfig
     {
         return $this->serverConfig;
+    }
+
+    /**
+     * @return PluginInterfaceManager
+     */
+    public function getBasePlugManager(): PluginInterfaceManager
+    {
+        return $this->basePlugManager;
     }
 }

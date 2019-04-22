@@ -67,6 +67,7 @@ class Message
 
     public function toString(): string
     {
-        return "{\"type\":\"$this->type\",\"data\":\"$this->data\"}";
+        $jsonData = json_encode($this->data);
+        return "{\"type\":\"$this->type\",\"data\":\"$jsonData\"}";
     }
 }
