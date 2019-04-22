@@ -11,7 +11,7 @@ namespace GoSwoole\BaseServer\Server\Plugin;
 
 use GoSwoole\BaseServer\Event\Event;
 
-class PlugEvent extends Event
+class PluginEvent extends Event
 {
     const PlugSuccessEvent = "PlugSuccessEvent";
     const PlugFailEvent = "PlugFailEvent";

@@ -22,15 +22,15 @@ use Monolog\Logger;
  * Class PlugManager
  * @package GoSwoole\BaseServer\Server\Plug
  */
-class PlugInterfaceManager implements PlugInterface
+class PluginInterfaceManager implements PluginInterface
 {
     /**
-     * @var PlugInterface[]
+     * @var PluginInterface[]
      */
     private $plugs = [];
 
     /**
-     * @var PlugInterface[]
+     * @var PluginInterface[]
      */
     private $plugClasses = [];
 
@@ -67,10 +67,10 @@ class PlugInterfaceManager implements PlugInterface
 
     /**
      * 添加插件
-     * @param PlugInterface $plug
+     * @param PluginInterface $plug
      * @throws Exception
      */
-    public function addPlug(PlugInterface $plug)
+    public function addPlug(PluginInterface $plug)
     {
         if ($this->fixed) {
             throw new Exception("已经锁定不能添加插件");
@@ -111,7 +111,7 @@ class PlugInterfaceManager implements PlugInterface
                 $plug->getReadyChannel()->close();
                 $this->log->error("{$plug->getName()}插件加载失败");
                 if ($this->eventDispatcher != null) {
-                    $this->eventDispatcher->dispatchEvent(new PlugEvent(PlugEvent::PlugFailEvent, $plug));
+                    $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PlugFailEvent, $plug));
                 }
             } else {
                 if ($plug instanceof EventPlugin) {
@@ -119,7 +119,7 @@ class PlugInterfaceManager implements PlugInterface
                     $this->eventDispatcher = $this->server->getContext()->getDeepByClassName(EventDispatcher::class);
                 }
                 if ($this->eventDispatcher != null) {
-                    $this->eventDispatcher->dispatchEvent(new PlugEvent(PlugEvent::PlugSuccessEvent, $plug));
+                    $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PlugSuccessEvent, $plug));
                 }
             }
         }
@@ -147,10 +147,10 @@ class PlugInterfaceManager implements PlugInterface
     }
 
     /**
-     * @param PlugInterface $plug
-     * @return PlugInterface|null
+     * @param PluginInterface $plug
+     * @return PluginInterface|null
      */
-    private function getPlugAfterClass(PlugInterface $plug)
+    private function getPlugAfterClass(PluginInterface $plug)
     {
         if ($plug->getAfterClass() == null) return null;
         return $this->plugClasses[$plug->getAfterClass()] ?? null;
@@ -223,7 +223,7 @@ class PlugInterfaceManager implements PlugInterface
         $this->readyChannel->pop();
         $this->readyChannel->close();
         //发出PlugEvent:PlugReady
-        $this->eventDispatcher->dispatchEvent(new PlugEvent(PlugEvent::PlugReady, $this));
+        $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PlugReady, $this));
     }
 
 }

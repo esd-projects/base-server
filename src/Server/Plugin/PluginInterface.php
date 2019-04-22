@@ -12,7 +12,7 @@ namespace GoSwoole\BaseServer\Server\Plugin;
 use GoSwoole\BaseServer\Coroutine\Channel;
 use GoSwoole\BaseServer\Server\Context;
 
-interface PlugInterface
+interface PluginInterface
 {
     /**
      * @return Channel

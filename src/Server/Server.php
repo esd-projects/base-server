@@ -18,7 +18,7 @@ use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
 use GoSwoole\BaseServer\Server\Exception\ConfigException;
-use GoSwoole\BaseServer\Server\Plugin\PlugInterfaceManager;
+use GoSwoole\BaseServer\Server\Plugin\PluginInterfaceManager;
 use GoSwoole\BaseServer\Server\ServerProcess\ManagerProcess;
 use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
 
@@ -68,7 +68,7 @@ abstract class Server
     protected $portManager;
 
     /**
-     * @var PlugInterfaceManager
+     * @var PluginInterfaceManager
      */
     protected $plugManager;
 
@@ -104,7 +104,7 @@ abstract class Server
         $this->serverConfig = $serverConfig;
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
-        $this->plugManager = new PlugInterfaceManager($this);
+        $this->plugManager = new PluginInterfaceManager($this);
         //添加Logger/Event插件
         $this->plugManager->addPlug(new LoggerPlugin());
         $this->plugManager->addPlug(new EventPlugin());
@@ -591,9 +591,9 @@ abstract class Server
     }
 
     /**
-     * @return PlugInterfaceManager
+     * @return PluginInterfaceManager
      */
-    public function getPlugManager(): PlugInterfaceManager
+    public function getPlugManager(): PluginInterfaceManager
     {
         return $this->plugManager;
     }

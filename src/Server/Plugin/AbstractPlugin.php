@@ -17,14 +17,14 @@ use GoSwoole\BaseServer\Event\EventPlugin;
  * Class BasePlug
  * @package GoSwoole\BaseServer\Server\Plug
  */
-abstract class AbstractPlugin implements PlugInterface
+abstract class AbstractPlugin implements PluginInterface
 {
     /**
      * @var string
      */
     private $afterClass;
     /**
-     * @var PlugInterface
+     * @var PluginInterface
      */
     private $afterPlug;
     /**
