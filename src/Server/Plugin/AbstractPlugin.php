@@ -10,7 +10,6 @@ namespace GoSwoole\BaseServer\Server\Plugin;
 
 
 use GoSwoole\BaseServer\Coroutine\Channel;
-use GoSwoole\BaseServer\Event\EventPlugin;
 
 /**
  * 基础插件，插件类需要继承
@@ -40,10 +39,6 @@ abstract class AbstractPlugin implements PluginInterface
     public function __construct()
     {
         $this->readyChannel = new Channel();
-        //默认都要在Event插件后加载
-        if (static::class !== EventPlugin::class) {
-            $this->atAfter(EventPlugin::class);
-        }
     }
 
     /**
