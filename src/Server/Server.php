@@ -121,6 +121,9 @@ abstract class Server
         //获取EventDispatcher/Logger
         $this->eventDispatcher = $this->context->getDeepByClassName(EventDispatcher::class);
         $this->log = $this->context->getDeepByClassName(Logger::class);
+        set_exception_handler(function ($e) {
+            $this->log->error($e);
+        });
         $this->serverConfig = $serverConfig;
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
@@ -249,7 +252,11 @@ abstract class Server
         //发送ApplicationStartingEvent事件
         $this->eventDispatcher->dispatchEvent(new ApplicationEvent(ApplicationEvent::ApplicationStartingEvent, $this));
         $this->processManager->getMasterProcess()->onProcessStart();
-        $this->onStart();
+        try {
+            $this->onStart();
+        } catch (\Throwable $e) {
+            $this->log->error($e);
+        }
     }
 
     /**
@@ -259,26 +266,43 @@ abstract class Server
     {
         //发送ApplicationShutdownEvent事件
         $this->eventDispatcher->dispatchEvent(new ApplicationEvent(ApplicationEvent::ApplicationShutdownEvent, $this));
-        $this->onShutdown();
+        try {
+            $this->onShutdown();
+        } catch (\Throwable $e) {
+            $this->log->error($e);
+        }
     }
 
     public function _onWorkerError($serv, int $worker_id, int $worker_pid, int $exit_code, int $signal)
     {
         $process = $this->processManager->getProcessFromId($worker_id);
-        $this->onWorkerError($process, $exit_code, $signal);
+        $this->log->alert("workerId:$worker_id exitCode:$exit_code signal:$signal");
+        try {
+            $this->onWorkerError($process, $exit_code, $signal);
+        } catch (\Throwable $e) {
+            $this->log->error($e);
+        }
     }
 
     public function _onManagerStart()
     {
         Server::$isStart = true;
         $this->processManager->getManagerProcess()->onProcessStart();
-        $this->onManagerStart();
+        try {
+            $this->onManagerStart();
+        } catch (\Throwable $e) {
+            $this->log->error($e);
+        }
     }
 
     public function _onManagerStop()
     {
         $this->processManager->getManagerProcess()->onProcessStop();
-        $this->onManagerStop();
+        try {
+            $this->onManagerStop();
+        } catch (\Throwable $e) {
+            $this->log->error($e);
+        }
     }
 
     public function _onWorkerStart($server, int $worker_id)
@@ -296,7 +320,7 @@ abstract class Server
     public function _onWorkerStop($server, int $worker_id)
     {
         $process = $this->processManager->getProcessFromId($worker_id);
-        $process->onProcessStop();
+        $process->_onProcessStop();
     }
 
     public abstract function onStart();
@@ -323,7 +347,7 @@ abstract class Server
 
     /**
      * 获取swoole的server类
-     * @return
+     * @return \Swoole\WebSocket\Server
      */
     public function getServer()
     {

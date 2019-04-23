@@ -209,7 +209,11 @@ abstract class Process
         $this->server->getPlugManager()->beforeProcessStart($this->context);
         $this->server->getPlugManager()->waitReady();
         $this->log = getDeepContextValueByClassName(Logger::class);
-        $this->init();
+        try {
+            $this->init();
+        } catch (\Throwable $e) {
+            $this->log->error($e);
+        }
         $this->log->info("ready");
         //获取EventDispatcher
         $this->eventDispatcher = $this->getContext()->getDeepByClassName(EventDispatcher::class);
@@ -230,7 +234,11 @@ abstract class Process
                 }
             });
         }
-        $this->onProcessStart();
+        try {
+            $this->onProcessStart();
+        } catch (\Throwable $e) {
+            $this->log->error($e);
+        }
     }
 
     /**
@@ -246,8 +254,12 @@ abstract class Process
      */
     public function _onPipeMessage(Message $message, Process $fromProcess)
     {
-        if (!MessageProcessor::dispatch($message)) {
-            $this->onPipeMessage($message, $fromProcess);
+        try {
+            if (!MessageProcessor::dispatch($message)) {
+                $this->onPipeMessage($message, $fromProcess);
+            }
+        } catch (\Throwable $e) {
+            $this->log->error($e);
         }
     }
 
@@ -256,7 +268,11 @@ abstract class Process
      */
     public function _onProcessStop()
     {
-        $this->onProcessStop();
+        try {
+            $this->onProcessStop();
+        } catch (\Throwable $e) {
+            $this->log->error($e);
+        }
         $this->swooleProcess->exit(0);
     }
 
