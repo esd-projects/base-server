@@ -9,7 +9,7 @@
 namespace GoSwoole\BaseServer\Server\Plugin;
 
 
-use GoSwoole\BaseServer\Event\Event;
+use GoSwoole\BaseServer\Plugins\Event\Event;
 
 class PluginEvent extends Event
 {

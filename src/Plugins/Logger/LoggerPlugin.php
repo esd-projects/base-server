@@ -6,7 +6,7 @@
  * Time: 13:52
  */
 
-namespace GoSwoole\BaseServer\Logger;
+namespace GoSwoole\BaseServer\Plugins\Logger;
 
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Plugin\AbstractPlugin;
@@ -18,7 +18,7 @@ use Monolog\Processor\IntrospectionProcessor;
 /**
  * Log 插件加载器
  * Class EventPlug
- * @package GoSwoole\BaseServer\Event
+ * @package GoSwoole\BaseServer\Plugins\Event
  */
 class LoggerPlugin extends AbstractPlugin
 {

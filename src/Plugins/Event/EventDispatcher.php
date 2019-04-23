@@ -6,7 +6,7 @@
  * Time: 9:20
  */
 
-namespace GoSwoole\BaseServer\Event;
+namespace GoSwoole\BaseServer\Plugins\Event;
 
 use GoSwoole\BaseServer\Coroutine\Channel;
 use GoSwoole\BaseServer\Server\Process;
@@ -16,7 +16,7 @@ use Monolog\Logger;
 /**
  * 事件派发器
  * Class EventDispatcher
- * @package GoSwoole\BaseServer\Event
+ * @package GoSwoole\BaseServer\Plugins\Event
  */
 class EventDispatcher
 {

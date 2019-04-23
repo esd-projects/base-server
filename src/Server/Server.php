@@ -8,10 +8,10 @@
 
 namespace GoSwoole\BaseServer\Server;
 
-use GoSwoole\BaseServer\Event\ApplicationEvent;
-use GoSwoole\BaseServer\Event\EventDispatcher;
-use GoSwoole\BaseServer\Event\EventPlugin;
-use GoSwoole\BaseServer\Logger\LoggerPlugin;
+use GoSwoole\BaseServer\Plugins\Event\ApplicationEvent;
+use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
+use GoSwoole\BaseServer\Plugins\Event\EventPlugin;
+use GoSwoole\BaseServer\Plugins\Logger\LoggerPlugin;
 use GoSwoole\BaseServer\Server\Beans\ClientInfo;
 use GoSwoole\BaseServer\Server\Beans\ServerStats;
 use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;

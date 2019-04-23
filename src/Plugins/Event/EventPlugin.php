@@ -6,10 +6,10 @@
  * Time: 13:52
  */
 
-namespace GoSwoole\BaseServer\Event;
+namespace GoSwoole\BaseServer\Plugins\Event;
 
 
-use GoSwoole\BaseServer\Logger\LoggerPlugin;
+use GoSwoole\BaseServer\Plugins\Logger\LoggerPlugin;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
 use GoSwoole\BaseServer\Server\Plugin\AbstractPlugin;
@@ -17,7 +17,7 @@ use GoSwoole\BaseServer\Server\Plugin\AbstractPlugin;
 /**
  * Event 插件加载器
  * Class EventPlug
- * @package GoSwoole\BaseServer\Event
+ * @package GoSwoole\BaseServer\Plugins\Event
  */
 class EventPlugin extends AbstractPlugin
 {

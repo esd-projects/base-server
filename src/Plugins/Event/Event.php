@@ -6,12 +6,12 @@
  * Time: 9:28
  */
 
-namespace GoSwoole\BaseServer\Event;
+namespace GoSwoole\BaseServer\Plugins\Event;
 
 /**
  * 本进程内的事件
  * Class Event
- * @package GoSwoole\BaseServer\Event
+ * @package GoSwoole\BaseServer\Plugins\Event
  */
 class Event
 {

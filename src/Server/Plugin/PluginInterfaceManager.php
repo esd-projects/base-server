@@ -9,8 +9,8 @@
 namespace GoSwoole\BaseServer\Server\Plugin;
 
 use GoSwoole\BaseServer\Coroutine\Channel;
-use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Exception;
+use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Server;
 use Monolog\Logger;

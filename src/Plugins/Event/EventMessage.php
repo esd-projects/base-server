@@ -6,14 +6,14 @@
  * Time: 9:28
  */
 
-namespace GoSwoole\BaseServer\Event;
+namespace GoSwoole\BaseServer\Plugins\Event;
 
 use GoSwoole\BaseServer\Server\Message\Message;
 
 /**
  * Event消息
  * Class Event
- * @package GoSwoole\BaseServer\Event
+ * @package GoSwoole\BaseServer\Plugins\Event
  */
 class EventMessage extends Message
 {

@@ -6,7 +6,7 @@
  * Time: 17:54
  */
 
-namespace GoSwoole\BaseServer\Logger;
+namespace GoSwoole\BaseServer\Plugins\Logger;
 
 use GoSwoole\BaseServer\Coroutine\Co;
 use GoSwoole\BaseServer\Server\Server;

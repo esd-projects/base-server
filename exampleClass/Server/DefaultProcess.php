@@ -9,7 +9,7 @@
 namespace GoSwoole\BaseServer\ExampleClass\Server;
 
 
-use GoSwoole\BaseServer\Event\Event;
+use GoSwoole\BaseServer\Plugins\Event\Event;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Process;
 

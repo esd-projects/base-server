@@ -6,7 +6,7 @@
  * Time: 10:42
  */
 
-namespace GoSwoole\BaseServer\Event;
+namespace GoSwoole\BaseServer\Plugins\Event;
 
 
 use GoSwoole\BaseServer\Server\Message\Message;
@@ -15,7 +15,7 @@ use GoSwoole\BaseServer\Server\Message\MessageProcessor;
 /**
  * 事件派发处理器
  * Class EventMessageProcessor
- * @package GoSwoole\BaseServer\Event
+ * @package GoSwoole\BaseServer\Plugins\Event
  */
 class EventMessageProcessor extends MessageProcessor
 {

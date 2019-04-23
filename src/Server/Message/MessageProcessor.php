@@ -8,8 +8,8 @@
 
 namespace GoSwoole\BaseServer\Server\Message;
 
-use GoSwoole\BaseServer\Event\EventDispatcher;
 use GoSwoole\BaseServer\Exception;
+use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
 
 /**
  * 消息处理器
