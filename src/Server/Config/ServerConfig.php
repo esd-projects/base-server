@@ -785,7 +785,7 @@ class ServerConfig
     /**
      * @return string
      */
-    public function getRootDir(): string
+    public function getRootDir()
     {
         return $this->rootDir;
     }
