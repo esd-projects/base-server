@@ -140,9 +140,18 @@ abstract class ServerPort
         $this->onUdpPacket($data, $client_info);
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @throws \GoSwoole\BaseServer\Exception
+     */
     public function _onRequest($request, $response)
     {
-        $this->onHttpRequest(new Request($request), new Response($response));
+        $_request = new Request($request);
+        $_response = new Response($response);
+        setContextValue("request", $_request);
+        setContextValue("response", $_response);
+        $this->onHttpRequest($_request, $_response);
     }
 
     public function _onMessage($server, $frame)
@@ -155,14 +164,29 @@ abstract class ServerPort
         }
     }
 
+    /**
+     * @param $server
+     * @param $request
+     * @throws \GoSwoole\BaseServer\Exception
+     */
     public function _onOpen($server, $request)
     {
-        $this->onWsOpen(new Request($request));
+        $_request = new Request($request);
+        setContextValue("request", $_request);
+        $this->onWsOpen($_request);
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @return bool
+     * @throws \GoSwoole\BaseServer\Exception
+     */
     public function _onHandshake($request, $response)
     {
-        $success = $this->onWsPassCustomHandshake(new Request($request));
+        $_request = new Request($request);
+        setContextValue("request", $_request);
+        $success = $this->onWsPassCustomHandshake($_request);
         if (!$success) return false;
         // websocket握手连接算法验证
         $secWebSocketKey = $request->header['sec-websocket-key'];
@@ -190,7 +214,7 @@ abstract class ServerPort
         $response->status(101);
         $response->end();
         $this->server->defer(function () use ($request) {
-            $this->onOpen($request);
+            $this->_onOpen($this->server->getServer(), $request);
         });
     }
 
