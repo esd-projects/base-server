@@ -24,6 +24,12 @@ class ServerConfig
      * @var string
      */
     private $name = "goSwoole";
+
+    /**
+     * 根目录
+     * @var string
+     */
+    private $rootDir;
     /**
      * reactor线程数，通过此参数来调节Reactor线程的数量，以充分利用多核
      * @Inject("Server.reactor_num")
@@ -774,6 +780,22 @@ class ServerConfig
     public function setName($name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRootDir(): string
+    {
+        return $this->rootDir;
+    }
+
+    /**
+     * @param string $rootDir
+     */
+    public function setRootDir(string $rootDir): void
+    {
+        $this->rootDir = $rootDir;
     }
 
 }

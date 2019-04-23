@@ -108,7 +108,7 @@ class ProcessManager
         } else {
             $processConfig = new ProcessConfig($this->defaultProcessClass, $name, $groupName);
         }
-        $this->customProcessConfigs[] = $processConfig;
+        $this->customProcessConfigs[$name] = $processConfig;
         return $processConfig;
     }
 
