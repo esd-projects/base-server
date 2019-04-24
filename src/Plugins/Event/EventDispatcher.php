@@ -41,16 +41,17 @@ class EventDispatcher
      * Registers an event listener at a certain object.
      *
      * @param string $type
-     * @param Channel|null $channel
-     * @return Channel
+     * @param EventChannel|null $channel
+     * @param bool $once 是否仅仅一次
+     * @return EventChannel
      */
-    public function listen($type, $channel = null): Channel
+    public function listen($type, $channel = null, $once = false): EventChannel
     {
         if (!array_key_exists($type, $this->eventChannels)) {
             $this->eventChannels [$type] = [];
         }
         if ($channel == null) {
-            $channel = new Channel();
+            $channel = new EventChannel($this, $type, $once);
         }
         array_push($this->eventChannels[$type], $channel);
         return $channel;
@@ -64,6 +65,7 @@ class EventDispatcher
      */
     public function remove($type, Channel $channel)
     {
+        if ($channel != null) $channel->close();
         if (array_key_exists($type, $this->eventChannels)) {
             $index = array_search($channel, $this->eventChannels [$type]);
             if ($index !== null) {
