@@ -46,16 +46,6 @@ class DefaultServerPort extends ServerPort
         $this->log->info("");
     }
 
-    public function onTcpBufferFull(int $fd)
-    {
-        $this->log->info("");
-    }
-
-    public function onTcpBufferEmpty(int $fd)
-    {
-        $this->log->info("");
-    }
-
     public function onUdpPacket(string $data, array $client_info)
     {
         $this->log->info("");

@@ -20,7 +20,7 @@ use GoSwoole\BaseServer\Server\Config\PortConfig;
  * Class ServerPort
  * @package GoSwoole\BaseServer\Server
  */
-abstract class ServerPort
+abstract class ServerPort implements IServerPort
 {
     /**
      * @var PortConfig
@@ -89,8 +89,6 @@ abstract class ServerPort
             $listening->on("connect", [$this, "_onConnect"]);
             $listening->on("close", [$this, "_onClose"]);
             $listening->on("receive", [$this, "_onReceive"]);
-            $listening->on("bufferFull", [$this, "_onBufferFull"]);
-            $listening->on("bufferEmpty", [$this, "_onBufferEmpty"]);
         }
         //UDP
         if ($this->isUDP()) {
@@ -123,16 +121,6 @@ abstract class ServerPort
     public function _onReceive($server, int $fd, int $reactorId, string $data)
     {
         $this->onTcpReceive($fd, $reactorId, $data);
-    }
-
-    public function _onBufferFull($server, int $fd)
-    {
-        $this->onTcpBufferFull($fd);
-    }
-
-    public function _onBufferEmpty($server, int $fd)
-    {
-        $this->onTcpBufferEmpty($fd);
     }
 
     public function _onPacket($server, string $data, array $client_info)
@@ -223,10 +211,6 @@ abstract class ServerPort
     public abstract function onTcpClose(int $fd, int $reactorId);
 
     public abstract function onTcpReceive(int $fd, int $reactorId, string $data);
-
-    public abstract function onTcpBufferFull(int $fd);
-
-    public abstract function onTcpBufferEmpty(int $fd);
 
     public abstract function onUdpPacket(string $data, array $client_info);
 
