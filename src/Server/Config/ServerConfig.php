@@ -815,4 +815,30 @@ class ServerConfig
         $this->rootDir = $rootDir;
     }
 
+    /**
+     * 获取bin目录
+     * @return string
+     */
+    public function getBinDir()
+    {
+        return $this->getRootDir() . DIRECTORY_SEPARATOR . "bin";
+    }
+
+    /**
+     * 获取src目录
+     * @return string
+     */
+    public function getSrcDir()
+    {
+        return $this->getRootDir() . DIRECTORY_SEPARATOR . "src";
+    }
+
+    /**
+     * 获取vendor目录
+     * @return string
+     */
+    public function getVendorDir()
+    {
+        return $this->getRootDir() . DIRECTORY_SEPARATOR . "vendor";
+    }
 }
