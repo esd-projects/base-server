@@ -235,7 +235,7 @@ abstract class Process
                 }
             });
         }
-        //这里加个延迟，不然有神奇的时序BUG
+        //这里加个延迟，不然用AOP有神奇的时序BUG
         Co::sleep(0.1);
         try {
             $this->onProcessStart();
