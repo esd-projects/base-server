@@ -679,6 +679,15 @@ class ServerConfig
     public function buildConfig(): array
     {
         $build = [];
+        if (empty($this->getRootDir())) {
+            throw new ConfigException("RootDir不能为空");
+        } else {
+            //格式化rootDir
+            $this->rootDir = realpath($this->getRootDir());
+            if ($this->rootDir === false) {
+                throw new ConfigException("RootDir不存在");
+            }
+        }
         if ($this->getReactorNum() != null && $this->getReactorNum() > 0) {
             $build['reactor_num'] = $this->getReactorNum();
         }
@@ -704,7 +713,11 @@ class ServerConfig
         if (!empty($this->getCpuAffinityIgnore())) {
             $build['cpu_affinity_ignore'] = $this->getCpuAffinityIgnore();
         }
-        ConfigException::AssertNull($this, "logFile", $this->getLogFile());
+        if (empty($this->getLogFile())) {
+            $path = $this->rootDir . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "logs";
+            mkdir($path, 0777, true);
+            $this->logFile = $path . DIRECTORY_SEPARATOR . "swoole.log";
+        }
         $build['log_file'] = $this->getLogFile();
         $build['log_level'] = $this->getLogLevel();
         if ($this->getHeartbeatCheckInterval() != null) {
@@ -722,7 +735,11 @@ class ServerConfig
         if (!empty($this->getChroot())) {
             $build['chroot'] = $this->getChroot();
         }
-        ConfigException::AssertNull($this, "pidFile", $this->getPidFile());
+        if (empty($this->getPidFile())) {
+            $path = $this->rootDir . DIRECTORY_SEPARATOR . "bin";
+            mkdir($path, 0777, true);
+            $this->pidFile = $path . DIRECTORY_SEPARATOR . "pid";
+        }
         $build['pid_file'] = $this->getPidFile();
         if (!empty($this->getBufferOutputSize())) {
             $build['buffer_output_size'] = $this->getBufferOutputSize();

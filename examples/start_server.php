@@ -34,9 +34,7 @@ $wsPortConfig->setOpenHttpProtocol(true);
 //---服务器配置---
 $serverConfig = new ServerConfig();
 $serverConfig->setWorkerNum(4);
-$serverConfig->setLogFile(__DIR__ . "/../swoole.log");
-$serverConfig->setPidFile(__DIR__ . "/../pid");
-
+$serverConfig->setRootDir(__DIR__ . "/../");
 
 $server = new DefaultServer($serverConfig);
 //添加端口
