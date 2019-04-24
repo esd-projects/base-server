@@ -97,6 +97,10 @@ class PluginInterfaceManager implements PluginInterface
             }
             $plug->beforeServerStart($context);
         }
+        //发出PlugManagerEvent:PlugAfterServerStartEvent事件
+        if ($this->eventDispatcher != null) {
+            $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugAfterServerStartEvent, $this));
+        }
     }
 
     /**
@@ -125,6 +129,10 @@ class PluginInterfaceManager implements PluginInterface
                     $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PlugSuccessEvent, $plug));
                 }
             }
+        }
+        //发出PlugManagerEvent:PlugAfterProcessStartEvent事件
+        if ($this->eventDispatcher != null) {
+            $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugAfterProcessStartEvent, $this));
         }
         $this->readyChannel->push("ready");
     }
