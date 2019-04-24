@@ -14,6 +14,8 @@ use GoSwoole\BaseServer\Plugins\Event\Event;
 class PluginManagerEvent extends Event
 {
     const PlugBeforeServerStartEvent = "PlugBeforeServerStartEvent";
+    const PlugAfterServerStartEvent = "PlugAfterServerStartEvent";
     const PlugBeforeProcessStartEvent = "PlugBeforeProcessStartEvent";
+    const PlugAfterProcessStartEvent = "PlugAfterProcessStartEvent";
     const PlugAllReadyEvent = "PlugAllReadyEvent";
 }
