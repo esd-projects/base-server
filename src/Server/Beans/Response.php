@@ -15,6 +15,11 @@ namespace GoSwoole\BaseServer\Server\Beans;
  */
 class Response
 {
+    /**
+     * @var bool
+     */
+    private $isEnd = false;
+
     private $fd;
     /**
      * swoole的原始对象
@@ -105,7 +110,11 @@ class Response
      */
     public function end(string $html)
     {
+        if ($this->isEnd) {
+            return;
+        }
         $this->swooleResponse->end($html);
+        $this->isEnd = true;
     }
 
     /**
@@ -165,5 +174,13 @@ class Response
     public function setCookie($cookie): void
     {
         $this->swooleResponse->cookie = $cookie;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnd(): bool
+    {
+        return $this->isEnd;
     }
 }
