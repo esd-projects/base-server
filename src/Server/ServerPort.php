@@ -110,58 +110,93 @@ abstract class ServerPort implements IServerPort
 
     public function _onConnect($server, int $fd, int $reactorId)
     {
-        $this->onTcpConnect($fd, $reactorId);
+        try {
+            $this->onTcpConnect($fd, $reactorId);
+        } catch (\Throwable $e) {
+            Server::$instance->getLog()->error($e);
+        }
     }
 
     public function _onClose($server, int $fd, int $reactorId)
     {
-        $this->onTcpClose($fd, $reactorId);
+        try {
+            $this->onTcpClose($fd, $reactorId);
+        } catch (\Throwable $e) {
+            Server::$instance->getLog()->error($e);
+        }
     }
 
     public function _onReceive($server, int $fd, int $reactorId, string $data)
     {
-        $this->onTcpReceive($fd, $reactorId, $data);
+        try {
+            $this->onTcpReceive($fd, $reactorId, $data);
+        } catch (\Throwable $e) {
+            Server::$instance->getLog()->error($e);
+        }
     }
 
+    /**
+     * @param $server
+     * @param string $data
+     * @param array $client_info
+     */
     public function _onPacket($server, string $data, array $client_info)
     {
-        $this->onUdpPacket($data, $client_info);
+        try {
+            $this->onUdpPacket($data, $client_info);
+        } catch (\Throwable $e) {
+            Server::$instance->getLog()->error($e);
+        }
     }
 
     /**
      * @param $request
      * @param $response
-     * @throws \GoSwoole\BaseServer\Exception
      */
     public function _onRequest($request, $response)
     {
-        $_request = new Request($request);
-        $_response = new Response($response);
-        setContextValue("request", $_request);
-        setContextValue("response", $_response);
-        $this->onHttpRequest($_request, $_response);
+        try {
+            $_request = new Request($request);
+            $_response = new Response($response);
+            setContextValue("request", $_request);
+            setContextValue("response", $_response);
+            $this->onHttpRequest($_request, $_response);
+        } catch (\Throwable $e) {
+            Server::$instance->getLog()->error($e);
+        }
     }
 
+    /**
+     * @param $server
+     * @param $frame
+     */
     public function _onMessage($server, $frame)
     {
-        if (isset($frame['code'])) {
-            //是个CloseFrame
-            $this->onWsMessage(new WebSocketCloseFrame($frame));
-        } else {
-            $this->onWsMessage(new WebSocketFrame($frame));
+        try {
+            if (isset($frame['code'])) {
+                //是个CloseFrame
+                $this->onWsMessage(new WebSocketCloseFrame($frame));
+            } else {
+                $this->onWsMessage(new WebSocketFrame($frame));
+            }
+        } catch (\Throwable $e) {
+            Server::$instance->getLog()->error($e);
         }
     }
 
     /**
      * @param $server
      * @param $request
-     * @throws \GoSwoole\BaseServer\Exception
      */
     public function _onOpen($server, $request)
     {
-        $_request = new Request($request);
-        setContextValue("request", $_request);
-        $this->onWsOpen($_request);
+        try {
+            $_request = new Request($request);
+            setContextValue("request", $_request);
+            $this->onWsOpen($_request);
+        } catch (\Throwable $e) {
+            Server::$instance->getLog()->error($e);
+        }
     }
 
     /**

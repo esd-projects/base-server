@@ -668,4 +668,12 @@ abstract class Server
     {
         return $this->basePlugManager;
     }
+
+    /**
+     * @return Logger
+     */
+    public function getLog(): Logger
+    {
+        return $this->log;
+    }
 }
