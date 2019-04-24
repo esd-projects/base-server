@@ -821,7 +821,7 @@ class ServerConfig
      */
     public function getBinDir()
     {
-        return $this->getRootDir() . DIRECTORY_SEPARATOR . "bin";
+        return realpath($this->getRootDir()) . DIRECTORY_SEPARATOR . "bin";
     }
 
     /**
@@ -830,7 +830,7 @@ class ServerConfig
      */
     public function getSrcDir()
     {
-        return $this->getRootDir() . DIRECTORY_SEPARATOR . "src";
+        return realpath($this->getRootDir()) . DIRECTORY_SEPARATOR . "src";
     }
 
     /**
@@ -839,6 +839,6 @@ class ServerConfig
      */
     public function getVendorDir()
     {
-        return $this->getRootDir() . DIRECTORY_SEPARATOR . "vendor";
+        return realpath($this->getRootDir()) . DIRECTORY_SEPARATOR . "vendor";
     }
 }
