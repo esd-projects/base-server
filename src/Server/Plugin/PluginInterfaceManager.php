@@ -81,6 +81,16 @@ class PluginInterfaceManager implements PluginInterface
     }
 
     /**
+     * 获取插件
+     * @param String $className
+     * @return PluginInterface|null
+     */
+    public function getPlug(String $className)
+    {
+        return $this->plugClasses[$className] ?? null;
+    }
+
+    /**
      * 在服务启动之前
      * @param Context $context
      * @return mixed|void
