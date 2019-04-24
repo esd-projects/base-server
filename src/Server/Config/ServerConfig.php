@@ -715,7 +715,9 @@ class ServerConfig
         }
         if (empty($this->getLogFile())) {
             $path = $this->rootDir . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "logs";
-            mkdir($path, 0777, true);
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
             $this->logFile = $path . DIRECTORY_SEPARATOR . "swoole.log";
         }
         $build['log_file'] = $this->getLogFile();
@@ -737,7 +739,9 @@ class ServerConfig
         }
         if (empty($this->getPidFile())) {
             $path = $this->rootDir . DIRECTORY_SEPARATOR . "bin";
-            mkdir($path, 0777, true);
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
             $this->pidFile = $path . DIRECTORY_SEPARATOR . "pid";
         }
         $build['pid_file'] = $this->getPidFile();

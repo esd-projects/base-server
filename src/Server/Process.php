@@ -8,7 +8,6 @@
 
 namespace GoSwoole\BaseServer\Server;
 
-use GoSwoole\BaseServer\Coroutine\Co;
 use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
@@ -235,8 +234,7 @@ abstract class Process
                 }
             });
         }
-        //这里加个延迟，不然用AOP有神奇的时序BUG
-        Co::sleep(0.1);
+        enableRuntimeCoroutine();
         try {
             $this->onProcessStart();
         } catch (\Throwable $e) {
