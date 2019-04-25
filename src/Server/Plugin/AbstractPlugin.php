@@ -20,6 +20,10 @@ use GoSwoole\BaseServer\Exception;
 abstract class AbstractPlugin implements PluginInterface
 {
     /**
+     * @var PluginInterfaceManager
+     */
+    private $pluginInterfaceManager;
+    /**
      * @var string[]
      */
     private $afterClass = [];
@@ -122,5 +126,15 @@ abstract class AbstractPlugin implements PluginInterface
     public function getBeforeClass(): array
     {
         return $this->beforeClass;
+    }
+
+    /**
+     * 被加入时，这里其实可以添加依赖的插件
+     * @param PluginInterfaceManager $pluginInterfaceManager
+     * @return mixed|void
+     */
+    public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
+    {
+        $this->pluginInterfaceManager = $pluginInterfaceManager;
     }
 }

@@ -73,4 +73,10 @@ interface PluginInterface
      */
     public function getBeforeClass(): array;
 
+    /**
+     * @param PluginInterfaceManager $pluginInterfaceManager
+     * @return mixed
+     */
+    public function onAdded(PluginInterfaceManager $pluginInterfaceManager);
+
 }

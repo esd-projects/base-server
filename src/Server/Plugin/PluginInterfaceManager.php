@@ -288,4 +288,13 @@ class PluginInterfaceManager implements PluginInterface
     {
         return;
     }
+
+    /**
+     * @param PluginInterfaceManager $pluginInterfaceManager
+     * @return mixed
+     */
+    public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
+    {
+        return;
+    }
 }
