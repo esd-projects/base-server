@@ -27,7 +27,19 @@ interface PluginInterface
     /**
      * @param mixed $afterPlug
      */
-    public function setAfterPlug($afterPlug);
+    public function setAfterPlug(array $afterPlug);
+
+    /**
+     * @param $className
+     * @return void
+     */
+    public function atAfter($className);
+
+    /**
+     * @param $className
+     * @return void
+     */
+    public function atBefore($className);
 
     /**
      * 获取插件名字
@@ -50,8 +62,13 @@ interface PluginInterface
     public function beforeProcessStart(Context $context);
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getAfterClass();
+    public function getAfterClass(): array;
+
+    /**
+     * @return array
+     */
+    public function getBeforeClass(): array;
 
 }

@@ -19,13 +19,17 @@ use GoSwoole\BaseServer\Coroutine\Channel;
 abstract class AbstractPlugin implements PluginInterface
 {
     /**
-     * @var string
+     * @var string[]
      */
-    private $afterClass;
+    private $afterClass = [];
     /**
-     * @var PluginInterface
+     * @var PluginInterface[]
      */
-    private $afterPlug;
+    private $afterPlug = [];
+    /**
+     * @var string[]
+     */
+    private $beforeClass = [];
     /**
      * @var int
      */
@@ -47,13 +51,22 @@ abstract class AbstractPlugin implements PluginInterface
      */
     public function atAfter($className)
     {
-        $this->afterClass = $className;
+        $this->afterClass[$className] = $className;
     }
 
     /**
-     * @return mixed
+     * 在哪个之前
+     * @param $className
      */
-    public function getAfterClass()
+    public function atBefore($className)
+    {
+        $this->beforeClass[$className] = $className;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAfterClass(): array
     {
         return $this->afterClass;
     }
@@ -64,18 +77,12 @@ abstract class AbstractPlugin implements PluginInterface
      */
     public function getOrderIndex(): int
     {
-        if ($this->afterPlug != null) {
-            return $this->orderIndex + $this->afterPlug->getOrderIndex();
+        $max = $this->orderIndex;
+        foreach ($this->afterPlug as $plugin) {
+            $vaule = $this->orderIndex + $plugin->getOrderIndex();
+            $max = max($max, $vaule);
         }
-        return $this->orderIndex;
-    }
-
-    /**
-     * @param mixed $afterPlug
-     */
-    public function setAfterPlug($afterPlug): void
-    {
-        $this->afterPlug = $afterPlug;
+        return $max;
     }
 
     /**
@@ -89,5 +96,21 @@ abstract class AbstractPlugin implements PluginInterface
     public function ready()
     {
         $this->readyChannel->push("ready");
+    }
+
+    /**
+     * @param PluginInterface[] $afterPlug
+     */
+    public function setAfterPlug(array $afterPlug): void
+    {
+        $this->afterPlug = $afterPlug;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getBeforeClass(): array
+    {
+        return $this->beforeClass;
     }
 }

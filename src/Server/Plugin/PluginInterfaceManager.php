@@ -153,9 +153,10 @@ class PluginInterfaceManager implements PluginInterface
     public function order()
     {
         foreach ($this->plugs as $plug) {
-            if ($this->getPlugAfterClass($plug) != null) {
-                $plug->setAfterPlug($this->getPlugAfterClass($plug));
+            foreach ($this->getPlugBeforeClass($plug) as $needAddAfterPlug) {
+                $needAddAfterPlug->atAfter($plug);
             }
+            $plug->setAfterPlug($this->getPlugAfterClass($plug));
         }
         usort($this->plugs, function ($a, $b) {
             if ($a->getOrderIndex() > $b->getOrderIndex()) {
@@ -169,14 +170,35 @@ class PluginInterfaceManager implements PluginInterface
 
     /**
      * @param PluginInterface $plug
-     * @return PluginInterface|null
+     * @return PluginInterface[]
      */
-    private function getPlugAfterClass(PluginInterface $plug)
+    private function getPlugAfterClass(PluginInterface $plug): array
     {
-        if ($plug->getAfterClass() == null) return null;
-        return $this->plugClasses[$plug->getAfterClass()] ?? null;
+        $result = [];
+        foreach ($plug->getAfterClass() as $class) {
+            $one = $this->plugClasses[$class] ?? null;
+            if ($one != null) {
+                $result[] = $one;
+            }
+        }
+        return $result;
     }
 
+    /**
+     * @param PluginInterface $plug
+     * @return PluginInterface[]
+     */
+    private function getPlugBeforeClass(PluginInterface $plug): array
+    {
+        $result = [];
+        foreach ($plug->getBeforeClass() as $class) {
+            $one = $this->plugClasses[$class] ?? null;
+            if ($one != null) {
+                $result[] = $one;
+            }
+        }
+        return $result;
+    }
 
     /**
      * 获取插件名字
@@ -207,23 +229,23 @@ class PluginInterfaceManager implements PluginInterface
     /**
      * @return mixed
      */
-    public function getBeforeClass()
+    public function getBeforeClass(): array
     {
-        return null;
+        return [];
     }
 
     /**
      * @return mixed
      */
-    public function getAfterClass()
+    public function getAfterClass(): array
     {
-        return null;
+        return [];
     }
 
     /**
      * @param mixed $afterPlug
      */
-    public function setAfterPlug($afterPlug)
+    public function setAfterPlug(array $afterPlug): void
     {
         return;
     }
@@ -247,5 +269,19 @@ class PluginInterfaceManager implements PluginInterface
         if ($this->eventDispatcher != null) {
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugAllReadyEvent, $this));
         }
+    }
+
+    public function atAfter($className)
+    {
+        return;
+    }
+
+    /**
+     * @param $className
+     * @return void
+     */
+    public function atBefore($className)
+    {
+        return;
     }
 }
