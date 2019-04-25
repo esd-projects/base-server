@@ -297,4 +297,12 @@ class PluginInterfaceManager implements PluginInterface
     {
         return;
     }
+
+    /**
+     * @return Server
+     */
+    public function getServer(): Server
+    {
+        return $this->server;
+    }
 }
