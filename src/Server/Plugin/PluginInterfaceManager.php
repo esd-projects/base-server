@@ -76,7 +76,7 @@ class PluginInterfaceManager implements PluginInterface
         if ($this->fixed) {
             throw new Exception("已经锁定不能添加插件");
         }
-        $this->plugs[] = $plug;
+        $this->plugs[$plug->getName()] = $plug;
         $this->plugClasses[get_class($plug)] = $plug;
     }
 
