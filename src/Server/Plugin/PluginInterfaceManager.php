@@ -78,6 +78,7 @@ class PluginInterfaceManager implements PluginInterface
         }
         $this->plugs[$plug->getName()] = $plug;
         $this->plugClasses[get_class($plug)] = $plug;
+        $plug->onAdded($this);
     }
 
     /**
