@@ -154,12 +154,14 @@ class PluginInterfaceManager implements PluginInterface
     {
         foreach ($this->plugs as $plug) {
             foreach ($this->getPlugBeforeClass($plug) as $needAddAfterPlug) {
-                $needAddAfterPlug->atAfter($plug);
+                $needAddAfterPlug->addAfterPlug($plug);
             }
-            $plug->setAfterPlug($this->getPlugAfterClass($plug));
+            foreach ($this->getPlugAfterClass($plug) as $afterPlug) {
+                $plug->addAfterPlug($afterPlug);
+            }
         }
         usort($this->plugs, function ($a, $b) {
-            if ($a->getOrderIndex() > $b->getOrderIndex()) {
+            if ($a->getOrderIndex($a, 0) > $b->getOrderIndex($b, 0)) {
                 return 1;
             } else {
                 return -1;
@@ -219,9 +221,11 @@ class PluginInterfaceManager implements PluginInterface
     }
 
     /**
+     * @param PluginInterface $root
+     * @param int $layer
      * @return int
      */
-    public function getOrderIndex(): int
+    public function getOrderIndex(PluginInterface $root, int $layer): int
     {
         return 0;
     }
@@ -245,7 +249,7 @@ class PluginInterfaceManager implements PluginInterface
     /**
      * @param mixed $afterPlug
      */
-    public function setAfterPlug(array $afterPlug): void
+    public function addAfterPlug(PluginInterface $afterPlug): void
     {
         return;
     }
@@ -271,7 +275,7 @@ class PluginInterfaceManager implements PluginInterface
         }
     }
 
-    public function atAfter($className)
+    public function atAfter(...$className)
     {
         return;
     }
@@ -280,7 +284,7 @@ class PluginInterfaceManager implements PluginInterface
      * @param $className
      * @return void
      */
-    public function atBefore($className)
+    public function atBefore(...$className)
     {
         return;
     }

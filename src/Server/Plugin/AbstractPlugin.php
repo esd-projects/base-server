@@ -10,6 +10,7 @@ namespace GoSwoole\BaseServer\Server\Plugin;
 
 
 use GoSwoole\BaseServer\Coroutine\Channel;
+use GoSwoole\BaseServer\Exception;
 
 /**
  * 基础插件，插件类需要继承
@@ -49,18 +50,22 @@ abstract class AbstractPlugin implements PluginInterface
      * 在哪个之后
      * @param $className
      */
-    public function atAfter($className)
+    public function atAfter(...$className)
     {
-        $this->afterClass[$className] = $className;
+        foreach ($className as $one) {
+            $this->afterClass[$one] = $one;
+        }
     }
 
     /**
      * 在哪个之前
      * @param $className
      */
-    public function atBefore($className)
+    public function atBefore(...$className)
     {
-        $this->beforeClass[$className] = $className;
+        foreach ($className as $one) {
+            $this->beforeClass[$one] = $one;
+        }
     }
 
     /**
@@ -73,13 +78,18 @@ abstract class AbstractPlugin implements PluginInterface
 
 
     /**
+     * @param PluginInterface $root
+     * @param int $layer
      * @return int
+     * @throws Exception
      */
-    public function getOrderIndex(): int
+    public function getOrderIndex(PluginInterface $root, int $layer): int
     {
+        $layer++;
+        if ($layer > 255) throw new Exception(get_class($root) . " 插件排序出现了循环依赖，请检查插件");
         $max = $this->orderIndex;
         foreach ($this->afterPlug as $plugin) {
-            $vaule = $this->orderIndex + $plugin->getOrderIndex();
+            $vaule = $this->orderIndex + $plugin->getOrderIndex($root, $layer);
             $max = max($max, $vaule);
         }
         return $max;
@@ -99,11 +109,11 @@ abstract class AbstractPlugin implements PluginInterface
     }
 
     /**
-     * @param PluginInterface[] $afterPlug
+     * @param PluginInterface $afterPlug
      */
-    public function setAfterPlug(array $afterPlug): void
+    public function addAfterPlug(PluginInterface $afterPlug): void
     {
-        $this->afterPlug = $afterPlug;
+        $this->afterPlug[] = $afterPlug;
     }
 
     /**
