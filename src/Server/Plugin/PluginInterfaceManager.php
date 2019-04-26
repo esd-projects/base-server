@@ -126,7 +126,13 @@ class PluginInterfaceManager implements PluginInterface
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugBeforeProcessStartEvent, $this));
         }
         foreach ($this->plugs as $plug) {
-            $plug->beforeProcessStart($context);
+            try {
+                $plug->beforeProcessStart($context);
+            } catch (\Throwable $e) {
+                $this->log->error($e);
+                $this->log->error("{$plug->getName()}插件加载失败");
+                continue;
+            }
             if (!$plug->getReadyChannel()->pop(5)) {
                 $plug->getReadyChannel()->close();
                 if ($this->log != null) {
