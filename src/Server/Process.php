@@ -195,6 +195,7 @@ abstract class Process
      */
     public function _onProcessStart()
     {
+        $this->log = getDeepContextValueByClassName(Logger::class);
         try {
             Server::$isStart = true;
             if ($this->processName != null) {
@@ -210,7 +211,6 @@ abstract class Process
 
             $this->server->getPlugManager()->beforeProcessStart($this->context);
             $this->server->getPlugManager()->waitReady();
-            $this->log = getDeepContextValueByClassName(Logger::class);
             $this->init();
 
             $this->log->info("ready");
