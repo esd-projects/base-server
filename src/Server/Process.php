@@ -9,6 +9,7 @@
 namespace GoSwoole\BaseServer\Server;
 
 use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
+use GoSwoole\BaseServer\Plugins\Event\ProcessEvent;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
 use GoSwoole\BaseServer\Utils\Utils;
@@ -232,6 +233,8 @@ abstract class Process
                 });
             }
             enableRuntimeCoroutine();
+            //发出事件
+            $this->eventDispatcher->dispatchEvent(new ProcessEvent(ProcessEvent::ProcessStartEvent, $this));
             $this->onProcessStart();
         } catch (\Throwable $e) {
             $this->log->error($e);
@@ -266,6 +269,8 @@ abstract class Process
     public function _onProcessStop()
     {
         try {
+            //发出事件
+            $this->eventDispatcher->dispatchEvent(new ProcessEvent(ProcessEvent::ProcessStopEvent, $this));
             $this->onProcessStop();
         } catch (\Throwable $e) {
             $this->log->error($e);
