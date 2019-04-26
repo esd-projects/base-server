@@ -13,6 +13,7 @@ use GoSwoole\BaseServer\Plugins\Logger\LoggerPlugin;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
 use GoSwoole\BaseServer\Server\Plugin\AbstractPlugin;
+use GoSwoole\BaseServer\Server\Server;
 
 /**
  * Event 插件加载器
@@ -52,8 +53,7 @@ class EventPlugin extends AbstractPlugin
     public function beforeProcessStart(Context $context)
     {
         //创建事件派发器
-        $this->eventDispatcher = new EventDispatcher($context->getServer());
-        $context->add("eventDispatcher", $this->eventDispatcher);
+        $this->eventDispatcher = Server::$instance->getEventDispatcher();
         //注册事件派发处理函数
         MessageProcessor::addMessageProcessor(new EventMessageProcessor($this->eventDispatcher));
         //ready
