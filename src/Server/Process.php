@@ -195,47 +195,45 @@ abstract class Process
      */
     public function _onProcessStart()
     {
-        Server::$isStart = true;
-        if ($this->processName != null) {
-            $this->setName($this->processName);
-        }
-        $this->server->getProcessManager()->setCurrentProcessId($this->processId);
-        $this->processPid = getmypid();
-        $this->server->getProcessManager()->setCurrentProcessPid($this->processPid);
-        //基础插件初始化
-        $this->server->getBasePlugManager()->beforeProcessStart($this->context);
-        $this->server->getBasePlugManager()->waitReady();
-        //用户插件初始化
-        $this->server->getPlugManager()->beforeProcessStart($this->context);
-        $this->server->getPlugManager()->waitReady();
-        $this->log = getDeepContextValueByClassName(Logger::class);
         try {
+            Server::$isStart = true;
+            if ($this->processName != null) {
+                $this->setName($this->processName);
+            }
+            $this->server->getProcessManager()->setCurrentProcessId($this->processId);
+            $this->processPid = getmypid();
+            $this->server->getProcessManager()->setCurrentProcessPid($this->processPid);
+            //基础插件初始化
+            $this->server->getBasePlugManager()->beforeProcessStart($this->context);
+            $this->server->getBasePlugManager()->waitReady();
+            //用户插件初始化
+
+            $this->server->getPlugManager()->beforeProcessStart($this->context);
+            $this->server->getPlugManager()->waitReady();
+            $this->log = getDeepContextValueByClassName(Logger::class);
             $this->init();
-        } catch (\Throwable $e) {
-            $this->log->error($e);
-        }
-        $this->log->info("ready");
-        //获取EventDispatcher
-        $this->eventDispatcher = $this->getContext()->getDeepByClassName(EventDispatcher::class);
-        if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
-            $this->getProcessManager()->setCurrentProcessId($this->processId);
-            \Swoole\Process::signal(SIGTERM, [$this, '_onProcessStop']);
-            $this->socket = $this->swooleProcess->exportSocket();
-            go(function () {
-                while (true) {
-                    $recv = $this->socket->recv();
-                    //获取进程id
-                    $unpackData = unpack("N", $recv);
-                    $processId = $unpackData[1];
-                    $fromProcess = $this->server->getProcessManager()->getProcessFromId($processId);
-                    go(function () use ($recv, $fromProcess) {
-                        $this->_onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
-                    });
-                }
-            });
-        }
-        enableRuntimeCoroutine();
-        try {
+
+            $this->log->info("ready");
+            //获取EventDispatcher
+            $this->eventDispatcher = $this->getContext()->getDeepByClassName(EventDispatcher::class);
+            if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
+                $this->getProcessManager()->setCurrentProcessId($this->processId);
+                \Swoole\Process::signal(SIGTERM, [$this, '_onProcessStop']);
+                $this->socket = $this->swooleProcess->exportSocket();
+                go(function () {
+                    while (true) {
+                        $recv = $this->socket->recv();
+                        //获取进程id
+                        $unpackData = unpack("N", $recv);
+                        $processId = $unpackData[1];
+                        $fromProcess = $this->server->getProcessManager()->getProcessFromId($processId);
+                        go(function () use ($recv, $fromProcess) {
+                            $this->_onPipeMessage(serverUnSerialize(substr($recv, 4)), $fromProcess);
+                        });
+                    }
+                });
+            }
+            enableRuntimeCoroutine();
             $this->onProcessStart();
         } catch (\Throwable $e) {
             $this->log->error($e);
