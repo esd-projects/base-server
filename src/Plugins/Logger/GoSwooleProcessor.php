@@ -75,11 +75,12 @@ class GoSwooleProcessor implements ProcessorInterface
         if ($this->color) {
             if ($level >= Logger::ERROR) {
                 $level_name = "\e[31m" . $level_name . "\e[0m";
-            }
-            if ($level >= Logger::WARNING) {
+            } elseif ($level >= Logger::WARNING) {
                 $level_name = "\e[33m" . $level_name . "\e[0m";
-            } else {
+            } elseif ($level >= Logger::INFO) {
                 $level_name = "\e[32m" . $level_name . "\e[0m";
+            } else {
+                $level_name = "\e[34m" . $level_name . "\e[0m";
             }
         }
         return $level_name;
