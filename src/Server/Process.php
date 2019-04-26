@@ -195,7 +195,7 @@ abstract class Process
      */
     public function _onProcessStart()
     {
-        $this->log = getDeepContextValueByClassName(Logger::class);
+        $this->log = Server::$instance->getLog();
         try {
             Server::$isStart = true;
             if ($this->processName != null) {
@@ -208,11 +208,9 @@ abstract class Process
             $this->server->getBasePlugManager()->beforeProcessStart($this->context);
             $this->server->getBasePlugManager()->waitReady();
             //用户插件初始化
-
             $this->server->getPlugManager()->beforeProcessStart($this->context);
             $this->server->getPlugManager()->waitReady();
             $this->init();
-
             $this->log->info("ready");
             //获取EventDispatcher
             $this->eventDispatcher = $this->getContext()->getDeepByClassName(EventDispatcher::class);
