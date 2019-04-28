@@ -255,6 +255,7 @@ abstract class Process
             foreach ($this->pipeMessageCache as $value) {
                 $this->_onPipeMessage($value[0], $value[1]);
             }
+            $this->pipeMessageCache = [];
             $this->init();
             $this->log->info("ready");
             if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
