@@ -227,7 +227,7 @@ abstract class Process
             $this->eventDispatcher = $this->getContext()->getDeepByClassName(EventDispatcher::class);
             if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
                 $this->getProcessManager()->setCurrentProcessId($this->processId);
-                \Swoole\Process::signal(SIGTERM, [$this, '_onProcessStop']);
+                Process::signal(SIGTERM, [$this, '_onProcessStop']);
                 $this->socket = $this->swooleProcess->exportSocket();
                 go(function () {
                     while (true) {
