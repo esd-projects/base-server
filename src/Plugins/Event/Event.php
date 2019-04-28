@@ -27,6 +27,12 @@ class Event
      */
     private $data;
 
+    /**
+     * 消息发出的进程id
+     * @var int
+     */
+    private $processId;
+
     public function __construct(string $type, $data)
     {
         $this->type = $type;
@@ -47,5 +53,21 @@ class Event
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProcessId(): int
+    {
+        return $this->processId;
+    }
+
+    /**
+     * @param int $processId
+     */
+    public function setProcessId(int $processId): void
+    {
+        $this->processId = $processId;
     }
 }
