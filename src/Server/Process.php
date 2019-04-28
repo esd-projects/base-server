@@ -113,6 +113,16 @@ abstract class Process
     }
 
     /**
+     * 注册信号
+     * @param int $SIG
+     * @param callable $param
+     */
+    public static function signal(int $SIG, callable $param)
+    {
+        \Swoole\Process::signal($SIG, $param);
+    }
+
+    /**
      * 创建一个进程实例,这里都是自定义进程
      * @return Process
      */
