@@ -110,6 +110,7 @@ abstract class Server
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
         self::$instance = $this;
+        date_default_timezone_set('Asia/Shanghai');
         print_r($serverConfig->getBannel() . "\n");
         $this->context = new Context($this);
         $this->basePlugManager = new PluginInterfaceManager($this);
