@@ -12,7 +12,6 @@ use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
 use GoSwoole\BaseServer\Plugins\Event\ProcessEvent;
 use GoSwoole\BaseServer\Server\Message\Message;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
-use GoSwoole\BaseServer\Utils\Utils;
 use Monolog\Logger;
 
 /**
@@ -90,6 +89,16 @@ abstract class Process
      * @var Logger
      */
     protected $log;
+
+    /**
+     * @var bool
+     */
+    protected $isReady = false;
+
+    /**
+     * @var array
+     */
+    protected $pipeMessageCache = [];
 
     /**
      * Process constructor.
@@ -181,6 +190,22 @@ abstract class Process
     }
 
     /**
+     * @return bool
+     */
+    public function isReady(): bool
+    {
+        return $this->isReady;
+    }
+
+    /**
+     * @param bool $isReady
+     */
+    public function setIsReady(bool $isReady): void
+    {
+        $this->isReady = $isReady;
+    }
+
+    /**
      * 执行外部命令.
      *
      * @param $path
@@ -225,6 +250,11 @@ abstract class Process
             //用户插件初始化
             $this->server->getPlugManager()->beforeProcessStart($this->context);
             $this->server->getPlugManager()->waitReady();
+            $this->setIsReady(true);
+            //延迟发送缓存的消息
+            foreach ($this->pipeMessageCache as $value) {
+                $this->_onPipeMessage($value[0], $value[1]);
+            }
             $this->init();
             $this->log->info("ready");
             if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
@@ -266,6 +296,10 @@ abstract class Process
      */
     public function _onPipeMessage(Message $message, Process $fromProcess)
     {
+        if (!$this->isReady()) {
+            $this->pipeMessageCache[] = [$message, $fromProcess];
+            return;
+        }
         try {
             if (!MessageProcessor::dispatch($message)) {
                 $this->onPipeMessage($message, $fromProcess);
