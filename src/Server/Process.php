@@ -210,6 +210,7 @@ abstract class Process
 
         });
         $this->log = Server::$instance->getLog();
+        $this->eventDispatcher = Server::$instance->getEventDispatcher();
         try {
             Server::$isStart = true;
             if ($this->processName != null) {
@@ -226,8 +227,6 @@ abstract class Process
             $this->server->getPlugManager()->waitReady();
             $this->init();
             $this->log->info("ready");
-            //获取EventDispatcher
-            $this->eventDispatcher = $this->getContext()->getDeepByClassName(EventDispatcher::class);
             if ($this->getProcessType() == self::PROCESS_TYPE_CUSTOM) {
                 $this->getProcessManager()->setCurrentProcessId($this->processId);
                 Process::signal(SIGTERM, [$this, '_onProcessStop']);
