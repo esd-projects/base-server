@@ -43,9 +43,9 @@ class EventDispatcher
      * @param string $type
      * @param EventChannel|null $channel
      * @param bool $once 是否仅仅一次
-     * @return EventChannel
+     * @return Channel
      */
-    public function listen($type, $channel = null, $once = false): EventChannel
+    public function listen($type, $channel = null, $once = false): Channel
     {
         if (!array_key_exists($type, $this->eventChannels)) {
             $this->eventChannels [$type] = [];
