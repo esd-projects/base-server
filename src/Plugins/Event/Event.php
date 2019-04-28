@@ -56,34 +56,18 @@ class Event
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getProcessId(): int
+    public function getProcessId(): ?int
     {
         return $this->processId;
     }
 
     /**
-     * @param int $processId
+     * @param int $processId |null
      */
-    public function setProcessId(int $processId): void
+    public function setProcessId(?int $processId): void
     {
         $this->processId = $processId;
-    }
-
-    /**
-     * @param string $type
-     */
-    public function setType(string $type): void
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @param mixed $data
-     */
-    public function setData($data): void
-    {
-        $this->data = $data;
     }
 }
