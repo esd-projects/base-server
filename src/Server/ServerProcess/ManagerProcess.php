@@ -29,6 +29,10 @@ class ManagerProcess extends Process
         Process::setProcessTitle($this->getProcessName());
         $this->processPid = getmypid();
         $this->server->getProcessManager()->setCurrentProcessId($this->processId);
+        //堵塞住SIGINT
+        pcntl_signal(SIGINT, function () {
+
+        });
     }
 
     public function onProcessStop()
