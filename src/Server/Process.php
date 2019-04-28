@@ -275,7 +275,9 @@ abstract class Process
         } catch (\Throwable $e) {
             $this->log->error($e);
         }
-        $this->swooleProcess->exit(0);
+        if ($this->swooleProcess != null) {
+            $this->swooleProcess->exit(0);
+        }
     }
 
     /**
