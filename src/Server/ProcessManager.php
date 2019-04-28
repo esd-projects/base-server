@@ -149,11 +149,9 @@ class ProcessManager
                 $group[] = $process;
             }
         }
-        if (count($group) > 0) {
-            $processGroup = new ProcessGroup($this, $groupName, $group);
-            $this->groups[$groupName] = $processGroup;
-        }
-        return null;
+        $processGroup = new ProcessGroup($this, $groupName, $group);
+        $this->groups[$groupName] = $processGroup;
+        return $processGroup;
     }
 
 
