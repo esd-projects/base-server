@@ -1,8 +1,5 @@
 goswoole:
   profiles:
-    active: ${ACTIVE:local}
+    active: local
   logging:
     level: debug
-
-tets:
-  yesy: ${goswoole.profiles.active}
