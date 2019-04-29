@@ -125,6 +125,22 @@ class Request
     }
 
     /**
+     * @return array
+     */
+    public function get()
+    {
+        return $this->get;
+    }
+
+    /**
+     * @return array
+     */
+    public function post()
+    {
+        return $this->post;
+    }
+
+    /**
      * @param string $key
      * @return string|null
      */
