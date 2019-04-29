@@ -8,8 +8,10 @@
 
 namespace GoSwoole\BaseServer\Plugins\Logger;
 
+use GoSwoole\BaseServer\Plugins\Config\ConfigChangeEvent;
 use GoSwoole\BaseServer\Plugins\Config\ConfigContext;
 use GoSwoole\BaseServer\Plugins\Config\ConfigPlugin;
+use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Plugin\AbstractPlugin;
 use Monolog\Formatter\LineFormatter;
@@ -77,6 +79,16 @@ class LoggerPlugin extends AbstractPlugin
      */
     public function beforeProcessStart(Context $context)
     {
+        //监控配置更新
+        goWithContext(function () use ($context) {
+            $configContext = $context->getDeepByClassName(ConfigContext::class);
+            $eventDispatcher = $context->getDeepByClassName(EventDispatcher::class);
+            $channel = $eventDispatcher->listen(ConfigChangeEvent::ConfigChangeEvent);
+            while (true) {
+                $channel->pop();
+                $this->streamHandler->setLevel($configContext->get("goswoole.logger.level", "debug"));
+            }
+        });
         $this->ready();
     }
 
