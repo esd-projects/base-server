@@ -9,7 +9,6 @@
 namespace GoSwoole\BaseServer\Plugins\Event;
 
 
-use GoSwoole\BaseServer\Plugins\Logger\LoggerPlugin;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Message\MessageProcessor;
 use GoSwoole\BaseServer\Server\Plugin\AbstractPlugin;
@@ -30,7 +29,6 @@ class EventPlugin extends AbstractPlugin
     public function __construct()
     {
         parent::__construct();
-        $this->atAfter(LoggerPlugin::class);
     }
 
     /**

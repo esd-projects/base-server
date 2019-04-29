@@ -8,9 +8,10 @@
 
 namespace GoSwoole\BaseServer\Plugins\Logger;
 
+use GoSwoole\BaseServer\Plugins\Config\ConfigContext;
+use GoSwoole\BaseServer\Plugins\Config\ConfigPlugin;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Plugin\AbstractPlugin;
-use GoSwoole\Plugins\Config\ConfigPlugin;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -28,6 +29,11 @@ class LoggerPlugin extends AbstractPlugin
      */
     private $logger;
 
+    /**
+     * @var StreamHandler
+     */
+    private $streamHandler;
+
     public function __construct()
     {
         parent::__construct();
@@ -44,11 +50,11 @@ class LoggerPlugin extends AbstractPlugin
         $this->logger = new Logger('log');
         $output = "%datetime% \033[32m%level_name%\033[0m %extra.about_process% %extra.class_and_func% : %message% %context% \n";
         $formatter = new LineFormatter($output, null, false, true);
-        $streamHandler = new StreamHandler('php://stderr', Logger::DEBUG);
-        $streamHandler->setFormatter($formatter);
+        $this->streamHandler = new StreamHandler('php://stderr', Logger::DEBUG);
+        $this->streamHandler->setFormatter($formatter);
         $this->logger->pushProcessor(new GoSwooleProcessor());
         $this->logger->pushProcessor(new IntrospectionProcessor());
-        $this->logger->pushHandler($streamHandler);
+        $this->logger->pushHandler($this->streamHandler);
         $context->add("logger", $this->logger);
     }
 
@@ -61,6 +67,8 @@ class LoggerPlugin extends AbstractPlugin
     public function beforeServerStart(Context $context)
     {
         $this->buildLogger($context);
+        $configContext = $context->getDeepByClassName(ConfigContext::class);
+        $this->streamHandler->setLevel($configContext->get("goswoole.logging.level", "debug"));
     }
 
     /**

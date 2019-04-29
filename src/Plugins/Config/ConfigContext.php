@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: administrato
+ * User: 白猫
  * Date: 2019/4/29
  * Time: 14:55
  */
@@ -81,17 +81,18 @@ class ConfigContext
     /**
      * 获取a.b.v这种的值，分隔符默认为"."
      * @param $key
-     * @param $separator
+     * @param null $default
+     * @param string $separator
      * @return array|mixed|null
      */
-    public function get($key, $separator = ".")
+    public function get($key, $default = null, $separator = ".")
     {
         $arr = explode($separator, $key);
         $result = $this->cacheContain;
         foreach ($arr as $value) {
             $result = $result[$value] ?? null;
             if ($result == null) {
-                return null;
+                return $default;
             }
         }
         return $result;
