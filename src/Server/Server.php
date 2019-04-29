@@ -8,6 +8,8 @@
 
 namespace GoSwoole\BaseServer\Server;
 
+use GoSwoole\BaseServer\Plugins\Config\ConfigContext;
+use GoSwoole\BaseServer\Plugins\Config\ConfigPlugin;
 use GoSwoole\BaseServer\Plugins\Event\ApplicationEvent;
 use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
 use GoSwoole\BaseServer\Plugins\Event\EventPlugin;
@@ -95,6 +97,11 @@ abstract class Server
     protected $eventDispatcher;
 
     /**
+     * @var ConfigContext
+     */
+    protected $configContext;
+
+    /**
      * @var Logger
      */
     protected $log;
@@ -110,22 +117,24 @@ abstract class Server
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
         self::$instance = $this;
+        $this->serverConfig = $serverConfig;
         date_default_timezone_set('Asia/Shanghai');
         print_r($serverConfig->getBannel() . "\n");
         $this->context = new Context($this);
         $this->basePlugManager = new PluginInterfaceManager($this);
         //初始化默认插件添加Logger/Event插件
+        $this->basePlugManager->addPlug(new ConfigPlugin());
         $this->basePlugManager->addPlug(new LoggerPlugin());
         $this->basePlugManager->addPlug(new EventPlugin());
         $this->basePlugManager->order();
         $this->basePlugManager->beforeServerStart($this->context);
-        //获取EventDispatcher/Logger
+        //获取EventDispatcher/Logger/ConfigContext
         $this->eventDispatcher = $this->context->getDeepByClassName(EventDispatcher::class);
         $this->log = $this->context->getDeepByClassName(Logger::class);
+        $this->configContext = $this->context->getDeepByClassName(ConfigContext::class);
         set_exception_handler(function ($e) {
             $this->log->error($e);
         });
-        $this->serverConfig = $serverConfig;
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
         $this->plugManager = new PluginInterfaceManager($this);
@@ -676,5 +685,13 @@ abstract class Server
     public function getLog(): Logger
     {
         return $this->log;
+    }
+
+    /**
+     * @return ConfigContext
+     */
+    public function getConfigContext(): ConfigContext
+    {
+        return $this->configContext;
     }
 }

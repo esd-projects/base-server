@@ -10,6 +10,7 @@ namespace GoSwoole\BaseServer\Plugins\Logger;
 
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\Plugin\AbstractPlugin;
+use GoSwoole\Plugins\Config\ConfigPlugin;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -30,7 +31,7 @@ class LoggerPlugin extends AbstractPlugin
     public function __construct()
     {
         parent::__construct();
-        $this->atAfter(null);
+        $this->atAfter(ConfigPlugin::class);
     }
 
     /**
