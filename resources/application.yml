@@ -1,5 +1,5 @@
 goswoole:
   profiles:
     active: local
-  logging:
+  logger:
     level: debug

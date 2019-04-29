@@ -68,7 +68,7 @@ class LoggerPlugin extends AbstractPlugin
     {
         $this->buildLogger($context);
         $configContext = $context->getDeepByClassName(ConfigContext::class);
-        $this->streamHandler->setLevel($configContext->get("goswoole.logging.level", "debug"));
+        $this->streamHandler->setLevel($configContext->get("goswoole.logger.level", "debug"));
     }
 
     /**
