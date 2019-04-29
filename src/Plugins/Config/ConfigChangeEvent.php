@@ -15,8 +15,8 @@ class ConfigChangeEvent extends Event
 {
     const ConfigChangeEvent = "ConfigChangeEvent";
 
-    public function __construct($data)
+    public function __construct()
     {
-        parent::__construct(self::ConfigChangeEvent, $data);
+        parent::__construct(self::ConfigChangeEvent, null);
     }
 }

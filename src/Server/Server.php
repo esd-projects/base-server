@@ -121,7 +121,10 @@ abstract class Server
         date_default_timezone_set('Asia/Shanghai');
         print_r($serverConfig->getBannel() . "\n");
         $this->context = new Context($this);
+        $this->portManager = new PortManager($this, $defaultPortClass);
+        $this->processManager = new ProcessManager($this, $defaultProcessClass);
         $this->basePlugManager = new PluginInterfaceManager($this);
+        $this->plugManager = new PluginInterfaceManager($this);
         //初始化默认插件添加Logger/Event插件
         $this->basePlugManager->addPlug(new ConfigPlugin());
         $this->basePlugManager->addPlug(new LoggerPlugin());
@@ -135,9 +138,6 @@ abstract class Server
         set_exception_handler(function ($e) {
             $this->log->error($e);
         });
-        $this->portManager = new PortManager($this, $defaultPortClass);
-        $this->processManager = new ProcessManager($this, $defaultProcessClass);
-        $this->plugManager = new PluginInterfaceManager($this);
         //设置主要进程
         $managerProcess = new ManagerProcess($this);
         $masterProcess = new MasterProcess($this);

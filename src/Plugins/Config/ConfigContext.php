@@ -8,6 +8,9 @@
 
 namespace GoSwoole\BaseServer\Plugins\Config;
 
+use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
+use GoSwoole\BaseServer\Server\Server;
+
 /**
  * 具有层级关系的配置
  * Class ConfigContext
@@ -34,6 +37,15 @@ class ConfigContext
         //先合并
         $this->cache();
         $this->conductConfig($this->contain[$deep]);
+        $eventDispatcher = Server::$instance->getContext()->getDeepByClassName(EventDispatcher::class);
+        //尝试发出更新信号
+        if ($eventDispatcher instanceof EventDispatcher) {
+            if (Server::$instance->getProcessManager() != null) {
+                $eventDispatcher->dispatchProcessEvent(new ConfigChangeEvent(), ...Server::$instance->getProcessManager()->getProcesses());
+            } else {
+                $eventDispatcher->dispatchEvent(new ConfigChangeEvent());
+            }
+        }
     }
 
     /**
