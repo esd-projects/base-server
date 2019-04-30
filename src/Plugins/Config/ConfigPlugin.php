@@ -43,12 +43,17 @@ class ConfigPlugin extends AbstractPlugin
     /**
      * ConfigPlugin constructor.
      * @param ConfigConfig|null $configConfig
+     * @throws \GoSwoole\BaseServer\Exception
      */
     public function __construct(?ConfigConfig $configConfig = null)
     {
         parent::__construct();
         if ($configConfig == null) {
-            $path = Server::$instance->getServerConfig()->getRootDir() . "/resources";
+            if (defined("RES_DIR")) {
+                $path = RES_DIR;
+            } else {
+                $path = Server::$instance->getServerConfig()->getRootDir() . "/resources";
+            }
             $configConfig = new ConfigConfig($path);
         }
         $this->configConfig = $configConfig;
