@@ -1,6 +1,4 @@
 goswoole:
-  server:
-    name: goswoole
   port:
     http:
       name: http
