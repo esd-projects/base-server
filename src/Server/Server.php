@@ -234,7 +234,7 @@ abstract class Server
         $this->server->on("pipeMessage", [$this, "_onPipeMessage"]);
         $this->server->on("workerStop", [$this, "_onWorkerStop"]);
         //配置进程
-        $this->processManager->buildProcess();
+        $this->processManager->createProcess();
         $this->configureReady();
         //打印配置
         $this->log->debug("打印配置:\n" . $this->configContext->getCacheContainYaml());

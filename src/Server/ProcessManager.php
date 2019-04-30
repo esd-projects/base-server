@@ -104,11 +104,7 @@ class ProcessManager
      */
     public function addCustomProcessesConfig(string $name, $processClass, string $groupName)
     {
-        if ($processClass != null) {
-            $processConfig = new ProcessConfig($processClass, $name, $groupName);
-        } else {
-            $processConfig = new ProcessConfig($this->defaultProcessClass, $name, $groupName);
-        }
+        $processConfig = new ProcessConfig($processClass, $name, $groupName);
         $this->customProcessConfigs[$name] = $processConfig;
         return $processConfig;
     }
@@ -118,7 +114,7 @@ class ProcessManager
      * @throws Exception\ConfigException
      * @throws \ReflectionException
      */
-    public function buildProcess()
+    public function createProcess()
     {
         //配置默认工作进程
         $serverConfig = $this->server->getServerConfig();
@@ -138,6 +134,9 @@ class ProcessManager
         foreach ($configs as $key => $value) {
             $processConfig = new ProcessConfig();
             $this->customProcessConfigs[$key] = $processConfig->buildFromConfig($value);
+            if ($processConfig->getClassName() == null) {
+                $processConfig->setClassName($this->defaultProcessClass);
+            }
         }
         //配置自定义进程
         foreach ($this->customProcessConfigs as $processConfig) {

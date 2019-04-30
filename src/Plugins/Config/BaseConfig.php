@@ -9,6 +9,7 @@
 namespace GoSwoole\BaseServer\Plugins\Config;
 
 
+use GoSwoole\BaseServer\Server\Exception\ConfigException;
 use GoSwoole\BaseServer\Server\Server;
 use ReflectionClass;
 
@@ -19,6 +20,7 @@ use ReflectionClass;
  */
 class BaseConfig
 {
+    protected static $uuid = 1000;
     private $prefix;
     private $reflectionClass;
     private $config = [];
@@ -42,6 +44,7 @@ class BaseConfig
 
     /**
      * 当设置好配置后将合并配置
+     * @throws ConfigException
      */
     public function merge()
     {
@@ -53,6 +56,9 @@ class BaseConfig
             } else {
                 $indexName = $this->indexName;
                 $index = $this->$indexName;
+                if (empty($index)) {
+                    throw new ConfigException("配置错误无法获取到$indexName");
+                }
             }
             $this->prefix = $this->prefix . ".$index";
         }
