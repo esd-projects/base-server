@@ -130,7 +130,7 @@ class ProcessManager
         }
         //重新获取配置
         $this->customProcessConfigs = [];
-        $configs = Server::$instance->getConfigContext()->get(ProcessConfig::key);
+        $configs = Server::$instance->getConfigContext()->get(ProcessConfig::key, []);
         foreach ($configs as $key => $value) {
             $processConfig = new ProcessConfig();
             $this->customProcessConfigs[$key] = $processConfig->buildFromConfig($value);

@@ -16,8 +16,6 @@ class MyProcess extends \GoSwoole\BaseServer\ExampleClass\Server\DefaultProcess
 
 }
 
-enableRuntimeCoroutine();
-
 //----多端口配置----
 $httpPortConfig = new PortConfig();
 $httpPortConfig->setHost("0.0.0.0");

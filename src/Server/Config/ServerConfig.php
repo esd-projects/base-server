@@ -8,6 +8,7 @@
 
 namespace GoSwoole\BaseServer\Server\Config;
 
+use GoSwoole\BaseServer\Exception;
 use GoSwoole\BaseServer\Plugins\Config\BaseConfig;
 use GoSwoole\BaseServer\Server\Exception\ConfigException;
 
@@ -792,10 +793,14 @@ class ServerConfig extends BaseConfig
 
     /**
      * @return string
+     * @throws Exception
      */
     public function getRootDir()
     {
-        return $this->rootDir;
+        if (empty($this->rootDir) && !defined("ROOT_DIR")) {
+            throw new Exception("没有设置ROOT_DIR常量，请定义");
+        }
+        return ROOT_DIR ?? $this->rootDir;
     }
 
     /**
@@ -809,6 +814,7 @@ class ServerConfig extends BaseConfig
     /**
      * 获取bin目录
      * @return string
+     * @throws Exception
      */
     public function getBinDir()
     {
@@ -818,6 +824,7 @@ class ServerConfig extends BaseConfig
     /**
      * 获取src目录
      * @return string
+     * @throws Exception
      */
     public function getSrcDir()
     {
@@ -827,6 +834,7 @@ class ServerConfig extends BaseConfig
     /**
      * 获取vendor目录
      * @return string
+     * @throws Exception
      */
     public function getVendorDir()
     {
