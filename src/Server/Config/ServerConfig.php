@@ -8,8 +8,7 @@
 
 namespace GoSwoole\BaseServer\Server\Config;
 
-
-use DI\Annotation\Inject;
+use GoSwoole\BaseServer\Plugins\Config\BaseConfig;
 use GoSwoole\BaseServer\Server\Exception\ConfigException;
 
 /**
@@ -17,31 +16,30 @@ use GoSwoole\BaseServer\Server\Exception\ConfigException;
  * Class ServerConfig
  * @package GoSwoole\BaseServer\Server\Config
  */
-class ServerConfig
+class ServerConfig extends BaseConfig
 {
+    const key = "goswoole.server";
     /**
      * 服务器名称
      * @var string
      */
-    private $name = "goSwoole";
+    protected $name = "goSwoole";
 
     /**
      * 根目录
      * @var string
      */
-    private $rootDir;
+    protected $rootDir;
     /**
      * reactor线程数，通过此参数来调节Reactor线程的数量，以充分利用多核
-     * @Inject("Server.reactor_num")
      * @var int
      */
-    private $reactorNum;
+    protected $reactorNum;
     /**
      * worker进程数,设置启动的Worker进程数量
-     * @Inject("Server.worker_num")
      * @var int
      */
-    private $workerNum;
+    protected $workerNum;
     /**
      * 数据包分发策略。可以选择7种类型，默认为2
      * 1，轮循模式，收到会轮循分配给每一个Worker进程
@@ -53,51 +51,44 @@ class ServerConfig
      * @Inject("Server.dispatch_mode")
      * @var int
      */
-    private $dispatchMode;
+    protected $dispatchMode;
     /**
      * 最大连接
-     * @Inject("Server.max_conn")
      * @var int
      */
-    private $maxConn;
+    protected $maxConn;
     /**
      * 守护进程化 daemonize => 1，加入此参数后，将转入后台作为守护进程运行
-     * @Inject("Server.daemonize")
      * @var bool
      */
-    private $daemonize;
+    protected $daemonize;
     /**
      * 设置异步重启开关。设置为true时，将启用异步安全重启特性，Worker进程会等待异步事件完成后再退出
-     * @Inject("Server.reload_async")
      * @var bool
      */
-    private $reloadAsync;
+    protected $reloadAsync;
     /**
      * Worker进程收到停止服务通知后最大等待时间，默认为30秒
-     * @Inject("Server.max_wait_time")
      * @var int
      */
-    private $maxWaitTime;
+    protected $maxWaitTime;
     /**
      * CPU亲和设置 open_cpu_affinity => 1 ,启用CPU亲和设置
      * 在多核的硬件平台中，启用此特性会将swoole的reactor线程/worker进程绑定到固定的一个核上。可以避免进程/线程的运行时在多个核之间互相切换，提高CPU Cache的命中率。
-     * @Inject("Server.open_cpu_affinity")
      * @var bool
      */
-    private $openCpuAffinity;
+    protected $openCpuAffinity;
     /**
      * 接受一个数组作为参数，array(0, 1) 表示不使用CPU0,CPU1，专门空出来处理网络中断。
-     * @Inject("Server.cpu_affinity_ignore")
      * @var array
      */
-    private $cpuAffinityIgnore;
+    protected $cpuAffinityIgnore;
 
     /**
      * log_file => '/data/log/swoole.log', 指定swoole错误日志文件。在swoole运行期发生的异常信息会记录到这个文件中。默认会打印到屏幕。
-     * @Inject("Server.log_file")
      * @var string
      */
-    private $logFile;
+    protected $logFile;
 
     /**
      * 设置Server错误日志打印的等级，范围是0-5。低于log_level设置的日志信息不会抛出。
@@ -109,60 +100,52 @@ class ServerConfig
      * 5 => SWOOLE_LOG_ERROR
      * SWOOLE_LOG_DEBUG和SWOOLE_LOG_TRACE仅在编译为--enable-debug-log和--enable-trace-log版本时可用
      * 默认为SWOOLE_LOG_DEBUG也就是所有级别都打印
-     * @Inject("Server.log_level")
      * @var string
      */
-    private $logLevel;
+    protected $logLevel;
     /**
      * 心跳检测机制 每隔多少秒检测一次，单位秒，Swoole会轮询所有TCP连接，将超过心跳时间的连接关闭掉
-     * @Inject("Server.heartbeat_check_interval")
      * @var int
      */
-    private $heartbeatCheckInterval;
+    protected $heartbeatCheckInterval;
     /**
      * 心跳检测机制 TCP连接的最大闲置时间，单位s , 如果某fd最后一次发包距离现在的时间超过heartbeat_idle_time会把这个连接关闭。
-     * @Inject("Server.heartbeat_idle_time")
      * @var int
      */
-    private $heartbeatIdleTime;
+    protected $heartbeatIdleTime;
 
     /**
      * 设置Worker/TaskWorker子进程的所属用户。
      * 服务器如果需要监听1024以下的端口，必须有root权限。
      * 但程序运行在root用户下，代码中一旦有漏洞，攻击者就可以以root的方式执行远程指令，风险很大。
      * 配置了user项之后，可以让主进程运行在root权限下，子进程运行在普通用户权限下。
-     * @Inject("Server.user")
      * @var string
      */
-    private $user;
+    protected $user;
     /**
      * 设置worker子进程的进程用户组。与user配置相同，此配置是修改进程所属用户组，提升服务器程序的安全性。
-     * @Inject("Server.group")
      * @var string
      */
-    private $group;
+    protected $group;
     /**
      * 重定向Worker进程的文件系统根目录。此设置可以使进程对文件系统的读写与实际的操作系统文件系统隔离。提升安全性。
-     * @Inject("Server.chroot")
      * @var string
      */
-    private $chroot;
+    protected $chroot;
 
     /**
      * 在Server启动时自动将master进程的PID写入到文件，在Server关闭时自动删除PID文件。
-     * @Inject("Server.pid_file")
      * @var string
      */
-    private $pidFile;
+    protected $pidFile;
 
     /**
      * 配置发送输出缓存区内存尺寸。
      * 注意此函数不应当调整过大，避免拥塞的数据过多，导致吃光机器内存
      * 开启大量Worker进程时，将会占用worker_num * buffer_output_size字节的内存
-     * @Inject("Server.buffer_output_size")
      * @var int
      */
-    private $bufferOutputSize;
+    protected $bufferOutputSize;
     /**
      * 数据发送缓存区
      * 参数buffer_output_size用于设置单次最大发送长度。socket_buffer_size用于设置客户端连接最大允许占用内存数量。
@@ -170,66 +153,64 @@ class ServerConfig
      * 如果发送数据过多，客户端阻塞，数据占满缓存区后Server会报如下错误信息：swFactoryProcess_finish: send failed, session#1 output buffer has been overflowed.
      * 发送缓冲区塞满导致send失败，只会影响当前的客户端，其他客户端不受影响
      * 服务器有大量TCP连接时，最差的情况下将会占用serv->max_connection * socket_buffer_size字节的内存
-     * @Inject("Server.socket_buffer_size")
      * @var int
      */
-    private $socketBufferSize;
+    protected $socketBufferSize;
 
     /**
      * 设置当前工作进程最大协程数量。超过max_coroutine底层将无法创建新的协程，底层会抛出错误，并直接关闭连接。
-     * @Inject("Server.max_coroutine")
      * @var int
      */
-    private $maxCoroutine;
+    protected $maxCoroutine;
 
     /**
      * 设置上传文件的临时目录。
      * @var string
      */
-    private $uploadTmpDir;
+    protected $uploadTmpDir;
 
     /**
      * 设置POST消息解析开关，选项为true时自动将Content-Type为x-www-form-urlencoded的请求包体解析到POST数组。设置为false时将关闭POST解析。
      * @var bool
      */
-    private $httpParsePost = true;
+    protected $httpParsePost = true;
 
     /**
      * 配置静态文件根目录，与$enableStaticHandler配合使用。
      * @var string
      */
-    private $documentRoot;
+    protected $documentRoot;
 
     /**
      * $enableStaticHandler为true后，底层收到Http请求会先判断document_root路径下是否存在此文件，如果存在会直接发送文件内容给客户端，不再触发onRequest回调。
      * @var bool
      */
-    private $enableStaticHandler = false;
+    protected $enableStaticHandler = false;
 
     /**
      * 启用压缩。默认为开启。
      * @var bool
      */
-    private $httpCompression = true;
+    protected $httpCompression = true;
 
     /**
      * 设置WebSocket子协议。设置后握手响应的Http头会增加Sec-WebSocket-Protocol: {$websocket_subprotocol}。具体使用方法请参考WebSocket协议相关RFC文档。
      * @var string
      */
-    private $websocketSubprotocol;
+    protected $websocketSubprotocol;
 
     /**
      * 启用websocket协议中关闭帧（opcode为0x08的帧）在onMessage回调中接收，默认为false
      * 开启后，可在WebSocketServer中的onMessage回调中接收到客户端或服务端发送的关闭帧，开发者可自行对其进行处理。
      * @var bool
      */
-    private $openWebsocketCloseFrame = false;
+    protected $openWebsocketCloseFrame = false;
 
     /**
-     * Bannel
+     * Banner
      * @var string
      */
-    private $bannel = "
+    protected $banner = "
   ________        _________                    .__          
  /  _____/  ____ /   _____/_  _  ______   ____ |  |   ____  
 /   \  ___ /  _ \\_____  \\ \/ \/ /  _ \ /  _ \|  | _/ __ \ 
@@ -237,6 +218,11 @@ class ServerConfig
  \______  /\____/_______  / \/\_/ \____/ \____/|____/\___  >
         \/              \/                               \/  
         ";
+
+    public function __construct()
+    {
+        parent::__construct(self::key);
+    }
 
     /**
      * @return int
@@ -678,6 +664,7 @@ class ServerConfig
      */
     public function buildConfig(): array
     {
+        $this->merge();
         $build = [];
         if (empty($this->getRootDir())) {
             throw new ConfigException("RootDir不能为空");
@@ -774,17 +761,17 @@ class ServerConfig
     /**
      * @return string
      */
-    public function getBannel(): string
+    public function getBanner(): string
     {
-        return $this->bannel;
+        return $this->banner;
     }
 
     /**
-     * @param string $bannel
+     * @param string $banner
      */
-    public function setBannel(string $bannel): void
+    public function setBanner(string $banner): void
     {
-        $this->bannel = $bannel;
+        $this->banner = $banner;
     }
 
     /**

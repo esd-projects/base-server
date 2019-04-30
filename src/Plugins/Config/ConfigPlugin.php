@@ -16,9 +16,20 @@ use Symfony\Component\Yaml\Yaml;
 
 class ConfigPlugin extends AbstractPlugin
 {
+    //bootstrap.yml
     const BootstrapDeep = 10;
-    const ApplicationDeep = 5;
-    const ApplicationActiveDeep = 4;
+    //application.yml
+    const ApplicationDeep = 9;
+    //application-active.yml
+    const ApplicationActiveDeep = 8;
+    //手动设置的Config配置
+    const ConfigDeep = 7;
+    //远程全局Application配置
+    const ConfigServerGlobalApplicationDeep = 6;
+    //远程Application配置
+    const ConfigServerApplicationDeep = 5;
+    //远程Application/Active配置
+    const ConfigServerApplicationActiveDeep = 4;
     /**
      * @var ConfigConfig
      */

@@ -10,6 +10,7 @@ namespace GoSwoole\BaseServer\Plugins\Config;
 
 use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Server;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * 具有层级关系的配置
@@ -40,12 +41,28 @@ class ConfigContext
         $eventDispatcher = Server::$instance->getContext()->getDeepByClassName(EventDispatcher::class);
         //尝试发出更新信号
         if ($eventDispatcher instanceof EventDispatcher) {
-            if (Server::$instance->getProcessManager() != null) {
+            if (Server::$instance->getProcessManager() != null && Server::$isStart) {
                 $eventDispatcher->dispatchProcessEvent(new ConfigChangeEvent(), ...Server::$instance->getProcessManager()->getProcesses());
             } else {
                 $eventDispatcher->dispatchEvent(new ConfigChangeEvent());
             }
         }
+    }
+
+    /**
+     * 追加同一层配置,按深度逆序排序
+     * @param array $config
+     * @param $deep
+     */
+    public function appendDeepConfig(array $config, $deep)
+    {
+        $oldConfig = $this->contain[$deep] ?? null;
+        if ($oldConfig != null) {
+            $oldConfig = array_replace_recursive($oldConfig, $config);
+        } else {
+            $oldConfig = $config;
+        }
+        $this->addDeepConfig($oldConfig, $deep);
     }
 
     /**
@@ -125,5 +142,10 @@ class ConfigContext
     public function getCacheContain(): array
     {
         return $this->cacheContain;
+    }
+
+    public function getCacheContainYaml(): string
+    {
+        return Yaml::dump($this->cacheContain, 255);
     }
 }

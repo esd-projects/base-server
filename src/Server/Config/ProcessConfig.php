@@ -8,6 +8,7 @@
 
 namespace GoSwoole\BaseServer\Server\Config;
 
+use GoSwoole\BaseServer\Plugins\Config\BaseConfig;
 use GoSwoole\BaseServer\Server\Exception\ConfigException;
 use GoSwoole\BaseServer\Server\Process;
 
@@ -16,11 +17,12 @@ use GoSwoole\BaseServer\Server\Process;
  * Class ProcessConfig
  * @package GoSwoole\BaseServer\Server\Config
  */
-class ProcessConfig
+class ProcessConfig extends BaseConfig
 {
-    private $name;
-    private $className;
-    private $groupName;
+    const key = "goswoole.process";
+    protected $name;
+    protected $className;
+    protected $groupName;
 
     /**
      * ProcessConfig constructor.
@@ -28,9 +30,11 @@ class ProcessConfig
      * @param $className
      * @param string $groupName
      * @throws ConfigException
+     * @throws \ReflectionException
      */
     public function __construct($className = null, $name = null, $groupName = Process::DEFAULT_GROUP)
     {
+        parent::__construct(self::key, true, "name");
         if ($groupName == Process::WORKER_GROUP) {
             throw new ConfigException("自定义进程不允许使用WORKER_GROUP组名");
         }

@@ -119,13 +119,12 @@ abstract class Server
         self::$instance = $this;
         $this->serverConfig = $serverConfig;
         date_default_timezone_set('Asia/Shanghai');
-        print_r($serverConfig->getBannel() . "\n");
         $this->context = new Context($this);
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
         $this->basePlugManager = new PluginInterfaceManager($this);
         $this->plugManager = new PluginInterfaceManager($this);
-        //初始化默认插件添加Logger/Event插件
+        //初始化默认插件添加Config/Logger/Event插件
         $this->basePlugManager->addPlug(new ConfigPlugin());
         $this->basePlugManager->addPlug(new LoggerPlugin());
         $this->basePlugManager->addPlug(new EventPlugin());
@@ -138,11 +137,7 @@ abstract class Server
         set_exception_handler(function ($e) {
             $this->log->error($e);
         });
-        //设置主要进程
-        $managerProcess = new ManagerProcess($this);
-        $masterProcess = new MasterProcess($this);
-        $this->processManager->setMasterProcess($masterProcess);
-        $this->processManager->setManagerProcess($managerProcess);
+        print_r($serverConfig->getBanner() . "\n");
     }
 
     /**
@@ -166,13 +161,14 @@ abstract class Server
      * @param null $processClass 不填写将用默认的
      * @param string $groupName
      * @throws ConfigException
+     * @throws \ReflectionException
      */
     public function addProcess(string $name, $processClass = null, string $groupName = Process::DEFAULT_GROUP)
     {
         if ($this->isConfigured()) {
             throw new ConfigException("配置已锁定，请在调用configure前添加");
         }
-        $this->processManager->addCustomProcesses($name, $processClass, $groupName);
+        $this->processManager->addCustomProcessesConfig($name, $processClass, $groupName);
     }
 
     /**
@@ -180,17 +176,23 @@ abstract class Server
      * 配置服务
      * @throws ConfigException
      * @throws \GoSwoole\BaseServer\Exception
+     * @throws \ReflectionException
      */
     public function configure()
     {
-        //设置进程名称
-        Process::setProcessTitle($this->serverConfig->getName());
         //插件排序此时不允许添加插件了
         $this->plugManager->order();
         //调用所有插件的beforeServerStart
         $this->plugManager->beforeServerStart($this->context);
         //锁定配置
         $this->setConfigured(true);
+        //设置主要进程
+        $managerProcess = new ManagerProcess($this);
+        $masterProcess = new MasterProcess($this);
+        $this->processManager->setMasterProcess($masterProcess);
+        $this->processManager->setManagerProcess($managerProcess);
+        //设置进程名称
+        Process::setProcessTitle($this->serverConfig->getName());
         //创建端口实例
         $this->getPortManager()->createPorts();
         //主要端口
@@ -232,19 +234,10 @@ abstract class Server
         $this->server->on("pipeMessage", [$this, "_onPipeMessage"]);
         $this->server->on("workerStop", [$this, "_onWorkerStop"]);
         //配置进程
-        for ($i = 0; $i < $this->serverConfig->getWorkerNum(); $i++) {
-            $defaultProcessClass = $this->processManager->getDefaultProcessClass();
-            $process = new $defaultProcessClass($this, $i, "worker-" . $i, Process::WORKER_GROUP);
-            $this->processManager->addProcesses($process);
-        }
-        $startId = $this->serverConfig->getWorkerNum();
-        foreach ($this->processManager->getCustomProcessConfigs() as $processConfig) {
-            $processClass = $processConfig->getClassName();
-            $process = new $processClass($this, $startId, $processConfig->getName(), $processConfig->getGroupName());
-            $this->processManager->addProcesses($process);
-            $startId++;
-        }
+        $this->processManager->buildProcess();
         $this->configureReady();
+        //打印配置
+        $this->log->debug("打印配置:\n" . $this->configContext->getCacheContainYaml());
     }
 
     /**

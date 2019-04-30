@@ -49,9 +49,13 @@ class LoggerPlugin extends AbstractPlugin
      */
     private function buildLogger(Context $context)
     {
-        $this->logger = new Logger('log');
+        $configContext = $context->getDeepByClassName(ConfigContext::class);
+        $this->logger = new Logger($configContext->get("goswoole.logger.name", "log"));
         $output = "%datetime% \033[32m%level_name%\033[0m %extra.about_process% %extra.class_and_func% : %message% %context% \n";
-        $formatter = new LineFormatter($output, null, false, true);
+        $formatter = new LineFormatter($configContext->get("goswoole.logger.output", "$output"),
+            $configContext->get("goswoole.logger.date_format", null),
+            $configContext->get("goswoole.logger.allow_inline_line_breaks", true),
+            $configContext->get("goswoole.logger.ignore_empty_context_and_extra", true));
         $this->streamHandler = new StreamHandler('php://stderr', Logger::DEBUG);
         $this->streamHandler->setFormatter($formatter);
         $this->logger->pushProcessor(new GoSwooleProcessor());

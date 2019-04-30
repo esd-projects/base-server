@@ -100,8 +100,9 @@ class ProcessManager
      * @param string $groupName
      * @return ProcessConfig
      * @throws Exception\ConfigException
+     * @throws \ReflectionException
      */
-    public function addCustomProcesses(string $name, $processClass, string $groupName)
+    public function addCustomProcessesConfig(string $name, $processClass, string $groupName)
     {
         if ($processClass != null) {
             $processConfig = new ProcessConfig($processClass, $name, $groupName);
@@ -113,10 +114,45 @@ class ProcessManager
     }
 
     /**
+     * 构建进程
+     * @throws Exception\ConfigException
+     * @throws \ReflectionException
+     */
+    public function buildProcess()
+    {
+        //配置默认工作进程
+        $serverConfig = $this->server->getServerConfig();
+        for ($i = 0; $i < $serverConfig->getWorkerNum(); $i++) {
+            $defaultProcessClass = $this->getDefaultProcessClass();
+            $process = new $defaultProcessClass($this->server, $i, "worker-" . $i, Process::WORKER_GROUP);
+            $this->addProcesses($process);
+        }
+        $startId = $serverConfig->getWorkerNum();
+        //合并配置
+        foreach ($this->customProcessConfigs as $processConfig) {
+            $processConfig->merge();
+        }
+        //重新获取配置
+        $this->customProcessConfigs = [];
+        $configs = Server::$instance->getConfigContext()->get(ProcessConfig::key);
+        foreach ($configs as $key => $value) {
+            $processConfig = new ProcessConfig();
+            $this->customProcessConfigs[$key] = $processConfig->buildFromConfig($value);
+        }
+        //配置自定义进程
+        foreach ($this->customProcessConfigs as $processConfig) {
+            $processClass = $processConfig->getClassName();
+            $process = new $processClass($this->server, $startId, $processConfig->getName(), $processConfig->getGroupName());
+            $this->addProcesses($process);
+            $startId++;
+        }
+    }
+
+    /**
      * 添加进程
      * @param Process $process
      */
-    public function addProcesses(Process $process)
+    protected function addProcesses(Process $process)
     {
         if ($process->getProcessType() == Process::PROCESS_TYPE_CUSTOM) {
             $process->createProcess();
