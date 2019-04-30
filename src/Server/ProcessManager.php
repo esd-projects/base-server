@@ -133,6 +133,7 @@ class ProcessManager
         $configs = Server::$instance->getConfigContext()->get(ProcessConfig::key, []);
         foreach ($configs as $key => $value) {
             $processConfig = new ProcessConfig();
+            $processConfig->setName($key);
             $this->customProcessConfigs[$key] = $processConfig->buildFromConfig($value);
             if ($processConfig->getClassName() == null) {
                 $processConfig->setClassName($this->defaultProcessClass);

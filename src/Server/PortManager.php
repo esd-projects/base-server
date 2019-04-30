@@ -72,6 +72,7 @@ class PortManager
         $configs = Server::$instance->getConfigContext()->get(PortConfig::key);
         foreach ($configs as $key => $value) {
             $portConfig = new PortConfig();
+            $portConfig->setName($key);
             $this->portConfigs[$key] = $portConfig->buildFromConfig($value);
         }
         if (count($this->portConfigs) == 0) {
