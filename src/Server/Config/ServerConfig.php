@@ -662,6 +662,7 @@ class ServerConfig extends BaseConfig
      * 构建配置
      * @return array
      * @throws ConfigException
+     * @throws Exception
      */
     public function buildConfig(): array
     {
@@ -800,7 +801,10 @@ class ServerConfig extends BaseConfig
         if (empty($this->rootDir) && !defined("ROOT_DIR")) {
             throw new Exception("没有设置ROOT_DIR常量，请定义");
         }
-        return ROOT_DIR ?? $this->rootDir;
+        if (defined("ROOT_DIR")) {
+            return ROOT_DIR;
+        }
+        return $this->rootDir;
     }
 
     /**

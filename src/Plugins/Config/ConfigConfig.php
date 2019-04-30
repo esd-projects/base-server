@@ -9,8 +9,6 @@
 namespace GoSwoole\BaseServer\Plugins\Config;
 
 
-use GoSwoole\BaseServer\Server\Exception\ConfigException;
-
 class ConfigConfig
 {
     /**
@@ -21,13 +19,12 @@ class ConfigConfig
     /**
      * ConfigConfig constructor.
      * @param string $configDir
-     * @throws ConfigException
      */
     public function __construct(string $configDir)
     {
         $this->configDir = $configDir;
         if (!is_dir($configDir)) {
-            throw new ConfigException("RES_DIR不合法");
+            echo "RES_DIR不合法，将不加载配置文件\n";
         }
     }
 

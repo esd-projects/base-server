@@ -70,4 +70,12 @@ class Event
     {
         $this->processId = $processId;
     }
+
+    /**
+     * @param string $type
+     */
+    public function setType(string $type): void
+    {
+        $this->type = $type;
+    }
 }
