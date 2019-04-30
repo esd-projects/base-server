@@ -1,7 +1,8 @@
 {
   "require": {
     "monolog/monolog": "^1.24",
-    "symfony/console": "^4.2"
+    "symfony/console": "^4.2",
+    "symfony/yaml": "^4.2"
   },
   "autoload": {
     "psr-4": {
