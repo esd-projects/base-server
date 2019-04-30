@@ -72,7 +72,11 @@ class BaseConfig
             if ($property->getDeclaringClass()->getName() == Static::class) {
                 $varName = $property->getName();
                 if ($this->$varName != null) {
-                    $config[$this->changeConnectStyle($varName)] = $this->$varName;
+                    if ($this->$varName instanceof BaseConfig) {
+                        $this->$varName->merge();
+                    } else {
+                        $config[$this->changeConnectStyle($varName)] = $this->$varName;
+                    }
                 }
             }
         }
@@ -82,7 +86,8 @@ class BaseConfig
         $this->config = Server::$instance->getConfigContext()->get($this->prefix);
         foreach ($this->config as $key => $value) {
             $varName = $this->changeHumpStyle($key);
-            $this->$varName = $value;
+            $func = "set" . ucfirst($varName);
+            call_user_func([$this, $func], $value);
         }
     }
 
