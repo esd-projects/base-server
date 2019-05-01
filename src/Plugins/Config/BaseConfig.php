@@ -21,7 +21,7 @@ use ReflectionClass;
 class BaseConfig
 {
     protected static $uuid = 1000;
-    private $prefix;
+    private $configPrefix;
     private $reflectionClass;
     private $config = [];
     private $isArray;
@@ -36,7 +36,7 @@ class BaseConfig
      */
     public function __construct(string $prefix, bool $isArray = false, $indexName = null)
     {
-        $this->prefix = $prefix;
+        $this->configPrefix = $prefix;
         $this->reflectionClass = new ReflectionClass(Static::class);
         $this->isArray = $isArray;
         $this->indexName = $indexName;
@@ -49,7 +49,7 @@ class BaseConfig
     public function merge()
     {
         $this->config = [];
-        $prefix = $this->prefix;
+        $prefix = $this->configPrefix;
         $config = &$this->config;
         //如果是数组那么还要再深入一层
         if ($this->isArray) {
