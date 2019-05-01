@@ -48,6 +48,8 @@ class BaseConfig
      */
     public function merge()
     {
+        $this->config = [];
+        $prefix = $this->prefix;
         $config = &$this->config;
         //如果是数组那么还要再深入一层
         if ($this->isArray) {
@@ -60,9 +62,9 @@ class BaseConfig
                     throw new ConfigException("配置错误无法获取到$indexName");
                 }
             }
-            $this->prefix = $this->prefix . ".$index";
+            $prefix = $prefix . ".$index";
         }
-        $prefixs = explode(".", $this->prefix);
+        $prefixs = explode(".", $prefix);
         foreach ($prefixs as $value) {
             $config[$value] = [];
             $config = &$config[$value];
@@ -71,7 +73,7 @@ class BaseConfig
         //添加到配置上下文中
         Server::$instance->getConfigContext()->appendDeepConfig($this->config, ConfigPlugin::ConfigDeep);
         //合并回配置
-        $this->config = Server::$instance->getConfigContext()->get($this->prefix);
+        $this->config = Server::$instance->getConfigContext()->get($prefix);
         $this->buildFromConfig($this->config);
     }
 
