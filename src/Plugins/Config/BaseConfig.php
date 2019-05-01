@@ -14,7 +14,7 @@ use GoSwoole\BaseServer\Server\Server;
 use ReflectionClass;
 
 /**
- * 配置的基础类，配置不允许嵌套，不允许有复杂对象,切命名为驼峰
+ * 配置的基础类，命名为驼峰
  * Class BaseConfig
  * @package GoSwoole\BaseServer\Plugins\Config
  */
@@ -52,7 +52,7 @@ class BaseConfig
         //如果是数组那么还要再深入一层
         if ($this->isArray) {
             if ($this->indexName == null) {
-                $index = count($config);
+                $index = 0;
             } else {
                 $indexName = $this->indexName;
                 $index = $this->$indexName;
@@ -67,28 +67,12 @@ class BaseConfig
             $config[$value] = [];
             $config = &$config[$value];
         }
-
-        foreach ($this->reflectionClass->getProperties() as $property) {
-            if ($property->getDeclaringClass()->getName() == Static::class) {
-                $varName = $property->getName();
-                if ($this->$varName != null) {
-                    if ($this->$varName instanceof BaseConfig) {
-                        $this->$varName->merge();
-                    } else {
-                        $config[$this->changeConnectStyle($varName)] = $this->$varName;
-                    }
-                }
-            }
-        }
+        $config = $this->toConfigArray();
         //添加到配置上下文中
         Server::$instance->getConfigContext()->appendDeepConfig($this->config, ConfigPlugin::ConfigDeep);
         //合并回配置
         $this->config = Server::$instance->getConfigContext()->get($this->prefix);
-        foreach ($this->config as $key => $value) {
-            $varName = $this->changeHumpStyle($key);
-            $func = "set" . ucfirst($varName);
-            call_user_func([$this, $func], $value);
-        }
+        $this->buildFromConfig($this->config);
     }
 
     /**
@@ -130,6 +114,35 @@ class BaseConfig
     }
 
     /**
+     * 转换成配置数组
+     */
+    public function toConfigArray()
+    {
+        $config = [];
+        foreach ($this->reflectionClass->getProperties() as $property) {
+            if ($property->getDeclaringClass()->getName() == Static::class) {
+                $varName = $property->getName();
+                if (!empty($this->$varName)) {
+                    if (is_array($this->$varName)) {
+                        foreach ($this->$varName as $key => $value) {
+                            if ($value instanceof BaseConfig) {
+                                $config[$this->changeConnectStyle($varName)][$this->changeConnectStyle($key)] = $value->toConfigArray();
+                            } else {
+                                $config[$this->changeConnectStyle($varName)][$this->changeConnectStyle($key)] = $value;
+                            }
+                        }
+                    } elseif ($this->$varName instanceof BaseConfig) {
+                        $config[$this->changeConnectStyle($varName)] = $this->$varName->toConfigArray();
+                    } else {
+                        $config[$this->changeConnectStyle($varName)] = $this->$varName;
+                    }
+                }
+            }
+        }
+        return $config;
+    }
+
+    /**
      * 从config中获取配置
      * @param $config
      * @return BaseConfig
@@ -138,7 +151,8 @@ class BaseConfig
     {
         foreach ($config as $key => $value) {
             $varName = $this->changeHumpStyle($key);
-            $this->$varName = $value;
+            $func = "set" . ucfirst($varName);
+            call_user_func([$this, $func], $value);
         }
         return $this;
     }

@@ -87,10 +87,27 @@ class ProcessManager
 
     /**
      * @return ProcessConfig[]
+     * @throws Exception\ConfigException
+     * @throws \ReflectionException
      */
     public function getCustomProcessConfigs(): array
     {
-        return $this->customProcessConfigs;
+        //合并配置
+        foreach ($this->customProcessConfigs as $processConfig) {
+            $processConfig->merge();
+        }
+        //重新获取配置
+        $customProcessConfigs = [];
+        $configs = Server::$instance->getConfigContext()->get(ProcessConfig::key, []);
+        foreach ($configs as $key => $value) {
+            $processConfig = new ProcessConfig();
+            $processConfig->setName($key);
+            $customProcessConfigs[$key] = $processConfig->buildFromConfig($value);
+            if ($processConfig->getClassName() == null) {
+                $processConfig->setClassName($this->defaultProcessClass);
+            }
+        }
+        return $customProcessConfigs;
     }
 
     /**
@@ -124,21 +141,8 @@ class ProcessManager
             $this->addProcesses($process);
         }
         $startId = $serverConfig->getWorkerNum();
-        //合并配置
-        foreach ($this->customProcessConfigs as $processConfig) {
-            $processConfig->merge();
-        }
         //重新获取配置
-        $this->customProcessConfigs = [];
-        $configs = Server::$instance->getConfigContext()->get(ProcessConfig::key, []);
-        foreach ($configs as $key => $value) {
-            $processConfig = new ProcessConfig();
-            $processConfig->setName($key);
-            $this->customProcessConfigs[$key] = $processConfig->buildFromConfig($value);
-            if ($processConfig->getClassName() == null) {
-                $processConfig->setClassName($this->defaultProcessClass);
-            }
-        }
+        $this->customProcessConfigs = $this->getCustomProcessConfigs();
         //配置自定义进程
         foreach ($this->customProcessConfigs as $processConfig) {
             $processClass = $processConfig->getClassName();

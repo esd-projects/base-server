@@ -57,24 +57,37 @@ class PortManager
     }
 
     /**
-     * 创建端口实例
+     * 获取配置
+     * @return PortConfig[]
      * @throws ConfigException
      * @throws \ReflectionException
      */
-    public function createPorts()
+    public function getPortConfigs()
     {
         //合并配置
         foreach ($this->portConfigs as $portConfig) {
             $portConfig->merge();
         }
         //重新获取配置
-        $this->portConfigs = [];
+        $portConfigs = [];
         $configs = Server::$instance->getConfigContext()->get(PortConfig::key);
         foreach ($configs as $key => $value) {
             $portConfig = new PortConfig();
             $portConfig->setName($key);
-            $this->portConfigs[$key] = $portConfig->buildFromConfig($value);
+            $portConfigs[$key] = $portConfig->buildFromConfig($value);
         }
+        return $portConfigs;
+    }
+
+    /**
+     * 创建端口实例
+     * @throws ConfigException
+     * @throws \ReflectionException
+     */
+    public function createPorts()
+    {
+        //重新获取配置
+        $this->portConfigs = $this->getPortConfigs();
         if (count($this->portConfigs) == 0) {
             throw new ConfigException("缺少port配置，无法启动服务");
         }

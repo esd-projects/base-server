@@ -123,7 +123,6 @@ abstract class Server
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
         $this->basePlugManager = new PluginInterfaceManager($this);
-        $this->plugManager = new PluginInterfaceManager($this);
         //初始化默认插件添加Config/Logger/Event插件
         $this->basePlugManager->addPlug(new ConfigPlugin());
         $this->basePlugManager->addPlug(new LoggerPlugin());
@@ -134,6 +133,8 @@ abstract class Server
         $this->eventDispatcher = $this->context->getDeepByClassName(EventDispatcher::class);
         $this->log = $this->context->getDeepByClassName(Logger::class);
         $this->configContext = $this->context->getDeepByClassName(ConfigContext::class);
+        //获取上面这些后才能初始化plugManager
+        $this->plugManager = new PluginInterfaceManager($this);
         set_exception_handler(function ($e) {
             $this->log->error($e);
         });
