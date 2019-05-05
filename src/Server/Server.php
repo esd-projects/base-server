@@ -439,7 +439,7 @@ abstract class Server
         $clientInfo = $this->getClientInfo($fd);
         $port = $this->getPortManager()->getPortFromPortNo($clientInfo->getServerPort());
         if ($this->isEstablished($fd)) {
-            $this->wsPush($fd, $port->getPortConfig()->getWsOpcode());
+            $this->wsPush($fd, $data, $port->getPortConfig()->getWsOpcode());
         } else {
             $this->send($fd, $data);
         }
