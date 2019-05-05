@@ -596,10 +596,11 @@ abstract class Server
      * @param $data
      * @param int $opcode
      * @param bool $finish
+     * @return bool
      */
-    public function wsPush(int $fd, $data, int $opcode = 1, bool $finish = true)
+    public function wsPush(int $fd, $data, int $opcode = 1, bool $finish = true): bool
     {
-        $this->server->push($fd, $data, $opcode, $finish);
+        return $this->server->push($fd, $data, $opcode, $finish);
     }
 
     /**
