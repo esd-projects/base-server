@@ -430,6 +430,22 @@ abstract class Server
     }
 
     /**
+     * 自动判断是ws还是tcp
+     * @param int $fd
+     * @param string $data
+     */
+    public function autoSend(int $fd, string $data)
+    {
+        $clientInfo = $this->getClientInfo($fd);
+        $port = $this->getPortManager()->getPortFromPortNo($clientInfo->getServerPort());
+        if ($this->isEstablished($fd)) {
+            $this->wsPush($fd, $port->getPortConfig()->getWsOpcode());
+        } else {
+            $this->send($fd, $data);
+        }
+    }
+
+    /**
      * 向客户端发送数据
      * @param int $fd 客户端的文件描述符
      * @param string $data 发送的数据
