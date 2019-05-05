@@ -122,7 +122,7 @@ class BaseConfig
     {
         $config = [];
         foreach ($this->reflectionClass->getProperties() as $property) {
-            if ($property->getDeclaringClass()->getName() == Static::class) {
+            if ($property->getDeclaringClass()->getName() != BaseConfig::class) {
                 $varName = $property->getName();
                 if (!empty($this->$varName)) {
                     if (is_array($this->$varName)) {
@@ -154,7 +154,9 @@ class BaseConfig
         foreach ($config as $key => $value) {
             $varName = $this->changeHumpStyle($key);
             $func = "set" . ucfirst($varName);
-            call_user_func([$this, $func], $value);
+            if (is_callable([$this, $func])) {
+                call_user_func([$this, $func], $value);
+            }
         }
         return $this;
     }
