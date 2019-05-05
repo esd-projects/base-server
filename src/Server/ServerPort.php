@@ -110,6 +110,11 @@ abstract class ServerPort implements IServerPort
 
     public function _onConnect($server, int $fd, int $reactorId)
     {
+        //未准备好直接关闭连接
+        if (!Server::$instance->getProcessManager()->getCurrentProcess()->isReady()) {
+            $this->server->closeFd($fd);
+            return;
+        }
         try {
             $this->onTcpConnect($fd, $reactorId);
         } catch (\Throwable $e) {
@@ -119,6 +124,10 @@ abstract class ServerPort implements IServerPort
 
     public function _onClose($server, int $fd, int $reactorId)
     {
+        //未准备好直接关闭连接
+        if (!Server::$instance->getProcessManager()->getCurrentProcess()->isReady()) {
+            return;
+        }
         try {
             $this->onTcpClose($fd, $reactorId);
         } catch (\Throwable $e) {
@@ -128,6 +137,11 @@ abstract class ServerPort implements IServerPort
 
     public function _onReceive($server, int $fd, int $reactorId, string $data)
     {
+        //未准备好直接关闭连接
+        if (!Server::$instance->getProcessManager()->getCurrentProcess()->isReady()) {
+            $this->server->closeFd($fd);
+            return;
+        }
         try {
             $this->onTcpReceive($fd, $reactorId, $data);
         } catch (\Throwable $e) {
@@ -142,6 +156,10 @@ abstract class ServerPort implements IServerPort
      */
     public function _onPacket($server, string $data, array $client_info)
     {
+        //未准备好直接关闭连接
+        if (!Server::$instance->getProcessManager()->getCurrentProcess()->isReady()) {
+            return;
+        }
         try {
             $this->onUdpPacket($data, $client_info);
         } catch (\Throwable $e) {
@@ -155,6 +173,11 @@ abstract class ServerPort implements IServerPort
      */
     public function _onRequest($request, $response)
     {
+        //未准备好直接关闭连接
+        if (!Server::$instance->getProcessManager()->getCurrentProcess()->isReady()) {
+            $response->end("server is not ready");
+            return;
+        }
         try {
             $_request = new Request($request);
             $_response = new Response($response);
@@ -172,6 +195,10 @@ abstract class ServerPort implements IServerPort
      */
     public function _onMessage($server, $frame)
     {
+        //未准备好直接关闭连接
+        if (!Server::$instance->getProcessManager()->getCurrentProcess()->isReady()) {
+            return;
+        }
         try {
             if (isset($frame['code'])) {
                 //是个CloseFrame
@@ -190,6 +217,11 @@ abstract class ServerPort implements IServerPort
      */
     public function _onOpen($server, $request)
     {
+        //未准备好直接关闭连接
+        if (!Server::$instance->getProcessManager()->getCurrentProcess()->isReady()) {
+            $server->disconnect($request->fd);
+            return;
+        }
         try {
             $_request = new Request($request);
             setContextValue("request", $_request);
@@ -207,6 +239,10 @@ abstract class ServerPort implements IServerPort
      */
     public function _onHandshake($request, $response)
     {
+        //未准备好直接关闭连接
+        if (!Server::$instance->getProcessManager()->getCurrentProcess()->isReady()) {
+            return false;
+        }
         $_request = new Request($request);
         setContextValue("request", $_request);
         $success = $this->onWsPassCustomHandshake($_request);
