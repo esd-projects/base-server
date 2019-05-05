@@ -200,29 +200,41 @@ abstract class Server
         //创建端口实例
         $this->getPortManager()->createPorts();
         //主要端口
-        $this->mainPort = array_values($this->portManager->getPorts())[0];
-        $portConfigData = $this->mainPort->getPortConfig()->buildConfig();
-        $serverConfigData = $this->serverConfig->buildConfig();
-        $serverConfigData = array_merge($portConfigData, $serverConfigData);
         if ($this->portManager->hasWebSocketPort()) {
+            foreach ($this->portManager->getPorts() as $serverPort) {
+                if ($serverPort->isWebSocket()) {
+                    $this->mainPort = $serverPort;
+                    break;
+                }
+            }
             $this->server = new \Swoole\WebSocket\Server($this->mainPort->getPortConfig()->getHost(),
                 $this->mainPort->getPortConfig()->getPort(),
                 SWOOLE_PROCESS,
                 $this->mainPort->getPortConfig()->getSwooleSockType()
             );
         } else if ($this->portManager->hasHttpPort()) {
+            foreach ($this->portManager->getPorts() as $serverPort) {
+                if ($serverPort->isHttp()) {
+                    $this->mainPort = $serverPort;
+                    break;
+                }
+            }
             $this->server = new \Swoole\Http\Server($this->mainPort->getPortConfig()->getHost(),
                 $this->mainPort->getPortConfig()->getPort(),
                 SWOOLE_PROCESS,
                 $this->mainPort->getPortConfig()->getSwooleSockType()
             );
         } else {
+            $this->mainPort = array_values($this->getPortManager()->getPorts())[0];
             $this->server = new \Swoole\Server($this->mainPort->getPortConfig()->getHost(),
                 $this->mainPort->getPortConfig()->getPort(),
                 SWOOLE_PROCESS,
                 $this->mainPort->getPortConfig()->getSwooleSockType()
             );
         }
+        $portConfigData = $this->mainPort->getPortConfig()->buildConfig();
+        $serverConfigData = $this->serverConfig->buildConfig();
+        $serverConfigData = array_merge($portConfigData, $serverConfigData);
         $this->server->set($serverConfigData);
         //多个端口
         foreach ($this->portManager->getPorts() as $serverPort) {
