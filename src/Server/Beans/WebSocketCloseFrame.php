@@ -17,8 +17,8 @@ class WebSocketCloseFrame extends WebSocketFrame
     public function __construct($frame)
     {
         parent::__construct($frame);
-        $this->code = $frame['code'];
-        $this->reason = $frame['reason'];
+        $this->code = $frame->code;
+        $this->reason = $frame->reason;
     }
 
     /**

@@ -258,7 +258,7 @@ abstract class AbstractServerPort
             return;
         }
         try {
-            if (isset($frame['code'])) {
+            if (isset($frame->code)) {
                 //是个CloseFrame
                 $this->onWsMessage(new WebSocketCloseFrame($frame));
             } else {

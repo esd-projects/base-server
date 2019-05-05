@@ -45,6 +45,13 @@ class PortConfig extends BaseConfig
     const SWOOLE_DTLSv1_SERVER_METHOD = SWOOLE_DTLSv1_SERVER_METHOD;
     const SWOOLE_DTLSv1_CLIENT_METHOD = SWOOLE_DTLSv1_CLIENT_METHOD;
 
+    const WEBSOCKET_OPCODE_TEXT = WEBSOCKET_OPCODE_TEXT;
+    const WEBSOCKET_OPCODE_BINARY = WEBSOCKET_OPCODE_BINARY;
+    const WEBSOCKET_OPCODE_PING = WEBSOCKET_OPCODE_PING;
+    const WEBSOCKET_STATUS_CONNECTION = WEBSOCKET_STATUS_CONNECTION;
+    const WEBSOCKET_STATUS_HANDSHAKE = WEBSOCKET_STATUS_HANDSHAKE;
+    const WEBSOCKET_STATUS_FRAME = WEBSOCKET_STATUS_FRAME;
+
     const key = "goswoole.port";
     /**
      * 名称
@@ -222,6 +229,11 @@ class PortConfig extends BaseConfig
      * @var bool
      */
     protected $customHandShake = false;
+
+    /**
+     * @var int
+     */
+    protected $wsOpcode = self::WEBSOCKET_OPCODE_TEXT;
 
     public function __construct()
     {
@@ -838,5 +850,21 @@ class PortConfig extends BaseConfig
     public function setPortClass(string $portClass): void
     {
         $this->portClass = $portClass;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWsOpcode(): int
+    {
+        return $this->wsOpcode;
+    }
+
+    /**
+     * @param int $wsOpcode
+     */
+    public function setWsOpcode(int $wsOpcode): void
+    {
+        $this->wsOpcode = $wsOpcode;
     }
 }

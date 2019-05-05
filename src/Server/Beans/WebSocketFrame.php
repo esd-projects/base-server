@@ -24,10 +24,10 @@ class WebSocketFrame
     public function __construct($frame)
     {
         $this->swooleFrame = $frame;
-        $this->fd = $frame['fd'];
-        $this->opcode = $frame['opcode'];
-        $this->data = $frame['data'];
-        $this->finish = $frame['finish'];
+        $this->fd = $frame->fd;
+        $this->opcode = $frame->opcode;
+        $this->data = $frame->data;
+        $this->finish = $frame->finish;
     }
 
     /**
