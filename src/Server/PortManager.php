@@ -57,6 +57,18 @@ class PortManager
     }
 
     /**
+     * 合并配置
+     * @throws ConfigException
+     */
+    public function mergeConfig()
+    {
+        //合并配置
+        foreach ($this->portConfigs as $portConfig) {
+            $portConfig->merge();
+        }
+    }
+
+    /**
      * 获取配置
      * @return PortConfig[]
      * @throws ConfigException
@@ -65,9 +77,7 @@ class PortManager
     public function getPortConfigs()
     {
         //合并配置
-        foreach ($this->portConfigs as $portConfig) {
-            $portConfig->merge();
-        }
+        $this->mergeConfig();
         //重新获取配置
         $portConfigs = [];
         $configs = Server::$instance->getConfigContext()->get(PortConfig::key);

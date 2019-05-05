@@ -181,6 +181,9 @@ abstract class Server
      */
     public function configure()
     {
+        //先生成部分配置
+        $this->getPortManager()->mergeConfig();
+        $this->getProcessManager()->mergeConfig();
         //插件排序此时不允许添加插件了
         $this->plugManager->order();
         //调用所有插件的beforeServerStart

@@ -86,6 +86,16 @@ class ProcessManager
     }
 
     /**
+     * 合并配置
+     */
+    public function mergeConfig()
+    {
+        foreach ($this->customProcessConfigs as $processConfig) {
+            $processConfig->merge();
+        }
+    }
+
+    /**
      * @return ProcessConfig[]
      * @throws Exception\ConfigException
      * @throws \ReflectionException
@@ -93,9 +103,7 @@ class ProcessManager
     public function getCustomProcessConfigs(): array
     {
         //合并配置
-        foreach ($this->customProcessConfigs as $processConfig) {
-            $processConfig->merge();
-        }
+        $this->mergeConfig();
         //重新获取配置
         $customProcessConfigs = [];
         $configs = Server::$instance->getConfigContext()->get(ProcessConfig::key, []);
