@@ -108,8 +108,9 @@ class Response
      * 发送Http响应体，并结束请求处理。
      * @param string $html
      */
-    public function end(string $html)
+    public function end(?string $html)
     {
+        if ($html === null) return;
         if ($this->isEnd) {
             return;
         }
