@@ -206,22 +206,22 @@ abstract class AbstractServerPort
     /**
      * @param $server
      * @param string $data
-     * @param array $client_info
+     * @param array $clientInfo
      */
-    public function _onPacket($server, string $data, array $client_info)
+    public function _onPacket($server, string $data, array $clientInfo)
     {
         //未准备好直接关闭连接
         if (!Server::$instance->getProcessManager()->getCurrentProcess()->isReady()) {
             return;
         }
         try {
-            $this->onUdpPacket($data, $client_info);
+            $this->onUdpPacket($data, $clientInfo);
         } catch (\Throwable $e) {
             Server::$instance->getLog()->error($e);
         }
     }
 
-    public abstract function onUdpPacket(string $data, array $client_info);
+    public abstract function onUdpPacket(string $data, array $clientInfo);
 
     /**
      * @param $request
