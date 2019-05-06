@@ -80,10 +80,13 @@ class BaseConfig
     /**
      * 驼峰修改为"_"连接
      * @param $var
-     * @return string
+     * @return mixed
      */
     private function changeConnectStyle($var)
     {
+        if (is_numeric($var)) {
+            return $var;
+        }
         $result = "";
         for ($i = 0; $i < strlen($var); $i++) {
             $str = ord($var[$i]);
@@ -99,10 +102,13 @@ class BaseConfig
     /**
      * "_"连接修改为驼峰
      * @param $var
-     * @return string
+     * @return mixed
      */
     private function changeHumpStyle($var)
     {
+        if (is_numeric($var)) {
+            return $var;
+        }
         $result = "";
         for ($i = 0; $i < strlen($var); $i++) {
             if ($var[$i] == "_") {
