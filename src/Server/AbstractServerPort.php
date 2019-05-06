@@ -234,15 +234,16 @@ abstract class AbstractServerPort
             $response->end("server is not ready");
             return;
         }
+        $_request = new Request($request);
+        $_response = new Response($response);
         try {
-            $_request = new Request($request);
-            $_response = new Response($response);
             setContextValue("request", $_request);
             setContextValue("response", $_response);
             $this->onHttpRequest($_request, $_response);
         } catch (\Throwable $e) {
             Server::$instance->getLog()->error($e);
         }
+        $_response->end("");
     }
 
     public abstract function onHttpRequest(Request $request, Response $response);
