@@ -27,6 +27,8 @@ class Response
      */
     private $swooleResponse;
 
+    protected $buffer = "";
+
     public function __construct($swooleResponse)
     {
         $this->swooleResponse = $swooleResponse;
@@ -105,17 +107,42 @@ class Response
     }
 
     /**
+     * 像缓冲区增加数据
+     * @param string|null $html
+     */
+    public function append(?string $html)
+    {
+        if (!empty($html)) {
+            $this->buffer .= $html;
+        }
+    }
+
+    /**
+     * 清除缓冲区
+     */
+    public function clear()
+    {
+        $this->buffer = "";
+    }
+
+    /**
      * 发送Http响应体，并结束请求处理。
      * @param string $html
      */
     public function end(?string $html)
     {
-        if ($html === null) return;
         if ($this->isEnd) {
             return;
         }
-        $this->swooleResponse->end($html);
+        if ($html === null) {
+            $this->swooleResponse->end($this->buffer);
+            $this->isEnd = true;
+            $this->buffer = "";
+            return;
+        }
+        $this->swooleResponse->end($this->buffer . $html);
         $this->isEnd = true;
+        $this->buffer = "";
     }
 
     /**
