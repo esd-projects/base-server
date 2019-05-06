@@ -60,6 +60,18 @@ abstract class AbstractPlugin implements PluginInterface
     }
 
     /**
+     * 配置到DI容器
+     * @param $name
+     * @param $value
+     */
+    public function setToDIContainer($name, $value)
+    {
+        if (Server::$instance->getContainer() != null) {
+            Server::$instance->getContainer()->set($name, $value);
+        }
+    }
+
+    /**
      * 在哪个之后
      * @param $className
      */
