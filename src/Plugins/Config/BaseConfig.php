@@ -130,7 +130,7 @@ class BaseConfig
         foreach ($this->reflectionClass->getProperties() as $property) {
             if ($property->getDeclaringClass()->getName() != BaseConfig::class) {
                 $varName = $property->getName();
-                if (!empty($this->$varName)) {
+                if ($this->$varName != null) {
                     if (is_array($this->$varName)) {
                         foreach ($this->$varName as $key => $value) {
                             if ($value instanceof BaseConfig) {
