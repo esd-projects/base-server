@@ -146,12 +146,12 @@ abstract class Server
         //获取上面这些后才能初始化plugManager
         $this->plugManager = new PluginInterfaceManager($this);
         //配置DI容器
-        $this->container->set("Logger", $this->log);
-        $this->container->set("EventDispatcher", $this->eventDispatcher);
-        $this->container->set("ConfigContext", $this->configContext);
-        $this->container->set("PortManager", $this->portManager);
-        $this->container->set("ProcessManager", $this->processManager);
-        $this->container->set("PlugManager", $this->getPlugManager());
+        $this->container->set(Logger::class, $this->log);
+        $this->container->set(EventDispatcher::class, $this->eventDispatcher);
+        $this->container->set(ConfigContext::class, $this->configContext);
+        $this->container->set(PortManager::class, $this->portManager);
+        $this->container->set(ProcessManager::class, $this->processManager);
+        $this->container->set(PluginInterfaceManager::class, $this->getPlugManager());
         set_exception_handler(function ($e) {
             $this->log->error($e);
         });
