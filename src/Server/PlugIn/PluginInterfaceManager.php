@@ -8,6 +8,7 @@
 
 namespace GoSwoole\BaseServer\Server\Plugin;
 
+use DI\ContainerBuilder;
 use GoSwoole\BaseServer\Coroutine\Channel;
 use GoSwoole\BaseServer\Exception;
 use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
@@ -57,6 +58,11 @@ class PluginInterfaceManager implements PluginInterface
      */
     private $readyChannel;
 
+    /**
+     * @var ContainerBuilder
+     */
+    private $containerBuilder;
+
     public function __construct(Server $server)
     {
         $this->server = $server;
@@ -64,6 +70,7 @@ class PluginInterfaceManager implements PluginInterface
         //baseManager是获取不到的，只有用户插件管理才能获取到
         $this->log = $this->server->getContext()->getDeepByClassName(Logger::class);
         $this->eventDispatcher = $this->server->getContext()->getDeepByClassName(EventDispatcher::class);
+        $this->containerBuilder = $this->server->getContext()->getDeepByClassName(ContainerBuilder::class);
     }
 
     /**

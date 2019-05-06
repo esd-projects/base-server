@@ -11,6 +11,7 @@ namespace GoSwoole\BaseServer\Server\Plugin;
 
 use GoSwoole\BaseServer\Coroutine\Channel;
 use GoSwoole\BaseServer\Exception;
+use GoSwoole\BaseServer\Server\Server;
 
 /**
  * 基础插件，插件类需要继承
@@ -45,9 +46,17 @@ abstract class AbstractPlugin implements PluginInterface
      */
     private $readyChannel;
 
+    /**
+     * AbstractPlugin constructor.
+     * @throws \DI\DependencyException
+     */
     public function __construct()
     {
         $this->readyChannel = new Channel();
+        if (Server::$instance->getContainer() != null) {
+            //注入DI
+            Server::$instance->getContainer()->injectOn($this);
+        }
     }
 
     /**

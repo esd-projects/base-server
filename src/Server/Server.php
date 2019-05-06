@@ -8,8 +8,10 @@
 
 namespace GoSwoole\BaseServer\Server;
 
+use DI\Container;
 use GoSwoole\BaseServer\Plugins\Config\ConfigContext;
 use GoSwoole\BaseServer\Plugins\Config\ConfigPlugin;
+use GoSwoole\BaseServer\Plugins\DI\DIPlugin;
 use GoSwoole\BaseServer\Plugins\Event\ApplicationEvent;
 use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
 use GoSwoole\BaseServer\Plugins\Event\EventPlugin;
@@ -107,12 +109,18 @@ abstract class Server
     protected $log;
 
     /**
+     * @var Container
+     */
+    private $container;
+
+    /**
      * 这里context获取不到任何插件，因为插件还没有加载
      * Server constructor.
      * @param ServerConfig $serverConfig
      * @param string $defaultPortClass
      * @param string $defaultProcessClass
      * @throws \GoSwoole\BaseServer\Exception
+     * @throws \DI\DependencyException
      */
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
@@ -123,18 +131,27 @@ abstract class Server
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
         $this->basePlugManager = new PluginInterfaceManager($this);
-        //初始化默认插件添加Config/Logger/Event插件
+        //初始化默认插件添加DI/Config/Logger/Event插件
+        $this->basePlugManager->addPlug(new DIPlugin());
         $this->basePlugManager->addPlug(new ConfigPlugin());
         $this->basePlugManager->addPlug(new LoggerPlugin());
         $this->basePlugManager->addPlug(new EventPlugin());
         $this->basePlugManager->order();
         $this->basePlugManager->beforeServerStart($this->context);
-        //获取EventDispatcher/Logger/ConfigContext
+        //获取EventDispatcher/Logger/ConfigContext/container
         $this->eventDispatcher = $this->context->getDeepByClassName(EventDispatcher::class);
+        $this->container = $this->context->getDeep("Container");
         $this->log = $this->context->getDeepByClassName(Logger::class);
         $this->configContext = $this->context->getDeepByClassName(ConfigContext::class);
         //获取上面这些后才能初始化plugManager
         $this->plugManager = new PluginInterfaceManager($this);
+        //配置DI容器
+        $this->container->set("Logger", $this->log);
+        $this->container->set("EventDispatcher", $this->eventDispatcher);
+        $this->container->set("ConfigContext", $this->configContext);
+        $this->container->set("PortManager", $this->portManager);
+        $this->container->set("ProcessManager", $this->processManager);
+        $this->container->set("PlugManager", $this->getPlugManager());
         set_exception_handler(function ($e) {
             $this->log->error($e);
         });
@@ -719,5 +736,13 @@ abstract class Server
     public function getConfigContext(): ConfigContext
     {
         return $this->configContext;
+    }
+
+    /**
+     * @return Container|null
+     */
+    public function getContainer(): ?Container
+    {
+        return $this->container;
     }
 }
