@@ -12,7 +12,7 @@ namespace GoSwoole\BaseServer\Plugins\DI;
 use DI\Container;
 use DI\ContainerBuilder;
 use GoSwoole\BaseServer\Server\Context;
-use GoSwoole\BaseServer\Server\Plugin\AbstractPlugin;
+use GoSwoole\BaseServer\Server\PlugIn\AbstractPlugin;
 use GoSwoole\BaseServer\Server\Server;
 
 class DIPlugin extends AbstractPlugin

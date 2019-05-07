@@ -13,7 +13,7 @@ use GoSwoole\BaseServer\Plugins\Config\ConfigContext;
 use GoSwoole\BaseServer\Plugins\Config\ConfigPlugin;
 use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Context;
-use GoSwoole\BaseServer\Server\Plugin\AbstractPlugin;
+use GoSwoole\BaseServer\Server\PlugIn\AbstractPlugin;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;

@@ -22,7 +22,7 @@ use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
 use GoSwoole\BaseServer\Server\Config\ServerConfig;
 use GoSwoole\BaseServer\Server\Exception\ConfigException;
-use GoSwoole\BaseServer\Server\Plugin\PluginInterfaceManager;
+use GoSwoole\BaseServer\Server\PlugIn\PluginInterfaceManager;
 use GoSwoole\BaseServer\Server\ServerProcess\ManagerProcess;
 use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
 use Monolog\Logger;

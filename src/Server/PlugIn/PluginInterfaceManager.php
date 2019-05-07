@@ -6,7 +6,7 @@
  * Time: 12:24
  */
 
-namespace GoSwoole\BaseServer\Server\Plugin;
+namespace GoSwoole\BaseServer\Server\PlugIn;
 
 use DI\ContainerBuilder;
 use GoSwoole\BaseServer\Coroutine\Channel;

@@ -10,7 +10,7 @@ namespace GoSwoole\BaseServer\Plugins\Config;
 
 use GoSwoole\BaseServer\Plugins\Event\EventPlugin;
 use GoSwoole\BaseServer\Server\Context;
-use GoSwoole\BaseServer\Server\Plugin\AbstractPlugin;
+use GoSwoole\BaseServer\Server\PlugIn\AbstractPlugin;
 use GoSwoole\BaseServer\Server\Server;
 use Symfony\Component\Yaml\Yaml;
 
