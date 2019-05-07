@@ -223,7 +223,7 @@ abstract class Process
     protected function setName($name)
     {
         $this->processName = $name;
-        self::setProcessTitle($name);
+        self::setProcessTitle(Server::$instance->getServerConfig()->getName() . "-" . $name);
     }
 
     /**

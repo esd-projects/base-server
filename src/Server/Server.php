@@ -143,6 +143,7 @@ abstract class Server
         $this->container = $this->context->getDeep("Container");
         $this->log = $this->context->getDeepByClassName(Logger::class);
         $this->configContext = $this->context->getDeepByClassName(ConfigContext::class);
+        $this->serverConfig->merge();
         //获取上面这些后才能初始化plugManager
         $this->plugManager = new PluginInterfaceManager($this);
         //配置DI容器

@@ -15,18 +15,17 @@ use GoSwoole\BaseServer\Server\Server;
 
 class ManagerProcess extends Process
 {
-    const name = "-manager";
+    const name = "manager";
     const id = "-2";
 
     public function __construct(Server $server)
     {
-        $name = $server->getServerConfig()->getName();
         parent::__construct($server, self::id, $name . self::name, Process::SERVER_GROUP);
     }
 
     public function onProcessStart()
     {
-        Process::setProcessTitle($this->getProcessName());
+        Process::setProcessTitle(Server::$instance->getServerConfig()->getName() . "-" . $this->getProcessName());
         $this->processPid = getmypid();
         $this->server->getProcessManager()->setCurrentProcessId($this->processId);
         //堵塞住SIGINT
