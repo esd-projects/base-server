@@ -16,14 +16,14 @@ use Symfony\Component\Yaml\Yaml;
 
 class ConfigPlugin extends AbstractPlugin
 {
-    //bootstrap.yml
-    const BootstrapDeep = 10;
-    //application.yml
-    const ApplicationDeep = 9;
-    //application-active.yml
-    const ApplicationActiveDeep = 8;
     //手动设置的Config配置
-    const ConfigDeep = 7;
+    const ConfigDeep = 10;
+    //bootstrap.yml
+    const BootstrapDeep = 9;
+    //application.yml
+    const ApplicationDeep = 8;
+    //application-active.yml
+    const ApplicationActiveDeep = 7;
     //远程全局Application配置
     const ConfigServerGlobalApplicationDeep = 6;
     //远程Application配置
@@ -44,6 +44,7 @@ class ConfigPlugin extends AbstractPlugin
      * ConfigPlugin constructor.
      * @param ConfigConfig|null $configConfig
      * @throws \GoSwoole\BaseServer\Exception
+     * @throws \DI\DependencyException
      */
     public function __construct(?ConfigConfig $configConfig = null)
     {
