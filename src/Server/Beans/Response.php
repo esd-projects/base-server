@@ -64,6 +64,14 @@ class Response
     }
 
     /**
+     * @param string $key
+     */
+    public function delCookie(string $key)
+    {
+        $this->addCookie($key, "");
+    }
+
+    /**
      * 发送Http状态码。
      * @param int $http_status_code
      */
