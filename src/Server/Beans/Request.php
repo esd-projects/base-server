@@ -8,6 +8,8 @@
 
 namespace GoSwoole\BaseServer\Server\Beans;
 
+use GoSwoole\BaseServer\Exception;
+
 /**
  * HTTP请求对象
  * Class Request
@@ -125,6 +127,20 @@ class Request
     }
 
     /**
+     * @param string $key
+     * @return string|null
+     * @throws Exception
+     */
+    public function getGetRequire(string $key)
+    {
+        $result = $this->get[$key] ?? null;
+        if ($result == null) {
+            throw new Exception("缺少参数$key");
+        }
+        return $result;
+    }
+
+    /**
      * @return array
      */
     public function get()
@@ -152,6 +168,20 @@ class Request
     /**
      * @param string $key
      * @return string|null
+     * @throws Exception
+     */
+    public function getPostRequire(string $key)
+    {
+        $result = $this->post[$key] ?? null;
+        if ($result == null) {
+            throw new Exception("缺少参数$key");
+        }
+        return $result;
+    }
+
+    /**
+     * @param string $key
+     * @return string|null
      */
     public function getGetPost(string $key)
     {
@@ -165,5 +195,33 @@ class Request
     public function getPostGet(string $key)
     {
         return $this->post[$key] ?? $this->get[$key] ?? null;
+    }
+
+    /**
+     * @param string $key
+     * @return string|null
+     * @throws Exception
+     */
+    public function getGetPostRequire(string $key)
+    {
+        $result = $this->get[$key] ?? $this->post[$key] ?? null;
+        if ($result == null) {
+            throw new Exception("缺少参数$key");
+        }
+        return $result;
+    }
+
+    /**
+     * @param string $key
+     * @return string|null
+     * @throws Exception
+     */
+    public function getPostGetRequire(string $key)
+    {
+        $result = $this->post[$key] ?? $this->get[$key] ?? null;
+        if ($result == null) {
+            throw new Exception("缺少参数$key");
+        }
+        return $result;
     }
 }
