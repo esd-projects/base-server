@@ -25,8 +25,9 @@ class DefaultServer extends Server
      * @param string $processClass
      * @throws \GoSwoole\BaseServer\Exception
      * @throws \ReflectionException
+     * @throws \DI\DependencyException
      */
-    public function __construct(ServerConfig $serverConfig = null, string $portClass = DefaultServerPort::class, string $processClass = DefaultProcess::class)
+    public function __construct(?ServerConfig $serverConfig = null, string $portClass = DefaultServerPort::class, string $processClass = DefaultProcess::class)
     {
         if ($serverConfig == null) {
             $serverConfig = new ServerConfig();
