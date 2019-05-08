@@ -17,6 +17,8 @@ use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
 use GoSwoole\BaseServer\Plugins\Event\EventPlugin;
 use GoSwoole\BaseServer\Plugins\Logger\LoggerPlugin;
 use GoSwoole\BaseServer\Server\Beans\ClientInfo;
+use GoSwoole\BaseServer\Server\Beans\Request;
+use GoSwoole\BaseServer\Server\Beans\Response;
 use GoSwoole\BaseServer\Server\Beans\ServerStats;
 use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
@@ -25,6 +27,8 @@ use GoSwoole\BaseServer\Server\Exception\ConfigException;
 use GoSwoole\BaseServer\Server\PlugIn\PluginInterfaceManager;
 use GoSwoole\BaseServer\Server\ServerProcess\ManagerProcess;
 use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
+use GoSwoole\Plugins\Session\RequestProxy;
+use GoSwoole\Plugins\Session\ResponseProxy;
 use Monolog\Logger;
 
 /**
@@ -153,6 +157,8 @@ abstract class Server
         $this->container->set(PortManager::class, $this->portManager);
         $this->container->set(ProcessManager::class, $this->processManager);
         $this->container->set(PluginInterfaceManager::class, $this->getPlugManager());
+        $this->container->set(Response::class, new ResponseProxy());
+        $this->container->set(Request::class, new RequestProxy());
         set_exception_handler(function ($e) {
             $this->log->error($e);
         });
