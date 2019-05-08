@@ -160,6 +160,7 @@ class BaseConfig
      */
     public function buildFromConfig($config)
     {
+        if ($config == null) return $this;
         foreach ($config as $key => $value) {
             $varName = $this->changeHumpStyle($key);
             $func = "set" . ucfirst($varName);
