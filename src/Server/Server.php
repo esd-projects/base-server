@@ -18,7 +18,9 @@ use GoSwoole\BaseServer\Plugins\Event\EventPlugin;
 use GoSwoole\BaseServer\Plugins\Logger\LoggerPlugin;
 use GoSwoole\BaseServer\Server\Beans\ClientInfo;
 use GoSwoole\BaseServer\Server\Beans\Request;
+use GoSwoole\BaseServer\Server\Beans\RequestProxy;
 use GoSwoole\BaseServer\Server\Beans\Response;
+use GoSwoole\BaseServer\Server\Beans\ResponseProxy;
 use GoSwoole\BaseServer\Server\Beans\ServerStats;
 use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
 use GoSwoole\BaseServer\Server\Config\PortConfig;
@@ -27,8 +29,6 @@ use GoSwoole\BaseServer\Server\Exception\ConfigException;
 use GoSwoole\BaseServer\Server\PlugIn\PluginInterfaceManager;
 use GoSwoole\BaseServer\Server\ServerProcess\ManagerProcess;
 use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
-use GoSwoole\Plugins\Session\RequestProxy;
-use GoSwoole\Plugins\Session\ResponseProxy;
 use Monolog\Logger;
 
 /**
