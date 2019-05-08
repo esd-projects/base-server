@@ -6,10 +6,8 @@
  * Time: 9:19
  */
 
-namespace GoSwoole\Plugins\Session;
+namespace GoSwoole\BaseServer\Server\Beans;
 
-
-use GoSwoole\BaseServer\Server\Beans\Request;
 
 class RequestProxy
 {
