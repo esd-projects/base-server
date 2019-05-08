@@ -20,7 +20,7 @@ class ManagerProcess extends Process
 
     public function __construct(Server $server)
     {
-        parent::__construct($server, self::id, $name . self::name, Process::SERVER_GROUP);
+        parent::__construct($server, self::id, self::name, Process::SERVER_GROUP);
     }
 
     public function onProcessStart()
