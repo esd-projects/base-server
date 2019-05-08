@@ -75,6 +75,8 @@ class BaseConfig
         //合并回配置
         $this->config = Server::$instance->getConfigContext()->get($prefix);
         $this->buildFromConfig($this->config);
+        //注入DI中
+        Server::$instance->getContainer()->set(get_class($this), $this);
     }
 
     /**
