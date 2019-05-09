@@ -25,7 +25,7 @@ const HOOK_ALL = SWOOLE_HOOK_ALL;//打开所有类型
  * @param bool $enable
  * @param int $flags
  */
-function enableRuntimeCoroutine(bool $enable = true, int $flags = HOOK_ALL)
+function enableRuntimeCoroutine(bool $enable = true, int $flags = HOOK_ALL ^ HOOK_FILE)
 {
     \Swoole\Runtime::enableCoroutine($enable, $flags);
 }
