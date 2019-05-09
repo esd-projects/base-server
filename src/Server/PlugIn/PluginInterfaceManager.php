@@ -111,7 +111,7 @@ class PluginInterfaceManager implements PluginInterface
         }
         foreach ($this->plugs as $plug) {
             if ($this->log != null) {
-                $this->log->log(Logger::INFO, "加载[{$plug->getName()}]插件");
+                $this->log->log(Logger::DEBUG, "加载[{$plug->getName()}]插件");
             }
             $plug->beforeServerStart($context);
         }
