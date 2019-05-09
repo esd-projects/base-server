@@ -115,7 +115,7 @@ abstract class Server
     /**
      * @var Container
      */
-    private $container;
+    protected $container;
 
     /**
      * 这里context获取不到任何插件，因为插件还没有加载
@@ -125,6 +125,7 @@ abstract class Server
      * @param string $defaultProcessClass
      * @throws \GoSwoole\BaseServer\Exception
      * @throws \DI\DependencyException
+     * @throws \ReflectionException
      */
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
@@ -142,11 +143,7 @@ abstract class Server
         $this->basePlugManager->addPlug(new EventPlugin());
         $this->basePlugManager->order();
         $this->basePlugManager->beforeServerStart($this->context);
-        //获取EventDispatcher/Logger/ConfigContext/container
-        $this->eventDispatcher = $this->context->getDeepByClassName(EventDispatcher::class);
-        $this->container = $this->context->getDeep("Container");
-        $this->log = $this->context->getDeepByClassName(Logger::class);
-        $this->configContext = $this->context->getDeepByClassName(ConfigContext::class);
+        //合并ServerConfig配置
         $this->serverConfig->merge();
         //获取上面这些后才能初始化plugManager
         $this->plugManager = new PluginInterfaceManager($this);
@@ -751,5 +748,37 @@ abstract class Server
     public function getContainer(): ?Container
     {
         return $this->container;
+    }
+
+    /**
+     * @param EventDispatcher $eventDispatcher
+     */
+    public function setEventDispatcher(EventDispatcher $eventDispatcher): void
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * @param ConfigContext $configContext
+     */
+    public function setConfigContext(ConfigContext $configContext): void
+    {
+        $this->configContext = $configContext;
+    }
+
+    /**
+     * @param Container $container
+     */
+    public function setContainer(Container $container): void
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @param Logger $log
+     */
+    public function setLog(Logger $log): void
+    {
+        $this->log = $log;
     }
 }

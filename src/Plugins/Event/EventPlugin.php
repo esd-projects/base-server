@@ -42,6 +42,7 @@ class EventPlugin extends AbstractPlugin
     {
         //创建事件派发器
         $this->eventDispatcher = new EventDispatcher($context->getServer());
+        Server::$instance->setEventDispatcher($this->eventDispatcher);
         $context->add("eventDispatcher", $this->eventDispatcher);
     }
 

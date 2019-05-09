@@ -77,6 +77,7 @@ class DIPlugin extends AbstractPlugin
         $builder->useAnnotations(true);
         $this->container = $builder->build();
         setContextValue("Container", $this->container);
+        Server::$instance->setContainer($this->container);
         $this->container->set(Server::class, $context->getServer());
     }
 

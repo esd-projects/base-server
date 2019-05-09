@@ -8,6 +8,7 @@
 
 namespace GoSwoole\BaseServer\Plugins\Config;
 
+use GoSwoole\BaseServer\Plugins\DI\DIPlugin;
 use GoSwoole\BaseServer\Plugins\Event\EventPlugin;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\PlugIn\AbstractPlugin;
@@ -59,7 +60,9 @@ class ConfigPlugin extends AbstractPlugin
         }
         $this->configConfig = $configConfig;
         $this->configContext = new ConfigContext();
+        Server::$instance->setConfigContext($this->configContext);
         $this->atAfter(EventPlugin::class);
+        $this->atAfter(DIPlugin::class);
     }
 
     /**

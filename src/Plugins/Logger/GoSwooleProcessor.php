@@ -23,7 +23,7 @@ class GoSwooleProcessor implements ProcessorInterface
 
     private $color;
 
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array(), $skipStackFramesCount = 0, $color = true)
+    public function __construct($color = true, $level = Logger::DEBUG, array $skipClassesPartials = array(), $skipStackFramesCount = 0)
     {
         $this->level = Logger::toMonologLevel($level);
         $this->skipClassesPartials = array_merge(array('Monolog\\'), $skipClassesPartials);

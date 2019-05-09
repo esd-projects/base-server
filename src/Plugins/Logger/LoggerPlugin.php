@@ -9,11 +9,11 @@
 namespace GoSwoole\BaseServer\Plugins\Logger;
 
 use GoSwoole\BaseServer\Plugins\Config\ConfigChangeEvent;
-use GoSwoole\BaseServer\Plugins\Config\ConfigContext;
 use GoSwoole\BaseServer\Plugins\Config\ConfigPlugin;
 use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
 use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\PlugIn\AbstractPlugin;
+use GoSwoole\BaseServer\Server\Server;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -35,11 +35,26 @@ class LoggerPlugin extends AbstractPlugin
      * @var StreamHandler
      */
     private $streamHandler;
+    /**
+     * @var LoggerConfig
+     */
+    private $loggerConfig;
 
-    public function __construct()
+    /**
+     * LoggerPlugin constructor.
+     * @param LoggerConfig|null $loggerConfig
+     * @throws \DI\DependencyException
+     * @throws \ReflectionException
+     */
+    public function __construct(?LoggerConfig $loggerConfig = null)
     {
         parent::__construct();
         $this->atAfter(ConfigPlugin::class);
+        if ($loggerConfig == null) {
+            $loggerConfig = new LoggerConfig();
+
+        }
+        $this->loggerConfig = $loggerConfig;
     }
 
     /**
@@ -49,19 +64,23 @@ class LoggerPlugin extends AbstractPlugin
      */
     private function buildLogger(Context $context)
     {
-        $configContext = $context->getDeepByClassName(ConfigContext::class);
-        $this->logger = new Logger($configContext->get("goswoole.logger.name", "log"));
-        $output = "%datetime% \033[32m%level_name%\033[0m %extra.about_process% %extra.class_and_func% : %message% %context% \n";
-        $formatter = new LineFormatter($configContext->get("goswoole.logger.output", "$output"),
-            $configContext->get("goswoole.logger.date_format", null),
-            $configContext->get("goswoole.logger.allow_inline_line_breaks", true),
-            $configContext->get("goswoole.logger.ignore_empty_context_and_extra", true));
-        $this->streamHandler = new StreamHandler('php://stderr', Logger::DEBUG);
-        $this->streamHandler->setFormatter($formatter);
-        $this->logger->pushProcessor(new GoSwooleProcessor());
+        $this->logger = new Logger($this->loggerConfig->getName());
+        $formatter = new LineFormatter($this->loggerConfig->getOutput(),
+            $this->loggerConfig->getDateFormat(),
+            $this->loggerConfig->isAllowInlineLineBreaks(),
+            $this->loggerConfig->isIgnoreEmptyContextAndExtra());
+        $serverConfig = Server::$instance->getServerConfig();
+        if ($serverConfig->isDaemonize()) {
+
+        } else {
+            $this->streamHandler = new StreamHandler('php://stderr', Logger::DEBUG);
+            $this->streamHandler->setFormatter($formatter);
+        }
+        $this->logger->pushProcessor(new GoSwooleProcessor($this->loggerConfig->isColor()));
         $this->logger->pushProcessor(new IntrospectionProcessor());
         $this->logger->pushHandler($this->streamHandler);
         $context->add("logger", $this->logger);
+        Server::$instance->setLog($this->logger);
     }
 
     /**
@@ -72,9 +91,9 @@ class LoggerPlugin extends AbstractPlugin
      */
     public function beforeServerStart(Context $context)
     {
+        $this->loggerConfig->merge();
         $this->buildLogger($context);
-        $configContext = $context->getDeepByClassName(ConfigContext::class);
-        $this->streamHandler->setLevel($configContext->get("goswoole.logger.level", "debug"));
+        $this->streamHandler->setLevel($this->loggerConfig->getLevel());
     }
 
     /**
@@ -85,12 +104,12 @@ class LoggerPlugin extends AbstractPlugin
     {
         //监控配置更新
         goWithContext(function () use ($context) {
-            $configContext = $context->getDeepByClassName(ConfigContext::class);
             $eventDispatcher = $context->getDeepByClassName(EventDispatcher::class);
             $channel = $eventDispatcher->listen(ConfigChangeEvent::ConfigChangeEvent);
             while (true) {
                 $channel->pop();
-                $this->streamHandler->setLevel($configContext->get("goswoole.logger.level", "debug"));
+                $this->loggerConfig->merge();
+                $this->streamHandler->setLevel($this->loggerConfig->getLevel());
             }
         });
         $this->ready();
@@ -102,7 +121,7 @@ class LoggerPlugin extends AbstractPlugin
      */
     public function getName(): string
     {
-        return "Log";
+        return "Logger";
     }
 
     /**
