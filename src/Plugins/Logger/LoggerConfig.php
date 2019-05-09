@@ -45,6 +45,11 @@ class LoggerConfig extends BaseConfig
      * @var bool
      */
     protected $color = true;
+
+    /**
+     * @var int
+     */
+    protected $maxFiles = 5;
     /**
      * @var array
      */
@@ -181,5 +186,21 @@ class LoggerConfig extends BaseConfig
     public function setColor(bool $color): void
     {
         $this->color = $color;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxFiles(): int
+    {
+        return $this->maxFiles;
+    }
+
+    /**
+     * @param int $maxFiles
+     */
+    public function setMaxFiles(int $maxFiles): void
+    {
+        $this->maxFiles = $maxFiles;
     }
 }

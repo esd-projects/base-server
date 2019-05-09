@@ -15,6 +15,7 @@ use GoSwoole\BaseServer\Server\Context;
 use GoSwoole\BaseServer\Server\PlugIn\AbstractPlugin;
 use GoSwoole\BaseServer\Server\Server;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
@@ -34,7 +35,7 @@ class LoggerPlugin extends AbstractPlugin
     /**
      * @var StreamHandler
      */
-    private $streamHandler;
+    private $handler;
     /**
      * @var LoggerConfig
      */
@@ -71,14 +72,16 @@ class LoggerPlugin extends AbstractPlugin
             $this->loggerConfig->isIgnoreEmptyContextAndExtra());
         $serverConfig = Server::$instance->getServerConfig();
         if ($serverConfig->isDaemonize()) {
-
+            $this->handler = new RotatingFileHandler($serverConfig->getBinDir() . "/logs/" . $this->loggerConfig->getName() . ".log",
+                $this->loggerConfig->getMaxFiles(),
+                Logger::DEBUG);
         } else {
-            $this->streamHandler = new StreamHandler('php://stderr', Logger::DEBUG);
-            $this->streamHandler->setFormatter($formatter);
+            $this->handler = new StreamHandler('php://stderr', Logger::DEBUG);
         }
+        $this->handler->setFormatter($formatter);
         $this->logger->pushProcessor(new GoSwooleProcessor($this->loggerConfig->isColor()));
         $this->logger->pushProcessor(new IntrospectionProcessor());
-        $this->logger->pushHandler($this->streamHandler);
+        $this->logger->pushHandler($this->handler);
         $context->add("logger", $this->logger);
         Server::$instance->setLog($this->logger);
     }
@@ -93,7 +96,7 @@ class LoggerPlugin extends AbstractPlugin
     {
         $this->loggerConfig->merge();
         $this->buildLogger($context);
-        $this->streamHandler->setLevel($this->loggerConfig->getLevel());
+        $this->handler->setLevel($this->loggerConfig->getLevel());
     }
 
     /**
@@ -109,7 +112,7 @@ class LoggerPlugin extends AbstractPlugin
             while (true) {
                 $channel->pop();
                 $this->loggerConfig->merge();
-                $this->streamHandler->setLevel($this->loggerConfig->getLevel());
+                $this->handler->setLevel($this->loggerConfig->getLevel());
             }
         });
         $this->ready();
