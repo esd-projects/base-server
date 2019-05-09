@@ -49,7 +49,6 @@ class ServerConfig extends BaseConfig
      * 4，IP分配，根据客户端IP进行取模hash，分配给一个固定的Worker进程。可以保证同一个来源IP的连接数据总会被分配到同一个Worker进程。算法为 ip2long(ClientIP) % worker_num
      * 5，UID分配，需要用户代码中调用 Server->bind() 将一个连接绑定1个uid。然后底层根据UID的值分配到不同的Worker进程。算法为 UID % worker_num，如果需要使用字符串作为UID，可以使用crc32(UID_STRING)
      * 7，stream模式，空闲的Worker会accept连接，并接受Reactor的新请求
-     * @Inject("Server.dispatch_mode")
      * @var int
      */
     protected $dispatchMode;
@@ -223,6 +222,12 @@ class ServerConfig extends BaseConfig
  \______  /\____/_______  / \/\_/ \____/ \____/|____/\___  >
         \/              \/                               \/  
         ";
+
+    /**
+     * 是否自动清理缓存文件
+     * @var bool
+     */
+    protected $autoCleanCache = true;
 
     public function __construct()
     {
@@ -830,6 +835,16 @@ class ServerConfig extends BaseConfig
     }
 
     /**
+     * 获取bin目录
+     * @return string
+     * @throws Exception
+     */
+    public function getCacheDir()
+    {
+        return realpath($this->getBinDir()) . DIRECTORY_SEPARATOR . "cache";
+    }
+
+    /**
      * 获取src目录
      * @return string
      * @throws Exception
@@ -863,5 +878,21 @@ class ServerConfig extends BaseConfig
     public function setProxyServerClass(?string $proxyServerClass): void
     {
         $this->proxyServerClass = $proxyServerClass;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAutoCleanCache(): bool
+    {
+        return $this->autoCleanCache;
+    }
+
+    /**
+     * @param bool $autoCleanCache
+     */
+    public function setAutoCleanCache(bool $autoCleanCache): void
+    {
+        $this->autoCleanCache = $autoCleanCache;
     }
 }

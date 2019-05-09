@@ -145,6 +145,10 @@ abstract class Server
         $this->basePlugManager->beforeServerStart($this->context);
         //合并ServerConfig配置
         $this->serverConfig->merge();
+        //清理缓存文件
+        if ($this->serverConfig->isAutoCleanCache()) {
+            clearDir($this->serverConfig->getCacheDir());
+        }
         //获取上面这些后才能初始化plugManager
         $this->plugManager = new PluginInterfaceManager($this);
         //配置DI容器
