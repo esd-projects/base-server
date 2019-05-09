@@ -59,6 +59,10 @@ class ServerConfig extends BaseConfig
      */
     protected $maxConn;
     /**
+     * @var string|null
+     */
+    protected $proxyServerClass = null;
+    /**
      * 守护进程化 daemonize => 1，加入此参数后，将转入后台作为守护进程运行
      * @var bool
      */
@@ -843,5 +847,21 @@ class ServerConfig extends BaseConfig
     public function getVendorDir()
     {
         return realpath($this->getRootDir()) . DIRECTORY_SEPARATOR . "vendor";
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getProxyServerClass(): ?string
+    {
+        return $this->proxyServerClass;
+    }
+
+    /**
+     * @param string|null $proxyServerClass
+     */
+    public function setProxyServerClass(?string $proxyServerClass): void
+    {
+        $this->proxyServerClass = $proxyServerClass;
     }
 }

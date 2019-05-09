@@ -228,11 +228,16 @@ abstract class Server
                     break;
                 }
             }
-            $this->server = new \Swoole\WebSocket\Server($this->mainPort->getPortConfig()->getHost(),
-                $this->mainPort->getPortConfig()->getPort(),
-                SWOOLE_PROCESS,
-                $this->mainPort->getPortConfig()->getSwooleSockType()
-            );
+            if ($this->serverConfig->getProxyServerClass() == null) {
+                $this->server = new \Swoole\WebSocket\Server($this->mainPort->getPortConfig()->getHost(),
+                    $this->mainPort->getPortConfig()->getPort(),
+                    SWOOLE_PROCESS,
+                    $this->mainPort->getPortConfig()->getSwooleSockType()
+                );
+            } else {
+                $proxyClass = $this->serverConfig->getProxyServerClass();
+                $this->server = new $proxyClass();
+            }
         } else if ($this->portManager->hasHttpPort()) {
             foreach ($this->portManager->getPorts() as $serverPort) {
                 if ($serverPort->isHttp()) {
@@ -240,18 +245,28 @@ abstract class Server
                     break;
                 }
             }
-            $this->server = new \Swoole\Http\Server($this->mainPort->getPortConfig()->getHost(),
-                $this->mainPort->getPortConfig()->getPort(),
-                SWOOLE_PROCESS,
-                $this->mainPort->getPortConfig()->getSwooleSockType()
-            );
+            if ($this->serverConfig->getProxyServerClass() == null) {
+                $this->server = new \Swoole\Http\Server($this->mainPort->getPortConfig()->getHost(),
+                    $this->mainPort->getPortConfig()->getPort(),
+                    SWOOLE_PROCESS,
+                    $this->mainPort->getPortConfig()->getSwooleSockType()
+                );
+            } else {
+                $proxyClass = $this->serverConfig->getProxyServerClass();
+                $this->server = new $proxyClass();
+            }
         } else {
             $this->mainPort = array_values($this->getPortManager()->getPorts())[0];
-            $this->server = new \Swoole\Server($this->mainPort->getPortConfig()->getHost(),
-                $this->mainPort->getPortConfig()->getPort(),
-                SWOOLE_PROCESS,
-                $this->mainPort->getPortConfig()->getSwooleSockType()
-            );
+            if ($this->serverConfig->getProxyServerClass() == null) {
+                $this->server = new \Swoole\Server($this->mainPort->getPortConfig()->getHost(),
+                    $this->mainPort->getPortConfig()->getPort(),
+                    SWOOLE_PROCESS,
+                    $this->mainPort->getPortConfig()->getSwooleSockType()
+                );
+            } else {
+                $proxyClass = $this->serverConfig->getProxyServerClass();
+                $this->server = new $proxyClass();
+            }
         }
         $portConfigData = $this->mainPort->getPortConfig()->buildConfig();
         $serverConfigData = $this->serverConfig->buildConfig();
