@@ -112,19 +112,25 @@ class Request
      * @param string $key
      * @return string|null
      */
-    public function getCookie(string $key)
+    public function getCookie(string $key, $default = null)
     {
-        return $this->cookie[$key] ?? null;
+        return $this->cookie[$key] ?? $default;
     }
+
+
 
     /**
      * @param string $key
+     * @param null $default
      * @return string|null
      */
-    public function getGet(string $key)
+    public function getGet(string $key, $default = null)
     {
-        return $this->get[$key] ?? null;
+        return $this->get[$key] ?? $default;
     }
+
+
+
 
     /**
      * @param string $key
@@ -156,13 +162,15 @@ class Request
         return $this->post;
     }
 
+
     /**
      * @param string $key
+     * @param null $default
      * @return string|null
      */
-    public function getPost(string $key)
+    public function getPost(string $key, $default = null)
     {
-        return $this->post[$key] ?? null;
+        return $this->post[$key] ?? $default;
     }
 
     /**
@@ -179,22 +187,26 @@ class Request
         return $result;
     }
 
-    /**
-     * @param string $key
-     * @return string|null
-     */
-    public function getGetPost(string $key)
-    {
-        return $this->get[$key] ?? $this->post[$key] ?? null;
-    }
 
     /**
      * @param string $key
+     * @param null $default
      * @return string|null
      */
-    public function getPostGet(string $key)
+    public function getGetPost(string $key, $default = null)
     {
-        return $this->post[$key] ?? $this->get[$key] ?? null;
+        return $this->get[$key] ?? $this->post[$key] ?? $default;
+    }
+
+
+    /**
+     * @param string $key
+     * @param null $default
+     * @return string|null
+     */
+    public function getPostGet(string $key, $default = null)
+    {
+        return $this->post[$key] ?? $this->get[$key] ?? $default;
     }
 
     /**
