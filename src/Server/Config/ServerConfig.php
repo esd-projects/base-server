@@ -223,12 +223,6 @@ class ServerConfig extends BaseConfig
         \/              \/                               \/  
         ";
 
-    /**
-     * 是否自动清理缓存文件
-     * @var bool
-     */
-    protected $autoCleanCache = true;
-
     public function __construct()
     {
         parent::__construct(self::key);
@@ -878,21 +872,5 @@ class ServerConfig extends BaseConfig
     public function setProxyServerClass(?string $proxyServerClass): void
     {
         $this->proxyServerClass = $proxyServerClass;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAutoCleanCache(): bool
-    {
-        return $this->autoCleanCache;
-    }
-
-    /**
-     * @param bool $autoCleanCache
-     */
-    public function setAutoCleanCache(bool $autoCleanCache): void
-    {
-        $this->autoCleanCache = $autoCleanCache;
     }
 }
