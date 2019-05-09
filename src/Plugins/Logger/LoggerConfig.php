@@ -10,7 +10,6 @@ namespace GoSwoole\BaseServer\Plugins\Logger;
 
 
 use GoSwoole\BaseServer\Plugins\Config\BaseConfig;
-use Monolog\Processor\IntrospectionProcessor;
 
 class LoggerConfig extends BaseConfig
 {
@@ -50,10 +49,6 @@ class LoggerConfig extends BaseConfig
      * @var int
      */
     protected $maxFiles = 5;
-    /**
-     * @var array
-     */
-    protected $processors = ["GoSwooleProcessor" => GoSwooleProcessor::class, "IntrospectionProcessor" => IntrospectionProcessor::class];
 
     public function __construct()
     {
@@ -154,22 +149,6 @@ class LoggerConfig extends BaseConfig
     public function setLevel(string $level): void
     {
         $this->level = $level;
-    }
-
-    /**
-     * @return array
-     */
-    public function getProcessors(): array
-    {
-        return $this->processors;
-    }
-
-    /**
-     * @param array $processors
-     */
-    public function setProcessors(array $processors): void
-    {
-        $this->processors = $processors;
     }
 
     /**
