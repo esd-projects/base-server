@@ -8,6 +8,8 @@
 
 namespace GoSwoole\BaseServer\Server\Message;
 
+use GoSwoole\BaseServer\Server\Server;
+
 /**
  * 进程中传递的消息
  * Class Message
@@ -27,10 +29,16 @@ class Message
      */
     private $data;
 
+    /**
+     * @var int
+     */
+    private $fromProcessId;
+
     public function __construct(string $type, $data)
     {
         $this->type = $type;
         $this->data = $data;
+        $this->fromProcessId = Server::$instance->getProcessManager()->getCurrentProcessId();
     }
 
     /**
@@ -69,5 +77,21 @@ class Message
     {
         $jsonData = json_encode($this->data);
         return "{\"type\":\"$this->type\",\"data\":\"$jsonData\"}";
+    }
+
+    /**
+     * @return int
+     */
+    public function getFromProcessId(): int
+    {
+        return $this->fromProcessId;
+    }
+
+    /**
+     * @param int $fromProcessId
+     */
+    public function setFromProcessId(int $fromProcessId): void
+    {
+        $this->fromProcessId = $fromProcessId;
     }
 }

@@ -19,10 +19,16 @@ use GoSwoole\BaseServer\Server\Message\MessageProcessor;
  */
 class EventMessageProcessor extends MessageProcessor
 {
+    /**
+     * 消息派发器
+     * @var EventDispatcher
+     */
+    protected $eventDispatcher;
 
     public function __construct(EventDispatcher $eventDispatcher)
     {
-        parent::__construct($eventDispatcher, EventMessage::type);
+        parent::__construct(EventMessage::type);
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

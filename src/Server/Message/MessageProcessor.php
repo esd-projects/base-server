@@ -9,7 +9,6 @@
 namespace GoSwoole\BaseServer\Server\Message;
 
 use GoSwoole\BaseServer\Exception;
-use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
 
 /**
  * 消息处理器
@@ -29,15 +28,9 @@ abstract class MessageProcessor
      */
     protected $type;
 
-    /**
-     * 消息派发器
-     * @var EventDispatcher
-     */
-    protected $eventDispatcher;
 
-    public function __construct(EventDispatcher $eventDispatcher, string $type)
+    public function __construct(string $type)
     {
-        $this->eventDispatcher = $eventDispatcher;
         $this->type = $type;
     }
 
