@@ -835,7 +835,7 @@ class ServerConfig extends BaseConfig
      */
     public function getCacheDir()
     {
-        return realpath($this->getBinDir()) . DIRECTORY_SEPARATOR . "cache";
+        return $this->getBinDir() . DIRECTORY_SEPARATOR . "cache";
     }
 
     /**

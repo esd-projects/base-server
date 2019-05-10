@@ -118,7 +118,6 @@ class Request
     }
 
 
-
     /**
      * @param string $key
      * @param null $default
@@ -128,8 +127,6 @@ class Request
     {
         return $this->get[$key] ?? $default;
     }
-
-
 
 
     /**
@@ -235,5 +232,14 @@ class Request
             throw new Exception("缺少参数$key");
         }
         return $result;
+    }
+
+    /**
+     * 获取requestBody
+     * @return mixed|null
+     */
+    public function getJsonBody()
+    {
+        return json_decode($this->getRawContent(), true);
     }
 }
