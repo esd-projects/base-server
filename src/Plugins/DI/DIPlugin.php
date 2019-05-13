@@ -51,8 +51,10 @@ class DIPlugin extends AbstractPlugin
             mkdir($cacheDir, 0777, true);
         }
         $builder = new ContainerBuilder();
-        $builder->enableCompilation($cacheDir);
-        $builder->writeProxiesToFile(true, $cacheProxiesDir);
+        if (!$serverConfig->isDebug()) {
+            $builder->enableCompilation($cacheDir);
+            $builder->writeProxiesToFile(true, $cacheProxiesDir);
+        }
         $builder->useAnnotations(true);
         $this->container = $builder->build();
         setContextValue("Container", $this->container);
