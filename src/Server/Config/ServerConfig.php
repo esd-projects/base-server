@@ -211,6 +211,11 @@ class ServerConfig extends BaseConfig
     protected $openWebsocketCloseFrame = false;
 
     /**
+     * 默认为debug模式，代表重启缓存无效
+     * @var bool
+     */
+    protected $debug = true;
+    /**
      * Banner
      * @var string
      */
@@ -872,5 +877,21 @@ class ServerConfig extends BaseConfig
     public function setProxyServerClass(?string $proxyServerClass): void
     {
         $this->proxyServerClass = $proxyServerClass;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDebug(): bool
+    {
+        return $this->debug;
+    }
+
+    /**
+     * @param bool $debug
+     */
+    public function setDebug(bool $debug): void
+    {
+        $this->debug = $debug;
     }
 }
