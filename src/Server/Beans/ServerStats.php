@@ -6,12 +6,12 @@
  * Time: 14:40
  */
 
-namespace GoSwoole\BaseServer\Server\Beans;
+namespace ESD\BaseServer\Server\Beans;
 
 /**
  * 服务器状态
  * Class ServerStats
- * @package GoSwoole\BaseServer\Server\Beans
+ * @package ESD\BaseServer\Server\Beans
  */
 class ServerStats
 {

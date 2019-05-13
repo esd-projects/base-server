@@ -6,13 +6,13 @@
  * Time: 14:16
  */
 
-namespace GoSwoole\BaseServer\Plugins\Config;
+namespace ESD\BaseServer\Plugins\Config;
 
-use GoSwoole\BaseServer\Plugins\DI\DIPlugin;
-use GoSwoole\BaseServer\Plugins\Event\EventPlugin;
-use GoSwoole\BaseServer\Server\Context;
-use GoSwoole\BaseServer\Server\PlugIn\AbstractPlugin;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Plugins\DI\DIPlugin;
+use ESD\BaseServer\Plugins\Event\EventPlugin;
+use ESD\BaseServer\Server\Context;
+use ESD\BaseServer\Server\PlugIn\AbstractPlugin;
+use ESD\BaseServer\Server\Server;
 use Symfony\Component\Yaml\Yaml;
 
 class ConfigPlugin extends AbstractPlugin
@@ -44,7 +44,7 @@ class ConfigPlugin extends AbstractPlugin
     /**
      * ConfigPlugin constructor.
      * @param ConfigConfig|null $configConfig
-     * @throws \GoSwoole\BaseServer\Exception
+     * @throws \ESD\BaseServer\Exception
      * @throws \DI\DependencyException
      */
     public function __construct(?ConfigConfig $configConfig = null)
@@ -78,7 +78,7 @@ class ConfigPlugin extends AbstractPlugin
      * 在服务启动前
      * @param Context $context
      * @return mixed
-     * @throws \GoSwoole\BaseServer\Exception
+     * @throws \ESD\BaseServer\Exception
      */
     public function beforeServerStart(Context $context)
     {
@@ -90,7 +90,7 @@ class ConfigPlugin extends AbstractPlugin
         if (is_file($applicationFile)) {
             $this->configContext->addDeepConfig(Yaml::parseFile($applicationFile), self::ApplicationDeep);
         }
-        $active = $this->configContext->get("goswoole.profiles.active");
+        $active = $this->configContext->get("esd.profiles.active");
         if (!empty($active)) {
             $applicationActiveFile = $this->configConfig->getConfigDir() . "/application-{$active}.yml";
             if (is_file($applicationActiveFile)) {

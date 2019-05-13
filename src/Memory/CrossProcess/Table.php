@@ -6,7 +6,7 @@
  * Time: 10:40
  */
 
-namespace GoSwoole\BaseServer\Memory\CrossProcess;
+namespace ESD\BaseServer\Memory\CrossProcess;
 
 /**
  * 一个基于共享内存和锁实现的超高性能，并发数据结构。用于解决多进程/多线程数据共享和同步加锁问题。
@@ -14,7 +14,7 @@ namespace GoSwoole\BaseServer\Memory\CrossProcess;
  * 使用共享内存来保存数据，在创建子进程前，务必要执行Table->create()
  * Table->create() 必须在Server->start()前执行
  * Class Table
- * @package GoSwoole\BaseServer\Memory
+ * @package ESD\BaseServer\Memory
  */
 class Table
 {

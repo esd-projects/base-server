@@ -6,12 +6,12 @@
  * Time: 14:21
  */
 
-namespace GoSwoole\BaseServer\Server\Beans;
+namespace ESD\BaseServer\Server\Beans;
 
 /**
  * 连接信息
  * Class ClientInfo
- * @package GoSwoole\BaseServer\Server\Beans
+ * @package ESD\BaseServer\Server\Beans
  */
 class ClientInfo
 {

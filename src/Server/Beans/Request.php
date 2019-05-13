@@ -6,14 +6,14 @@
  * Time: 14:53
  */
 
-namespace GoSwoole\BaseServer\Server\Beans;
+namespace ESD\BaseServer\Server\Beans;
 
-use GoSwoole\BaseServer\Exception;
+use ESD\BaseServer\Exception;
 
 /**
  * HTTP请求对象
  * Class Request
- * @package GoSwoole\BaseServer\Server\Beans
+ * @package ESD\BaseServer\Server\Beans
  */
 class Request
 {

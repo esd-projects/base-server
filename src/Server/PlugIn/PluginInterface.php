@@ -6,11 +6,11 @@
  * Time: 12:25
  */
 
-namespace GoSwoole\BaseServer\Server\PlugIn;
+namespace ESD\BaseServer\Server\PlugIn;
 
 
-use GoSwoole\BaseServer\Coroutine\Channel;
-use GoSwoole\BaseServer\Server\Context;
+use ESD\BaseServer\Coroutine\Channel;
+use ESD\BaseServer\Server\Context;
 
 interface PluginInterface
 {

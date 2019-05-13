@@ -6,14 +6,14 @@
  * Time: 10:17
  */
 
-namespace GoSwoole\BaseServer\Plugins\DI;
+namespace ESD\BaseServer\Plugins\DI;
 
 
 use DI\Container;
 use DI\ContainerBuilder;
-use GoSwoole\BaseServer\Server\Context;
-use GoSwoole\BaseServer\Server\PlugIn\AbstractPlugin;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Server\Context;
+use ESD\BaseServer\Server\PlugIn\AbstractPlugin;
+use ESD\BaseServer\Server\Server;
 
 class DIPlugin extends AbstractPlugin
 {
@@ -35,7 +35,7 @@ class DIPlugin extends AbstractPlugin
      * 在服务启动前
      * @param Context $context
      * @return mixed
-     * @throws \GoSwoole\BaseServer\Exception
+     * @throws \ESD\BaseServer\Exception
      */
     public function beforeServerStart(Context $context)
     {

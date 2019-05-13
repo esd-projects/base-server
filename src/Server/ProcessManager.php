@@ -6,12 +6,12 @@
  * Time: 17:46
  */
 
-namespace GoSwoole\BaseServer\Server;
+namespace ESD\BaseServer\Server;
 
 
-use GoSwoole\BaseServer\Server\Config\ProcessConfig;
-use GoSwoole\BaseServer\Server\ServerProcess\ManagerProcess;
-use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
+use ESD\BaseServer\Server\Config\ProcessConfig;
+use ESD\BaseServer\Server\ServerProcess\ManagerProcess;
+use ESD\BaseServer\Server\ServerProcess\MasterProcess;
 
 class ProcessManager
 {

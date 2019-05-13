@@ -6,15 +6,15 @@
  * Time: 13:16
  */
 
-namespace GoSwoole\BaseServer\Coroutine;
+namespace ESD\BaseServer\Coroutine;
 
 
-use GoSwoole\BaseServer\Coroutine\Pool\CoroutinePoolExecutor;
+use ESD\BaseServer\Coroutine\Pool\CoroutinePoolExecutor;
 
 /**
  * 协程池工厂
  * Class CoPoolFactory
- * @package GoSwoole\BaseServer\Coroutine
+ * @package ESD\BaseServer\Coroutine
  */
 class CoPoolFactory
 {

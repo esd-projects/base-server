@@ -6,7 +6,7 @@
  * Time: 17:30
  */
 
-namespace GoSwoole\BaseServer;
+namespace ESD\BaseServer;
 
 
 class Exception extends \Exception

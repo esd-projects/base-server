@@ -6,13 +6,13 @@
  * Time: 16:47
  */
 
-namespace GoSwoole\BaseServer\Server;
+namespace ESD\BaseServer\Server;
 
 
 /**
  * ServerPort 端口类,这个是可以被切片的
  * Class ServerPort
- * @package GoSwoole\BaseServer\Server
+ * @package ESD\BaseServer\Server
  */
 abstract class ServerPort extends AbstractServerPort implements IServerPort
 {

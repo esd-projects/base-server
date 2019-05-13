@@ -6,10 +6,10 @@
  * Time: 18:35
  */
 
-namespace GoSwoole\BaseServer\Plugins\Config;
+namespace ESD\BaseServer\Plugins\Config;
 
 
-use GoSwoole\BaseServer\Plugins\Event\Event;
+use ESD\BaseServer\Plugins\Event\Event;
 
 class ConfigChangeEvent extends Event
 {

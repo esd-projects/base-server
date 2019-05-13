@@ -6,14 +6,14 @@
  * Time: 9:33
  */
 
-namespace GoSwoole\BaseServer\Plugins\Logger;
+namespace ESD\BaseServer\Plugins\Logger;
 
 
-use GoSwoole\BaseServer\Plugins\Config\BaseConfig;
+use ESD\BaseServer\Plugins\Config\BaseConfig;
 
 class LoggerConfig extends BaseConfig
 {
-    const key = "goswoole.logger";
+    const key = "esd.logger";
     /**
      * @var string
      */

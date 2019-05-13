@@ -6,14 +6,14 @@
  * Time: 12:37
  */
 
-namespace GoSwoole\BaseServer\Server;
+namespace ESD\BaseServer\Server;
 
-use GoSwoole\BaseServer\Exception;
+use ESD\BaseServer\Exception;
 
 /**
  * Server的上下文
  * Class Context
- * @package GoSwoole\BaseServer\Server
+ * @package ESD\BaseServer\Server
  */
 class Context
 {

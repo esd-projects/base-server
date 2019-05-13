@@ -6,13 +6,13 @@
  * Time: 10:58
  */
 
-namespace GoSwoole\BaseServer\Memory\CrossProcess;
+namespace ESD\BaseServer\Memory\CrossProcess;
 
 /**
  * 原子计数操作类，可以方便整数的无锁原子增减。
  * 使用共享内存，可以在不同的进程之间操作计数
  * Class Atomic
- * @package GoSwoole\BaseServer\Memory\CrossProcess
+ * @package ESD\BaseServer\Memory\CrossProcess
  */
 class AtomicLong
 {

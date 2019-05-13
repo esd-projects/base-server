@@ -9,8 +9,8 @@
   },
   "autoload": {
     "psr-4": {
-      "GoSwoole\\BaseServer\\": "src/",
-      "GoSwoole\\BaseServer\\ExampleClass\\": "exampleClass/"
+      "ESD\\BaseServer\\": "src/",
+      "ESD\\BaseServer\\ExampleClass\\": "exampleClass/"
     },
     "files": [
       "src/Common.php"
@@ -23,7 +23,7 @@
       "homepage": "https://github.com/tmtbe"
     }
   ],
-  "name": "go-swoole/base-server",
+  "name": "esd/base-server",
   "type": "library",
   "keywords": ["server", "swoole"],
   "description": "base_server",

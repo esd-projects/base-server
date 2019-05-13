@@ -6,10 +6,10 @@
  * Time: 16:12
  */
 
-namespace GoSwoole\BaseServer\Server\PlugIn;
+namespace ESD\BaseServer\Server\PlugIn;
 
 
-use GoSwoole\BaseServer\Plugins\Event\Event;
+use ESD\BaseServer\Plugins\Event\Event;
 
 class PluginEvent extends Event
 {

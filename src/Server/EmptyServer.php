@@ -6,7 +6,7 @@
  * Time: 13:38
  */
 
-namespace GoSwoole\BaseServer\Server;
+namespace ESD\BaseServer\Server;
 
 
 class EmptyServer

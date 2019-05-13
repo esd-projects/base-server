@@ -6,12 +6,12 @@
  * Time: 18:32
  */
 
-namespace GoSwoole\BaseServer\Server;
+namespace ESD\BaseServer\Server;
 
 /**
  * 进程组
  * Class ProcessGroup
- * @package GoSwoole\BaseServer\Server
+ * @package ESD\BaseServer\Server
  */
 class ProcessGroup
 {

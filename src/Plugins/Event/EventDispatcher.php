@@ -6,17 +6,17 @@
  * Time: 9:20
  */
 
-namespace GoSwoole\BaseServer\Plugins\Event;
+namespace ESD\BaseServer\Plugins\Event;
 
-use GoSwoole\BaseServer\Coroutine\Channel;
-use GoSwoole\BaseServer\Server\Process;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Coroutine\Channel;
+use ESD\BaseServer\Server\Process;
+use ESD\BaseServer\Server\Server;
 use Monolog\Logger;
 
 /**
  * 事件派发器
  * Class EventDispatcher
- * @package GoSwoole\BaseServer\Plugins\Event
+ * @package ESD\BaseServer\Plugins\Event
  */
 class EventDispatcher
 {

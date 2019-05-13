@@ -6,7 +6,7 @@
  * Time: 16:12
  */
 
-namespace GoSwoole\BaseServer\Plugins\Event;
+namespace ESD\BaseServer\Plugins\Event;
 
 
 class ApplicationEvent extends Event

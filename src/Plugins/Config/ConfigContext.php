@@ -6,16 +6,16 @@
  * Time: 14:55
  */
 
-namespace GoSwoole\BaseServer\Plugins\Config;
+namespace ESD\BaseServer\Plugins\Config;
 
-use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Plugins\Event\EventDispatcher;
+use ESD\BaseServer\Server\Server;
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * 具有层级关系的配置
  * Class ConfigContext
- * @package GoSwoole\BaseServer\Plugins\Config
+ * @package ESD\BaseServer\Plugins\Config
  */
 class ConfigContext
 {

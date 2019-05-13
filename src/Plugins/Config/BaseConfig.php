@@ -6,17 +6,17 @@
  * Time: 9:46
  */
 
-namespace GoSwoole\BaseServer\Plugins\Config;
+namespace ESD\BaseServer\Plugins\Config;
 
 
-use GoSwoole\BaseServer\Server\Exception\ConfigException;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Server\Exception\ConfigException;
+use ESD\BaseServer\Server\Server;
 use ReflectionClass;
 
 /**
  * 配置的基础类，命名为驼峰
  * Class BaseConfig
- * @package GoSwoole\BaseServer\Plugins\Config
+ * @package ESD\BaseServer\Plugins\Config
  */
 class BaseConfig
 {

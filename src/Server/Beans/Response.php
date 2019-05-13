@@ -6,12 +6,12 @@
  * Time: 14:54
  */
 
-namespace GoSwoole\BaseServer\Server\Beans;
+namespace ESD\BaseServer\Server\Beans;
 
 /**
  * HTTP请求返回对象
  * Class Response
- * @package GoSwoole\BaseServer\Server\Beans
+ * @package ESD\BaseServer\Server\Beans
  */
 class Response
 {

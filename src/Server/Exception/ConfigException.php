@@ -6,10 +6,10 @@
  * Time: 15:20
  */
 
-namespace GoSwoole\BaseServer\Server\Exception;
+namespace ESD\BaseServer\Server\Exception;
 
 
-use GoSwoole\BaseServer\Exception;
+use ESD\BaseServer\Exception;
 
 class ConfigException extends Exception
 {

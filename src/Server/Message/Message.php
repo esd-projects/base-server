@@ -6,14 +6,14 @@
  * Time: 9:56
  */
 
-namespace GoSwoole\BaseServer\Server\Message;
+namespace ESD\BaseServer\Server\Message;
 
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Server\Server;
 
 /**
  * 进程中传递的消息
  * Class Message
- * @package GoSwoole\BaseServer\Server
+ * @package ESD\BaseServer\Server
  */
 class Message
 {

@@ -6,11 +6,11 @@
  * Time: 14:10
  */
 
-namespace GoSwoole\BaseServer\Coroutine;
+namespace ESD\BaseServer\Coroutine;
 
-use GoSwoole\BaseServer\Coroutine\Pool\Runnable;
-use GoSwoole\BaseServer\Server\Context;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Coroutine\Pool\Runnable;
+use ESD\BaseServer\Server\Context;
+use ESD\BaseServer\Server\Server;
 
 class Co
 {

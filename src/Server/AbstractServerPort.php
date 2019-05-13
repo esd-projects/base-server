@@ -6,19 +6,19 @@
  * Time: 16:47
  */
 
-namespace GoSwoole\BaseServer\Server;
+namespace ESD\BaseServer\Server;
 
 
-use GoSwoole\BaseServer\Server\Beans\Request;
-use GoSwoole\BaseServer\Server\Beans\Response;
-use GoSwoole\BaseServer\Server\Beans\WebSocketCloseFrame;
-use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
-use GoSwoole\BaseServer\Server\Config\PortConfig;
+use ESD\BaseServer\Server\Beans\Request;
+use ESD\BaseServer\Server\Beans\Response;
+use ESD\BaseServer\Server\Beans\WebSocketCloseFrame;
+use ESD\BaseServer\Server\Beans\WebSocketFrame;
+use ESD\BaseServer\Server\Config\PortConfig;
 
 /**
  * AbstractServerPort 端口类
  * Class ServerPort
- * @package GoSwoole\BaseServer\Server
+ * @package ESD\BaseServer\Server
  */
 abstract class AbstractServerPort
 {
@@ -276,7 +276,7 @@ abstract class AbstractServerPort
      * @param $request
      * @param $response
      * @return bool
-     * @throws \GoSwoole\BaseServer\Exception
+     * @throws \ESD\BaseServer\Exception
      */
     public function _onHandshake($request, $response)
     {

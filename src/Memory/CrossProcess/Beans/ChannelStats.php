@@ -6,7 +6,7 @@
  * Time: 11:17
  */
 
-namespace GoSwoole\BaseServer\Memory\CrossProcess\Beans;
+namespace ESD\BaseServer\Memory\CrossProcess\Beans;
 class ChannelStats
 {
     private $queueNum;

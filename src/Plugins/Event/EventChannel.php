@@ -6,10 +6,10 @@
  * Time: 9:43
  */
 
-namespace GoSwoole\BaseServer\Plugins\Event;
+namespace ESD\BaseServer\Plugins\Event;
 
 
-use GoSwoole\BaseServer\Coroutine\Channel;
+use ESD\BaseServer\Coroutine\Channel;
 
 class EventChannel extends Channel
 {

@@ -6,12 +6,12 @@
  * Time: 15:48
  */
 
-namespace GoSwoole\BaseServer\Server\Beans;
+namespace ESD\BaseServer\Server\Beans;
 
 /**
  * WebSocketFrame结构
  * Class WebSocketFrame
- * @package GoSwoole\BaseServer\Server\Beans
+ * @package ESD\BaseServer\Server\Beans
  */
 class WebSocketFrame
 {

@@ -6,12 +6,12 @@
  * Time: 17:39
  */
 
-namespace GoSwoole\BaseServer\ExampleClass\Server;
+namespace ESD\BaseServer\ExampleClass\Server;
 
 
-use GoSwoole\BaseServer\Plugins\Event\Event;
-use GoSwoole\BaseServer\Server\Message\Message;
-use GoSwoole\BaseServer\Server\Process;
+use ESD\BaseServer\Plugins\Event\Event;
+use ESD\BaseServer\Server\Message\Message;
+use ESD\BaseServer\Server\Process;
 
 class DefaultProcess extends Process
 {

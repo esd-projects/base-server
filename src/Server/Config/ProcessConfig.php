@@ -6,20 +6,20 @@
  * Time: 9:29
  */
 
-namespace GoSwoole\BaseServer\Server\Config;
+namespace ESD\BaseServer\Server\Config;
 
-use GoSwoole\BaseServer\Plugins\Config\BaseConfig;
-use GoSwoole\BaseServer\Server\Exception\ConfigException;
-use GoSwoole\BaseServer\Server\Process;
+use ESD\BaseServer\Plugins\Config\BaseConfig;
+use ESD\BaseServer\Server\Exception\ConfigException;
+use ESD\BaseServer\Server\Process;
 
 /**
  * 进程配置
  * Class ProcessConfig
- * @package GoSwoole\BaseServer\Server\Config
+ * @package ESD\BaseServer\Server\Config
  */
 class ProcessConfig extends BaseConfig
 {
-    const key = "goswoole.process";
+    const key = "esd.process";
     protected $name;
     protected $className;
     protected $groupName;

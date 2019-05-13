@@ -6,14 +6,14 @@
  * Time: 13:52
  */
 
-namespace GoSwoole\BaseServer\Plugins\Logger;
+namespace ESD\BaseServer\Plugins\Logger;
 
-use GoSwoole\BaseServer\Plugins\Config\ConfigChangeEvent;
-use GoSwoole\BaseServer\Plugins\Config\ConfigPlugin;
-use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
-use GoSwoole\BaseServer\Server\Context;
-use GoSwoole\BaseServer\Server\PlugIn\AbstractPlugin;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Plugins\Config\ConfigChangeEvent;
+use ESD\BaseServer\Plugins\Config\ConfigPlugin;
+use ESD\BaseServer\Plugins\Event\EventDispatcher;
+use ESD\BaseServer\Server\Context;
+use ESD\BaseServer\Server\PlugIn\AbstractPlugin;
+use ESD\BaseServer\Server\Server;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
@@ -23,7 +23,7 @@ use Monolog\Processor\IntrospectionProcessor;
 /**
  * Log 插件加载器
  * Class EventPlug
- * @package GoSwoole\BaseServer\Plugins\Event
+ * @package ESD\BaseServer\Plugins\Event
  */
 class LoggerPlugin extends AbstractPlugin
 {
@@ -60,7 +60,7 @@ class LoggerPlugin extends AbstractPlugin
 
     /**
      * @param Context $context
-     * @throws \GoSwoole\BaseServer\Exception
+     * @throws \ESD\BaseServer\Exception
      * @throws \Exception
      */
     private function buildLogger(Context $context)
@@ -89,7 +89,7 @@ class LoggerPlugin extends AbstractPlugin
     /**
      * 在服务启动前
      * @param Context $context
-     * @throws \GoSwoole\BaseServer\Exception
+     * @throws \ESD\BaseServer\Exception
      * @throws \Exception
      */
     public function beforeServerStart(Context $context)

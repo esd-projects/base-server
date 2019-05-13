@@ -6,15 +6,15 @@
  * Time: 10:21
  */
 
-namespace GoSwoole\BaseServer\Plugins\Logger;
+namespace ESD\BaseServer\Plugins\Logger;
 
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Server\Server;
 use Monolog\Logger;
 
 /**
  * 帮助获取logger实例
  * Class GetLogger
- * @package GoSwoole\BaseServer\Plugins\Logger
+ * @package ESD\BaseServer\Plugins\Logger
  */
 trait GetLogger
 {

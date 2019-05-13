@@ -6,11 +6,11 @@
  * Time: 17:58
  */
 
-namespace GoSwoole\BaseServer\Server;
+namespace ESD\BaseServer\Server;
 
 
-use GoSwoole\BaseServer\Server\Config\PortConfig;
-use GoSwoole\BaseServer\Server\Exception\ConfigException;
+use ESD\BaseServer\Server\Config\PortConfig;
+use ESD\BaseServer\Server\Exception\ConfigException;
 
 class PortManager
 {

@@ -6,7 +6,7 @@
  * Time: 9:19
  */
 
-namespace GoSwoole\BaseServer\Server\Beans;
+namespace ESD\BaseServer\Server\Beans;
 
 
 class ResponseProxy

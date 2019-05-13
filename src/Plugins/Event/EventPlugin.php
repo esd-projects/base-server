@@ -6,19 +6,19 @@
  * Time: 13:52
  */
 
-namespace GoSwoole\BaseServer\Plugins\Event;
+namespace ESD\BaseServer\Plugins\Event;
 
 
-use GoSwoole\BaseServer\Plugins\DI\DIPlugin;
-use GoSwoole\BaseServer\Server\Context;
-use GoSwoole\BaseServer\Server\Message\MessageProcessor;
-use GoSwoole\BaseServer\Server\PlugIn\AbstractPlugin;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Plugins\DI\DIPlugin;
+use ESD\BaseServer\Server\Context;
+use ESD\BaseServer\Server\Message\MessageProcessor;
+use ESD\BaseServer\Server\PlugIn\AbstractPlugin;
+use ESD\BaseServer\Server\Server;
 
 /**
  * Event 插件加载器
  * Class EventPlug
- * @package GoSwoole\BaseServer\Plugins\Event
+ * @package ESD\BaseServer\Plugins\Event
  */
 class EventPlugin extends AbstractPlugin
 {
@@ -36,7 +36,7 @@ class EventPlugin extends AbstractPlugin
     /**
      * 在服务启动前
      * @param Context $context
-     * @throws \GoSwoole\BaseServer\Exception
+     * @throws \ESD\BaseServer\Exception
      */
     public function beforeServerStart(Context $context)
     {
@@ -49,7 +49,7 @@ class EventPlugin extends AbstractPlugin
     /**
      * 在进程启动前
      * @param Context $context
-     * @throws \GoSwoole\BaseServer\Exception
+     * @throws \ESD\BaseServer\Exception
      */
     public function beforeProcessStart(Context $context)
     {

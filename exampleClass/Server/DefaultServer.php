@@ -6,12 +6,12 @@
  * Time: 17:41
  */
 
-namespace GoSwoole\BaseServer\ExampleClass\Server;
+namespace ESD\BaseServer\ExampleClass\Server;
 
 
-use GoSwoole\BaseServer\Server\Config\ServerConfig;
-use GoSwoole\BaseServer\Server\Process;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Server\Config\ServerConfig;
+use ESD\BaseServer\Server\Process;
+use ESD\BaseServer\Server\Server;
 use Monolog\Logger;
 
 class DefaultServer extends Server
@@ -23,7 +23,7 @@ class DefaultServer extends Server
      * @param ServerConfig $serverConfig
      * @param string $portClass
      * @param string $processClass
-     * @throws \GoSwoole\BaseServer\Exception
+     * @throws \ESD\BaseServer\Exception
      * @throws \ReflectionException
      * @throws \DI\DependencyException
      */

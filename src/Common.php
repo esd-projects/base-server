@@ -6,9 +6,9 @@
  * Time: 17:58
  */
 
-use GoSwoole\BaseServer\Coroutine\Co;
-use GoSwoole\BaseServer\Server\Context;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Coroutine\Co;
+use ESD\BaseServer\Server\Context;
+use ESD\BaseServer\Server\Server;
 const HOOK_TCP = SWOOLE_HOOK_TCP;//TCP Socket类型的stream
 const HOOK_UDP = SWOOLE_HOOK_UDP;//UDP Socket类型的stream
 const HOOK_UNIX = SWOOLE_HOOK_UNIX;//Unix Stream Socket类型的stream
@@ -101,7 +101,7 @@ function goWithContext(callable $run)
 
 /**
  * 获取上下文
- * @return \GoSwoole\BaseServer\Server\Context
+ * @return \ESD\BaseServer\Server\Context
  */
 function getContext()
 {
@@ -144,7 +144,7 @@ function getContextValueByClassName($key)
  * @param $key
  * @param $value
  * @return mixed
- * @throws \GoSwoole\BaseServer\Exception
+ * @throws \ESD\BaseServer\Exception
  */
 function setContextValue($key, $value)
 {

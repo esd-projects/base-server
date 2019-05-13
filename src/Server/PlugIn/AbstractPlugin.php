@@ -6,17 +6,17 @@
  * Time: 14:19
  */
 
-namespace GoSwoole\BaseServer\Server\PlugIn;
+namespace ESD\BaseServer\Server\PlugIn;
 
 
-use GoSwoole\BaseServer\Coroutine\Channel;
-use GoSwoole\BaseServer\Exception;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Coroutine\Channel;
+use ESD\BaseServer\Exception;
+use ESD\BaseServer\Server\Server;
 
 /**
  * 基础插件，插件类需要继承
  * Class BasePlug
- * @package GoSwoole\BaseServer\Server\Plug
+ * @package ESD\BaseServer\Server\Plug
  */
 abstract class AbstractPlugin implements PluginInterface
 {

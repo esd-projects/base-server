@@ -6,16 +6,16 @@
  * Time: 13:21
  */
 
-namespace GoSwoole\BaseServer\Coroutine;
+namespace ESD\BaseServer\Coroutine;
 
-use GoSwoole\BaseServer\Coroutine\Beans\ChannelStats;
+use ESD\BaseServer\Coroutine\Beans\ChannelStats;
 
 /**
  * 通道，类似于go语言的chan，支持多生产者协程和多消费者协程。
  * 底层自动实现了协程的切换和调度。
  * 通道与PHP的Array类似，仅占用内存，没有其他额外的资源申请，所有操作均为内存操作，无IO消耗。
  * Class Channel
- * @package GoSwoole\BaseServer\Coroutine
+ * @package ESD\BaseServer\Coroutine
  */
 class Channel
 {

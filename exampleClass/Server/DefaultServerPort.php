@@ -6,15 +6,15 @@
  * Time: 17:38
  */
 
-namespace GoSwoole\BaseServer\ExampleClass\Server;
+namespace ESD\BaseServer\ExampleClass\Server;
 
 
-use GoSwoole\BaseServer\Server\Beans\Request;
-use GoSwoole\BaseServer\Server\Beans\Response;
-use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
-use GoSwoole\BaseServer\Server\Config\PortConfig;
-use GoSwoole\BaseServer\Server\Server;
-use GoSwoole\BaseServer\Server\ServerPort;
+use ESD\BaseServer\Server\Beans\Request;
+use ESD\BaseServer\Server\Beans\Response;
+use ESD\BaseServer\Server\Beans\WebSocketFrame;
+use ESD\BaseServer\Server\Config\PortConfig;
+use ESD\BaseServer\Server\Server;
+use ESD\BaseServer\Server\ServerPort;
 use Monolog\Logger;
 
 class DefaultServerPort extends ServerPort

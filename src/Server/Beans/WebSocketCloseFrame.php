@@ -6,7 +6,7 @@
  * Time: 15:52
  */
 
-namespace GoSwoole\BaseServer\Server\Beans;
+namespace ESD\BaseServer\Server\Beans;
 
 
 class WebSocketCloseFrame extends WebSocketFrame

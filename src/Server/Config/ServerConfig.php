@@ -6,25 +6,25 @@
  * Time: 13:45
  */
 
-namespace GoSwoole\BaseServer\Server\Config;
+namespace ESD\BaseServer\Server\Config;
 
-use GoSwoole\BaseServer\Exception;
-use GoSwoole\BaseServer\Plugins\Config\BaseConfig;
-use GoSwoole\BaseServer\Server\Exception\ConfigException;
+use ESD\BaseServer\Exception;
+use ESD\BaseServer\Plugins\Config\BaseConfig;
+use ESD\BaseServer\Server\Exception\ConfigException;
 
 /**
  * 服务配置
  * Class ServerConfig
- * @package GoSwoole\BaseServer\Server\Config
+ * @package ESD\BaseServer\Server\Config
  */
 class ServerConfig extends BaseConfig
 {
-    const key = "goswoole.server";
+    const key = "esd.server";
     /**
      * 服务器名称
      * @var string
      */
-    protected $name = "goSwoole";
+    protected $name = "esd";
 
     /**
      * 根目录
@@ -220,13 +220,13 @@ class ServerConfig extends BaseConfig
      * @var string
      */
     protected $banner = "
-  ________        _________                    .__          
- /  _____/  ____ /   _____/_  _  ______   ____ |  |   ____  
-/   \  ___ /  _ \\_____  \\ \/ \/ /  _ \ /  _ \|  | _/ __ \ 
-\    \_\  (  <_> )        \\     (  <_> |  <_> )  |_\  ___/ 
- \______  /\____/_______  / \/\_/ \____/ \____/|____/\___  >
-        \/              \/                               \/  
-        ";
+             ________      ______      ______    
+            |_   __  |   .' ____ \    |_   _ `.  
+              | |_ \_|   | (___ \_|     | | `. \ 
+              |  _| _     _.____`.      | |  | | 
+             _| |__/ |   | \____) |    _| |_.' / 
+            |________|    \______.'   |______.'  
+                                                 ";
 
     public function __construct()
     {

@@ -6,12 +6,12 @@
  * Time: 10:21
  */
 
-namespace GoSwoole\BaseServer\Memory\CrossProcess;
+namespace ESD\BaseServer\Memory\CrossProcess;
 
 /**
  * 锁
  * Class Lock
- * @package GoSwoole\BaseServer\Memory
+ * @package ESD\BaseServer\Memory
  */
 class Lock
 {

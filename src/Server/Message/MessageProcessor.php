@@ -6,14 +6,14 @@
  * Time: 9:59
  */
 
-namespace GoSwoole\BaseServer\Server\Message;
+namespace ESD\BaseServer\Server\Message;
 
-use GoSwoole\BaseServer\Exception;
+use ESD\BaseServer\Exception;
 
 /**
  * 消息处理器
  * Class MessageProcessor
- * @package GoSwoole\BaseServer\Server\Message
+ * @package ESD\BaseServer\Server\Message
  */
 abstract class MessageProcessor
 {

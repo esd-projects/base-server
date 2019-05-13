@@ -6,7 +6,7 @@
  * Time: 14:19
  */
 
-namespace GoSwoole\BaseServer\Plugins\Config;
+namespace ESD\BaseServer\Plugins\Config;
 
 
 class ConfigConfig

@@ -6,11 +6,11 @@
  * Time: 13:56
  */
 
-namespace GoSwoole\BaseServer\Coroutine\Beans;
+namespace ESD\BaseServer\Coroutine\Beans;
 /**
  * 通道的状态
  * Class ChannelStats
- * @package GoSwoole\BaseServer\Coroutine\Beans
+ * @package ESD\BaseServer\Coroutine\Beans
  */
 class ChannelStats
 {

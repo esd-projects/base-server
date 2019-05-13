@@ -6,20 +6,20 @@
  * Time: 12:24
  */
 
-namespace GoSwoole\BaseServer\Server\PlugIn;
+namespace ESD\BaseServer\Server\PlugIn;
 
 use DI\ContainerBuilder;
-use GoSwoole\BaseServer\Coroutine\Channel;
-use GoSwoole\BaseServer\Exception;
-use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
-use GoSwoole\BaseServer\Server\Context;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Coroutine\Channel;
+use ESD\BaseServer\Exception;
+use ESD\BaseServer\Plugins\Event\EventDispatcher;
+use ESD\BaseServer\Server\Context;
+use ESD\BaseServer\Server\Server;
 use Monolog\Logger;
 
 /**
  * 插件管理器
  * Class PlugManager
- * @package GoSwoole\BaseServer\Server\Plug
+ * @package ESD\BaseServer\Server\Plug
  */
 class PluginInterfaceManager implements PluginInterface
 {

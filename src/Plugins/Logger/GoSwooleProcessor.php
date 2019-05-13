@@ -6,10 +6,10 @@
  * Time: 17:54
  */
 
-namespace GoSwoole\BaseServer\Plugins\Logger;
+namespace ESD\BaseServer\Plugins\Logger;
 
-use GoSwoole\BaseServer\Coroutine\Co;
-use GoSwoole\BaseServer\Server\Server;
+use ESD\BaseServer\Coroutine\Co;
+use ESD\BaseServer\Server\Server;
 use Monolog\Logger;
 use Monolog\Processor\ProcessorInterface;
 

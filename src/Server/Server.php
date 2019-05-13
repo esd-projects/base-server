@@ -6,35 +6,35 @@
  * Time: 13:43
  */
 
-namespace GoSwoole\BaseServer\Server;
+namespace ESD\BaseServer\Server;
 
 use DI\Container;
-use GoSwoole\BaseServer\Plugins\Config\ConfigContext;
-use GoSwoole\BaseServer\Plugins\Config\ConfigPlugin;
-use GoSwoole\BaseServer\Plugins\DI\DIPlugin;
-use GoSwoole\BaseServer\Plugins\Event\ApplicationEvent;
-use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
-use GoSwoole\BaseServer\Plugins\Event\EventPlugin;
-use GoSwoole\BaseServer\Plugins\Logger\LoggerPlugin;
-use GoSwoole\BaseServer\Server\Beans\ClientInfo;
-use GoSwoole\BaseServer\Server\Beans\Request;
-use GoSwoole\BaseServer\Server\Beans\RequestProxy;
-use GoSwoole\BaseServer\Server\Beans\Response;
-use GoSwoole\BaseServer\Server\Beans\ResponseProxy;
-use GoSwoole\BaseServer\Server\Beans\ServerStats;
-use GoSwoole\BaseServer\Server\Beans\WebSocketFrame;
-use GoSwoole\BaseServer\Server\Config\PortConfig;
-use GoSwoole\BaseServer\Server\Config\ServerConfig;
-use GoSwoole\BaseServer\Server\Exception\ConfigException;
-use GoSwoole\BaseServer\Server\PlugIn\PluginInterfaceManager;
-use GoSwoole\BaseServer\Server\ServerProcess\ManagerProcess;
-use GoSwoole\BaseServer\Server\ServerProcess\MasterProcess;
+use ESD\BaseServer\Plugins\Config\ConfigContext;
+use ESD\BaseServer\Plugins\Config\ConfigPlugin;
+use ESD\BaseServer\Plugins\DI\DIPlugin;
+use ESD\BaseServer\Plugins\Event\ApplicationEvent;
+use ESD\BaseServer\Plugins\Event\EventDispatcher;
+use ESD\BaseServer\Plugins\Event\EventPlugin;
+use ESD\BaseServer\Plugins\Logger\LoggerPlugin;
+use ESD\BaseServer\Server\Beans\ClientInfo;
+use ESD\BaseServer\Server\Beans\Request;
+use ESD\BaseServer\Server\Beans\RequestProxy;
+use ESD\BaseServer\Server\Beans\Response;
+use ESD\BaseServer\Server\Beans\ResponseProxy;
+use ESD\BaseServer\Server\Beans\ServerStats;
+use ESD\BaseServer\Server\Beans\WebSocketFrame;
+use ESD\BaseServer\Server\Config\PortConfig;
+use ESD\BaseServer\Server\Config\ServerConfig;
+use ESD\BaseServer\Server\Exception\ConfigException;
+use ESD\BaseServer\Server\PlugIn\PluginInterfaceManager;
+use ESD\BaseServer\Server\ServerProcess\ManagerProcess;
+use ESD\BaseServer\Server\ServerProcess\MasterProcess;
 use Monolog\Logger;
 
 /**
  * Class Server
  * 封装了Server对象
- * @package GoSwoole\BaseServer\Server
+ * @package ESD\BaseServer\Server
  */
 abstract class Server
 {
@@ -123,7 +123,7 @@ abstract class Server
      * @param ServerConfig $serverConfig
      * @param string $defaultPortClass
      * @param string $defaultProcessClass
-     * @throws \GoSwoole\BaseServer\Exception
+     * @throws \ESD\BaseServer\Exception
      * @throws \DI\DependencyException
      * @throws \ReflectionException
      */
@@ -197,7 +197,7 @@ abstract class Server
      * 添加插件和添加配置只能在configure之前
      * 配置服务
      * @throws ConfigException
-     * @throws \GoSwoole\BaseServer\Exception
+     * @throws \ESD\BaseServer\Exception
      * @throws \ReflectionException
      */
     public function configure()

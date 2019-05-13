@@ -6,15 +6,15 @@
  * Time: 14:01
  */
 
-namespace GoSwoole\BaseServer\Server\Config;
+namespace ESD\BaseServer\Server\Config;
 
-use GoSwoole\BaseServer\Plugins\Config\BaseConfig;
-use GoSwoole\BaseServer\Server\Exception\ConfigException;
+use ESD\BaseServer\Plugins\Config\BaseConfig;
+use ESD\BaseServer\Server\Exception\ConfigException;
 
 /**
  * 端口配置
  * Class PortConfig
- * @package GoSwoole\BaseServer\Server\Config
+ * @package ESD\BaseServer\Server\Config
  */
 class PortConfig extends BaseConfig
 {
@@ -52,7 +52,7 @@ class PortConfig extends BaseConfig
     const WEBSOCKET_STATUS_HANDSHAKE = WEBSOCKET_STATUS_HANDSHAKE;
     const WEBSOCKET_STATUS_FRAME = WEBSOCKET_STATUS_FRAME;
 
-    const key = "goswoole.port";
+    const key = "esd.port";
     /**
      * 名称
      * @var string

@@ -6,13 +6,13 @@
  * Time: 10:29
  */
 
-namespace GoSwoole\BaseServer\Memory\SingleProcess;
+namespace ESD\BaseServer\Memory\SingleProcess;
 
 /**
  * 让PHP开发者可以像C一样直接读写内存，提升程序的性能，又不用担心内存越界。Buffer会检测offset
  * 无法在多个进程间被共享
  * Class Buffer
- * @package GoSwoole\BaseServer\Memory
+ * @package ESD\BaseServer\Memory
  */
 class Buffer
 {

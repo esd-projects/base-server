@@ -6,18 +6,18 @@
  * Time: 9:23
  */
 
-namespace GoSwoole\BaseServer\Server;
+namespace ESD\BaseServer\Server;
 
-use GoSwoole\BaseServer\Plugins\Event\EventDispatcher;
-use GoSwoole\BaseServer\Plugins\Event\ProcessEvent;
-use GoSwoole\BaseServer\Server\Message\Message;
-use GoSwoole\BaseServer\Server\Message\MessageProcessor;
+use ESD\BaseServer\Plugins\Event\EventDispatcher;
+use ESD\BaseServer\Plugins\Event\ProcessEvent;
+use ESD\BaseServer\Server\Message\Message;
+use ESD\BaseServer\Server\Message\MessageProcessor;
 use Monolog\Logger;
 
 /**
  * 进程
  * Class Process
- * @package GoSwoole\BaseServer\Server\process
+ * @package ESD\BaseServer\Server\process
  */
 abstract class Process
 {

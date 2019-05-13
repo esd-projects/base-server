@@ -1,6 +1,6 @@
 <?php
 
-use GoSwoole\BaseServer\ExampleClass\Server\DefaultServer;
+use ESD\BaseServer\ExampleClass\Server\DefaultServer;
 
 require __DIR__ . '/../vendor/autoload.php';
 
