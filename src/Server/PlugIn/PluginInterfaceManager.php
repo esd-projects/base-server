@@ -99,6 +99,21 @@ class PluginInterfaceManager implements PluginInterface
     }
 
     /**
+     * 初始化
+     * @param Context $context
+     * @return mixed|void
+     */
+    public function init(Context $context)
+    {
+        foreach ($this->plugs as $plug) {
+            if ($this->log != null) {
+                $this->log->log(Logger::DEBUG, "加载[{$plug->getName()}]插件");
+            }
+            $plug->init($context);
+        }
+    }
+
+    /**
      * 在服务启动之前
      * @param Context $context
      * @return mixed|void
@@ -110,9 +125,6 @@ class PluginInterfaceManager implements PluginInterface
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugBeforeServerStartEvent, $this));
         }
         foreach ($this->plugs as $plug) {
-            if ($this->log != null) {
-                $this->log->log(Logger::DEBUG, "加载[{$plug->getName()}]插件");
-            }
             $plug->beforeServerStart($context);
         }
         //发出PlugManagerEvent:PlugAfterServerStartEvent事件

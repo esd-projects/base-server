@@ -11,6 +11,7 @@ namespace ESD\BaseServer\Server\PlugIn;
 
 use ESD\BaseServer\Coroutine\Channel;
 use ESD\BaseServer\Exception;
+use ESD\BaseServer\Server\Context;
 use ESD\BaseServer\Server\Server;
 
 /**
@@ -157,5 +158,15 @@ abstract class AbstractPlugin implements PluginInterface
     public function onAdded(PluginInterfaceManager $pluginInterfaceManager)
     {
         $this->pluginInterfaceManager = $pluginInterfaceManager;
+    }
+
+    /**
+     * 初始化
+     * @param Context $context
+     * @return mixed|void
+     */
+    public function init(Context $context)
+    {
+        return;
     }
 }

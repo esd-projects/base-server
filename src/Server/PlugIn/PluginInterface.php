@@ -54,6 +54,13 @@ interface PluginInterface
      * @param Context $context
      * @return mixed
      */
+    public function init(Context $context);
+
+    /**
+     * 初始化
+     * @param Context $context
+     * @return mixed
+     */
     public function beforeServerStart(Context $context);
 
     /**

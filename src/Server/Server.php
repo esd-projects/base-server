@@ -142,6 +142,7 @@ abstract class Server
         $this->basePlugManager->addPlug(new LoggerPlugin());
         $this->basePlugManager->addPlug(new EventPlugin());
         $this->basePlugManager->order();
+        $this->basePlugManager->init($this->context);
         $this->basePlugManager->beforeServerStart($this->context);
         //合并ServerConfig配置
         $this->serverConfig->merge();
@@ -207,6 +208,7 @@ abstract class Server
         $this->getProcessManager()->mergeConfig();
         //插件排序此时不允许添加插件了
         $this->plugManager->order();
+        $this->plugManager->init($this->context);
         //调用所有插件的beforeServerStart
         $this->plugManager->beforeServerStart($this->context);
         //锁定配置
