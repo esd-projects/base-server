@@ -820,7 +820,12 @@ class ServerConfig extends BaseConfig
      */
     public function setRootDir(string $rootDir): void
     {
-        $this->rootDir = $rootDir;
+        if (!defined("ROOT_DIR")) {
+            $this->rootDir = $rootDir;
+            define("ROOT_DIR", $rootDir);
+        } else {
+            $this->rootDir = ROOT_DIR;
+        }
     }
 
     /**
