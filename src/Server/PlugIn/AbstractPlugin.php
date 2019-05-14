@@ -24,7 +24,7 @@ abstract class AbstractPlugin implements PluginInterface
     /**
      * @var PluginInterfaceManager
      */
-    private $pluginInterfaceManager;
+    protected $pluginInterfaceManager;
     /**
      * @var string[]
      */
