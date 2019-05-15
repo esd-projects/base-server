@@ -23,7 +23,7 @@
       "homepage": "https://github.com/tmtbe"
     }
   ],
-  "name": "esd/baseServer",
+  "name": "esd/base-server",
   "type": "library",
   "keywords": ["server", "swoole"],
   "description": "base-server",
