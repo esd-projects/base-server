@@ -23,10 +23,10 @@
       "homepage": "https://github.com/tmtbe"
     }
   ],
-  "name": "esd/base-server",
+  "name": "esd/baseServer",
   "type": "library",
   "keywords": ["server", "swoole"],
-  "description": "base_server",
+  "description": "baseServer",
   "license": "MIT",
   "repositories": {
     "packagist": {
