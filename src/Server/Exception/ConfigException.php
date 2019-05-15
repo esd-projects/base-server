@@ -21,7 +21,7 @@ class ConfigException extends Exception
      */
     public static function AssertNull($object, $field, $value)
     {
-        if ($value == null){
+        if ($value === null) {
             $name = get_class($object);
             throw new ConfigException("[{$name}] {$field} cannot be empty");
         }

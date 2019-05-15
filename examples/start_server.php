@@ -29,6 +29,15 @@ $wsPortConfig->setPort(8081);
 $wsPortConfig->setSockType(PortConfig::SWOOLE_SOCK_TCP);
 $wsPortConfig->setOpenHttpProtocol(true);
 
+$tcpPortConfig = new PortConfig();
+$tcpPortConfig->setHost("0.0.0.0");
+$tcpPortConfig->setPort(8082);
+$tcpPortConfig->setOpenLengthCheck(true);
+$tcpPortConfig->setPackageLengthType("N");
+$tcpPortConfig->setPackageLengthOffset(0);
+$tcpPortConfig->setPackageBodyOffset(0);
+$tcpPortConfig->setSockType(PortConfig::SWOOLE_SOCK_TCP);
+
 //---服务器配置---
 $serverConfig = new ServerConfig();
 $serverConfig->setWorkerNum(4);
@@ -38,6 +47,7 @@ $server = new DefaultServer($serverConfig);
 //添加端口
 $server->addPort("http", $httpPortConfig, MyPort::class);//使用自定义实例
 $server->addPort("ws", $wsPortConfig);//使用默认实例
+$server->addPort("tcp", $tcpPortConfig);//使用默认实例
 //添加进程
 $server->addProcess("test1");
 $server->addProcess("test2", MyProcess::class);//使用自定义实例
