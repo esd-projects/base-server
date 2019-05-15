@@ -17,7 +17,6 @@ use ESD\BaseServer\Server\Server;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
-use Monolog\Processor\IntrospectionProcessor;
 
 /**
  * Log 插件加载器
@@ -79,7 +78,7 @@ class LoggerPlugin extends AbstractPlugin
         }
         $this->handler->setFormatter($formatter);
         $this->logger->pushProcessor(new GoSwooleProcessor($this->loggerConfig->isColor()));
-        $this->logger->pushProcessor(new IntrospectionProcessor());
+        $this->logger->pushProcessor(new GoIntrospectionProcessor());
         $this->logger->pushHandler($this->handler);
         $context->add("logger", $this->logger);
         Server::$instance->setLog($this->logger);
