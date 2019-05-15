@@ -17,7 +17,6 @@ use ESD\BaseServer\Server\Server;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 
 /**

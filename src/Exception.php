@@ -11,5 +11,23 @@ namespace ESD\BaseServer;
 
 class Exception extends \Exception
 {
+    protected $trace = true;
+
+    /**
+     * @return bool
+     */
+    public function isTrace(): bool
+    {
+        return $this->trace;
+    }
+
+    /**
+     * @param bool $trace
+     */
+    public function setTrace(bool $trace): void
+    {
+        $this->trace = $trace;
+    }
+
 
 }
