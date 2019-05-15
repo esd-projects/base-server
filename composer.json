@@ -26,7 +26,7 @@
   "name": "esd/baseServer",
   "type": "library",
   "keywords": ["server", "swoole"],
-  "description": "baseServer",
+  "description": "base-server",
   "license": "MIT",
   "repositories": {
     "packagist": {
