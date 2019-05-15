@@ -9,13 +9,13 @@
 namespace ESD\BaseServer\ExampleClass\Server;
 
 
+use ESD\BaseServer\Plugins\Logger\Logger;
 use ESD\BaseServer\Server\Beans\Request;
 use ESD\BaseServer\Server\Beans\Response;
 use ESD\BaseServer\Server\Beans\WebSocketFrame;
 use ESD\BaseServer\Server\Config\PortConfig;
 use ESD\BaseServer\Server\Server;
 use ESD\BaseServer\Server\ServerPort;
-use Monolog\Logger;
 
 class DefaultServerPort extends ServerPort
 {

@@ -15,6 +15,7 @@ use ESD\BaseServer\Plugins\DI\DIPlugin;
 use ESD\BaseServer\Plugins\Event\ApplicationEvent;
 use ESD\BaseServer\Plugins\Event\EventDispatcher;
 use ESD\BaseServer\Plugins\Event\EventPlugin;
+use ESD\BaseServer\Plugins\Logger\Logger;
 use ESD\BaseServer\Plugins\Logger\LoggerPlugin;
 use ESD\BaseServer\Server\Beans\ClientInfo;
 use ESD\BaseServer\Server\Beans\Request;
@@ -29,7 +30,6 @@ use ESD\BaseServer\Server\Exception\ConfigException;
 use ESD\BaseServer\Server\PlugIn\PluginInterfaceManager;
 use ESD\BaseServer\Server\ServerProcess\ManagerProcess;
 use ESD\BaseServer\Server\ServerProcess\MasterProcess;
-use Monolog\Logger;
 
 /**
  * Class Server
@@ -150,6 +150,7 @@ abstract class Server
         $this->plugManager = new PluginInterfaceManager($this);
         //配置DI容器
         $this->container->set(Logger::class, $this->log);
+        $this->container->set(\Monolog\Logger::class, $this->log);
         $this->container->set(EventDispatcher::class, $this->eventDispatcher);
         $this->container->set(ConfigContext::class, $this->configContext);
         $this->container->set(PortManager::class, $this->portManager);

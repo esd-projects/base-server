@@ -9,10 +9,10 @@
 namespace ESD\BaseServer\ExampleClass\Server;
 
 
+use ESD\BaseServer\Plugins\Logger\Logger;
 use ESD\BaseServer\Server\Config\ServerConfig;
 use ESD\BaseServer\Server\Process;
 use ESD\BaseServer\Server\Server;
-use Monolog\Logger;
 
 class DefaultServer extends Server
 {

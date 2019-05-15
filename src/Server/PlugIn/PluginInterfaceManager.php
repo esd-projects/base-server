@@ -12,9 +12,9 @@ use DI\ContainerBuilder;
 use ESD\BaseServer\Coroutine\Channel;
 use ESD\BaseServer\Exception;
 use ESD\BaseServer\Plugins\Event\EventDispatcher;
+use ESD\BaseServer\Plugins\Logger\Logger;
 use ESD\BaseServer\Server\Context;
 use ESD\BaseServer\Server\Server;
-use Monolog\Logger;
 
 /**
  * 插件管理器

@@ -9,9 +9,9 @@
 namespace ESD\BaseServer\Plugins\Event;
 
 use ESD\BaseServer\Coroutine\Channel;
+use ESD\BaseServer\Plugins\Logger\Logger;
 use ESD\BaseServer\Server\Process;
 use ESD\BaseServer\Server\Server;
-use Monolog\Logger;
 
 /**
  * 事件派发器
