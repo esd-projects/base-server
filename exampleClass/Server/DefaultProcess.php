@@ -10,11 +10,13 @@ namespace ESD\BaseServer\ExampleClass\Server;
 
 
 use ESD\BaseServer\Plugins\Event\Event;
+use ESD\BaseServer\Plugins\Logger\GetLogger;
 use ESD\BaseServer\Server\Message\Message;
 use ESD\BaseServer\Server\Process;
 
 class DefaultProcess extends Process
 {
+    use GetLogger;
     /**
      * 在onProcessStart之前，用于初始化成员变量
      * @return mixed
@@ -26,7 +28,7 @@ class DefaultProcess extends Process
 
     public function onProcessStart()
     {
-        $this->log->info("start");
+        $this->info("start");
         $message = new Message("message", "test");
         foreach ($this->getProcessManager()->getProcesses() as $process) {
             $this->sendMessage($message, $process);
@@ -47,12 +49,12 @@ class DefaultProcess extends Process
 
     public function onProcessStop()
     {
-        $this->log->info("stop");
+        $this->info("stop");
     }
 
     public function onPipeMessage(Message $message, Process $fromProcess)
     {
-        $this->log->info("[FromProcess:{$fromProcess->getProcessId()}] [{$message->toString()}]");
+        $this->info("[FromProcess:{$fromProcess->getProcessId()}] [{$message->toString()}]");
     }
 
 }
