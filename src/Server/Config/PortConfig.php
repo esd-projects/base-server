@@ -867,4 +867,26 @@ class PortConfig extends BaseConfig
     {
         $this->wsOpcode = $wsOpcode;
     }
+
+    /**
+     * 获取基础类型
+     * @return string
+     * @throws ConfigException
+     */
+    public function getBaseType(): string
+    {
+        if ($this->isOpenHttpProtocol()) {
+            return "http";
+        }
+        if ($this->isOpenWebsocketProtocol()) {
+            return "ws";
+        }
+        if ($this->getSwooleSockType() == self::SWOOLE_SOCK_TCP || $this->getSwooleSockType() == self::SWOOLE_SOCK_TCP6) {
+            return "tcp";
+        }
+        if ($this->getSwooleSockType() == self::SWOOLE_SOCK_UDP || $this->getSwooleSockType() == self::SWOOLE_SOCK_UDP6) {
+            return "udp";
+        }
+        return "unknown";
+    }
 }

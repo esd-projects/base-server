@@ -17,7 +17,7 @@ class Logger extends \Monolog\Logger
     {
         if ($message instanceof Exception) {
             if (!$message->isTrace()) {
-                return false;
+                return parent::addRecord(\Monolog\Logger::DEBUG, $message, $context);
             }
         }
         return parent::addRecord($level, $message, $context);
