@@ -87,11 +87,12 @@ function addTimerAfter(int $msec, callable $callback, ... $params)
 /**
  * 继承父级的上下文
  * @param callable $run
+ * @return int
  */
 function goWithContext(callable $run)
 {
     $context = getContext();
-    go(function () use ($run, $context) {
+    return go(function () use ($run, $context) {
         $currentContext = Co::getContext();
         //重新设置他的父类为上级协程
         $currentContext->setParentContext($context);
