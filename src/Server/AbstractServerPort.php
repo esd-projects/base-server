@@ -79,7 +79,7 @@ abstract class AbstractServerPort
         //TCP
         if ($this->isTcp()) {
             $listening->on("connect", [$this, "_onConnect"]);
-            $listening->on("close", [$this, "_onClose"]);
+            $listening->on("close", [$this, "_onTcpClose"]);
             $listening->on("receive", [$this, "_onReceive"]);
         }
         //UDP
@@ -92,6 +92,7 @@ abstract class AbstractServerPort
         }
         //WebSocket
         if ($this->isWebSocket()) {
+            $listening->on("close", [$this, "_onWsClose"]);
             $listening->on("message", [$this, "_onMessage"]);
             $listening->on("open", [$this, "_onOpen"]);
             if ($this->getPortConfig()->isCustomHandShake()) {
@@ -172,7 +173,7 @@ abstract class AbstractServerPort
 
     public abstract function onTcpConnect(int $fd, int $reactorId);
 
-    public function _onClose($server, int $fd, int $reactorId)
+    public function _onTcpClose($server, int $fd, int $reactorId)
     {
         //未准备好直接关闭连接
         if (!Server::$instance->getProcessManager()->getCurrentProcess()->isReady()) {
@@ -186,6 +187,21 @@ abstract class AbstractServerPort
     }
 
     public abstract function onTcpClose(int $fd, int $reactorId);
+
+    public function _onWsClose($server, int $fd, int $reactorId)
+    {
+        //未准备好直接关闭连接
+        if (!Server::$instance->getProcessManager()->getCurrentProcess()->isReady()) {
+            return;
+        }
+        try {
+            $this->onWsClose($fd, $reactorId);
+        } catch (\Throwable $e) {
+            Server::$instance->getLog()->error($e);
+        }
+    }
+
+    public abstract function onWsClose(int $fd, int $reactorId);
 
     public function _onReceive($server, int $fd, int $reactorId, string $data)
     {
