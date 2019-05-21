@@ -92,7 +92,7 @@ class Co
      */
     public static function getParentContext()
     {
-        return self::getSwooleContext()[Context::parentStorageKey] ?? null;
+        return self::getContext()->getParentContext();
     }
 
     /**
