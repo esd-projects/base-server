@@ -72,4 +72,9 @@ class DefaultServerPort extends ServerPort
         $this->log->info("");
         return true;
     }
+
+    public function onWsClose(int $fd, int $reactorId)
+    {
+        // TODO: Implement onWsClose() method.
+    }
 }
