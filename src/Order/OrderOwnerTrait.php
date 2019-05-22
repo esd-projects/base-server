@@ -60,10 +60,6 @@ trait OrderOwnerTrait
                 return -1;
             }
         });
-        foreach ($this->orderList as $order) {
-            var_dump($order->getName());
-            var_dump($order->getOrderIndex($order, 0));
-        }
         $this->fixed = true;
     }
 
