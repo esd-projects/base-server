@@ -55,6 +55,19 @@ class Channel
     }
 
     /**
+     * 循环pop
+     * @param $callback
+     */
+    public function popWhile($callback)
+    {
+        while (true) {
+            $result = $this->pop();
+            if ($result === false) break;
+            $callback($result);
+        }
+    }
+
+    /**
      * 获取通道的状态
      * @return ChannelStats
      */

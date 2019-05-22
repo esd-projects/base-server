@@ -101,6 +101,16 @@ function goWithContext(callable $run)
 }
 
 /**
+ * 继承父级的上下文
+ * @param callable $run
+ * @return int
+ */
+function goWithContext2(callable $run)
+{
+    $run();
+}
+
+/**
  * 获取上下文
  * @return \ESD\BaseServer\Server\Context
  */

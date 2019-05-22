@@ -17,6 +17,7 @@ use ESD\BaseServer\Server\Process;
 class DefaultProcess extends Process
 {
     use GetLogger;
+
     /**
      * 在onProcessStart之前，用于初始化成员变量
      * @return mixed
@@ -35,10 +36,9 @@ class DefaultProcess extends Process
         }
         $channel = $this->eventDispatcher->listen("testEvent");
         goWithContext(function () use ($channel) {
-            while (true) {
-                $event = $channel->pop();
+            $channel->popWhile(function (Event $event) {
                 $this->log->info("[Event] {$event->getData()}");
-            }
+            });
         });
         if ($this->getProcessId() == 0) {
             sleep(1);
