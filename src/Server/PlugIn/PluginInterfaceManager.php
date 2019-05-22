@@ -11,6 +11,7 @@ namespace ESD\BaseServer\Server\PlugIn;
 use DI\ContainerBuilder;
 use ESD\BaseServer\Coroutine\Channel;
 use ESD\BaseServer\Exception;
+use ESD\BaseServer\Order\OrderOwnerTrait;
 use ESD\BaseServer\Plugins\Event\EventDispatcher;
 use ESD\BaseServer\Plugins\Logger\Logger;
 use ESD\BaseServer\Server\Context;
@@ -23,20 +24,7 @@ use ESD\BaseServer\Server\Server;
  */
 class PluginInterfaceManager implements PluginInterface
 {
-    /**
-     * @var PluginInterface[]
-     */
-    private $plugs = [];
-
-    /**
-     * @var PluginInterface[]
-     */
-    private $plugClasses = [];
-
-    /**
-     * @var bool
-     */
-    private $fixed = false;
+    use OrderOwnerTrait;
 
     /**
      * @var Server
@@ -75,16 +63,12 @@ class PluginInterfaceManager implements PluginInterface
 
     /**
      * 添加插件
-     * @param PluginInterface $plug
+     * @param AbstractPlugin $plug
      * @throws Exception
      */
-    public function addPlug(PluginInterface $plug)
+    public function addPlug(AbstractPlugin $plug)
     {
-        if ($this->fixed) {
-            throw new Exception("已经锁定不能添加插件");
-        }
-        $this->plugs[$plug->getName()] = $plug;
-        $this->plugClasses[get_class($plug)] = $plug;
+        $this->addOrder($plug);
         $plug->onAdded($this);
     }
 
@@ -95,7 +79,12 @@ class PluginInterfaceManager implements PluginInterface
      */
     public function getPlug(String $className)
     {
-        return $this->plugClasses[$className] ?? null;
+        $plug = $this->orderClassList[$className] ?? null;
+        if ($plug instanceof PluginInterface) {
+            return $plug;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -105,11 +94,13 @@ class PluginInterfaceManager implements PluginInterface
      */
     public function init(Context $context)
     {
-        foreach ($this->plugs as $plug) {
-            if ($this->log != null) {
-                $this->log->log(Logger::DEBUG, "加载[{$plug->getName()}]插件");
+        foreach ($this->orderList as $plug) {
+            if ($plug instanceof PluginInterface) {
+                if ($this->log != null) {
+                    $this->log->log(Logger::DEBUG, "加载[{$plug->getName()}]插件");
+                }
+                $plug->init($context);
             }
-            $plug->init($context);
         }
     }
 
@@ -124,8 +115,10 @@ class PluginInterfaceManager implements PluginInterface
         if ($this->eventDispatcher != null) {
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugBeforeServerStartEvent, $this));
         }
-        foreach ($this->plugs as $plug) {
-            $plug->beforeServerStart($context);
+        foreach ($this->orderList as $plug) {
+            if ($plug instanceof PluginInterface) {
+                $plug->beforeServerStart($context);
+            }
         }
         //发出PlugManagerEvent:PlugAfterServerStartEvent事件
         if ($this->eventDispatcher != null) {
@@ -144,25 +137,27 @@ class PluginInterfaceManager implements PluginInterface
         if ($this->eventDispatcher != null) {
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugBeforeProcessStartEvent, $this));
         }
-        foreach ($this->plugs as $plug) {
-            try {
-                $plug->beforeProcessStart($context);
-            } catch (\Throwable $e) {
-                $this->log->error($e);
-                $this->log->error("{$plug->getName()}插件加载失败");
-                continue;
-            }
-            if (!$plug->getReadyChannel()->pop(5)) {
-                $plug->getReadyChannel()->close();
-                if ($this->log != null) {
+        foreach ($this->orderList as $plug) {
+            if ($plug instanceof PluginInterface) {
+                try {
+                    $plug->beforeProcessStart($context);
+                } catch (\Throwable $e) {
+                    $this->log->error($e);
                     $this->log->error("{$plug->getName()}插件加载失败");
+                    continue;
                 }
-                if ($this->eventDispatcher != null) {
-                    $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PlugFailEvent, $plug));
-                }
-            } else {
-                if ($this->eventDispatcher != null) {
-                    $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PlugSuccessEvent, $plug));
+                if (!$plug->getReadyChannel()->pop(5)) {
+                    $plug->getReadyChannel()->close();
+                    if ($this->log != null) {
+                        $this->log->error("{$plug->getName()}插件加载失败");
+                    }
+                    if ($this->eventDispatcher != null) {
+                        $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PlugFailEvent, $plug));
+                    }
+                } else {
+                    if ($this->eventDispatcher != null) {
+                        $this->eventDispatcher->dispatchEvent(new PluginEvent(PluginEvent::PlugSuccessEvent, $plug));
+                    }
                 }
             }
         }
@@ -174,110 +169,12 @@ class PluginInterfaceManager implements PluginInterface
     }
 
     /**
-     * 插件排序
-     */
-    public function order()
-    {
-        foreach ($this->plugs as $plug) {
-            foreach ($this->getPlugBeforeClass($plug) as $needAddAfterPlug) {
-                $needAddAfterPlug->addAfterPlug($plug);
-            }
-            foreach ($this->getPlugAfterClass($plug) as $afterPlug) {
-                $plug->addAfterPlug($afterPlug);
-            }
-        }
-        usort($this->plugs, function ($a, $b) {
-            if ($a->getOrderIndex($a, 0) > $b->getOrderIndex($b, 0)) {
-                return 1;
-            } else {
-                return -1;
-            }
-        });
-        $this->fixed = true;
-    }
-
-    /**
-     * @param PluginInterface $plug
-     * @return PluginInterface[]
-     */
-    private function getPlugBeforeClass(PluginInterface $plug): array
-    {
-        $result = [];
-        foreach ($plug->getBeforeClass() as $class) {
-            $one = $this->plugClasses[$class] ?? null;
-            if ($one != null) {
-                $result[] = $one;
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * @param PluginInterface $plug
-     * @return PluginInterface[]
-     */
-    private function getPlugAfterClass(PluginInterface $plug): array
-    {
-        $result = [];
-        foreach ($plug->getAfterClass() as $class) {
-            $one = $this->plugClasses[$class] ?? null;
-            if ($one != null) {
-                $result[] = $one;
-            }
-        }
-        return $result;
-    }
-
-    /**
      * 获取插件名字
      * @return string
      */
     public function getName(): string
     {
         return "PlugManager";
-    }
-
-    /**
-     * @param int $index
-     * @return mixed
-     */
-    public function setOrderIndex(int $index)
-    {
-        return;
-    }
-
-    /**
-     * @param PluginInterface $root
-     * @param int $layer
-     * @return int
-     */
-    public function getOrderIndex(PluginInterface $root, int $layer): int
-    {
-        return 0;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBeforeClass(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAfterClass(): array
-    {
-        return [];
-    }
-
-    /**
-     * @param mixed $afterPlug
-     */
-    public function addAfterPlug(PluginInterface $afterPlug): void
-    {
-        return;
     }
 
     /**
@@ -299,20 +196,6 @@ class PluginInterfaceManager implements PluginInterface
         if ($this->eventDispatcher != null) {
             $this->eventDispatcher->dispatchEvent(new PluginManagerEvent(PluginManagerEvent::PlugAllReadyEvent, $this));
         }
-    }
-
-    public function atAfter(...$className)
-    {
-        return;
-    }
-
-    /**
-     * @param $className
-     * @return void
-     */
-    public function atBefore(...$className)
-    {
-        return;
     }
 
     /**

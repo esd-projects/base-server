@@ -20,30 +20,6 @@ interface PluginInterface
     public function getReadyChannel();
 
     /**
-     * @param PluginInterface $root
-     * @param int $layer
-     * @return int
-     */
-    public function getOrderIndex(PluginInterface $root, int $layer): int;
-
-    /**
-     * @param mixed $afterPlug
-     */
-    public function addAfterPlug(PluginInterface $afterPlug);
-
-    /**
-     * @param $className
-     * @return void
-     */
-    public function atAfter(...$className);
-
-    /**
-     * @param $className
-     * @return void
-     */
-    public function atBefore(...$className);
-
-    /**
      * 获取插件名字
      * @return string
      */
@@ -69,16 +45,6 @@ interface PluginInterface
      * @return mixed
      */
     public function beforeProcessStart(Context $context);
-
-    /**
-     * @return array
-     */
-    public function getAfterClass(): array;
-
-    /**
-     * @return array
-     */
-    public function getBeforeClass(): array;
 
     /**
      * @param PluginInterfaceManager $pluginInterfaceManager

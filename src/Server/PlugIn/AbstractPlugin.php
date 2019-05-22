@@ -10,7 +10,7 @@ namespace ESD\BaseServer\Server\PlugIn;
 
 
 use ESD\BaseServer\Coroutine\Channel;
-use ESD\BaseServer\Exception;
+use ESD\BaseServer\Order\Order;
 use ESD\BaseServer\Server\Context;
 use ESD\BaseServer\Server\Server;
 
@@ -19,29 +19,12 @@ use ESD\BaseServer\Server\Server;
  * Class BasePlug
  * @package ESD\BaseServer\Server\Plug
  */
-abstract class AbstractPlugin implements PluginInterface
+abstract class AbstractPlugin extends Order implements PluginInterface
 {
     /**
      * @var PluginInterfaceManager
      */
     protected $pluginInterfaceManager;
-    /**
-     * @var string[]
-     */
-    private $afterClass = [];
-    /**
-     * @var PluginInterface[]
-     */
-    private $afterPlug = [];
-    /**
-     * @var string[]
-     */
-    private $beforeClass = [];
-    /**
-     * @var int
-     */
-    private $orderIndex = 1;
-
     /**
      * @var Channel
      */
@@ -73,55 +56,6 @@ abstract class AbstractPlugin implements PluginInterface
     }
 
     /**
-     * 在哪个之后
-     * @param $className
-     */
-    public function atAfter(...$className)
-    {
-        foreach ($className as $one) {
-            $this->afterClass[$one] = $one;
-        }
-    }
-
-    /**
-     * 在哪个之前
-     * @param $className
-     */
-    public function atBefore(...$className)
-    {
-        foreach ($className as $one) {
-            $this->beforeClass[$one] = $one;
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function getAfterClass(): array
-    {
-        return $this->afterClass;
-    }
-
-
-    /**
-     * @param PluginInterface $root
-     * @param int $layer
-     * @return int
-     * @throws Exception
-     */
-    public function getOrderIndex(PluginInterface $root, int $layer): int
-    {
-        $layer++;
-        if ($layer > 255) throw new Exception(get_class($root) . " 插件排序出现了循环依赖，请检查插件");
-        $max = $this->orderIndex;
-        foreach ($this->afterPlug as $plugin) {
-            $vaule = $this->orderIndex + $plugin->getOrderIndex($root, $layer);
-            $max = max($max, $vaule);
-        }
-        return $max;
-    }
-
-    /**
      * @return Channel
      */
     public function getReadyChannel(): Channel
@@ -132,22 +66,6 @@ abstract class AbstractPlugin implements PluginInterface
     public function ready()
     {
         $this->readyChannel->push("ready");
-    }
-
-    /**
-     * @param PluginInterface $afterPlug
-     */
-    public function addAfterPlug(PluginInterface $afterPlug): void
-    {
-        $this->afterPlug[] = $afterPlug;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getBeforeClass(): array
-    {
-        return $this->beforeClass;
     }
 
     /**
