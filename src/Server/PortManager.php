@@ -178,4 +178,14 @@ class PortManager
     {
         return $this->defaultPortClass;
     }
+
+    /**
+     * @param int $fd
+     * @return ServerPort|null
+     */
+    public function getPortFromFd(int $fd)
+    {
+        $clientInfo = Server::$instance->getClientInfo($fd);
+        return $this->getPortFromPortNo($clientInfo->getServerPort());
+    }
 }
