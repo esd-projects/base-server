@@ -58,7 +58,7 @@ class Channel
      * 循环pop
      * @param $callback
      */
-    public function popWhile($callback)
+    public function popLoop($callback)
     {
         while (true) {
             $result = $this->pop();

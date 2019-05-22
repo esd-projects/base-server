@@ -107,7 +107,7 @@ class LoggerPlugin extends AbstractPlugin
         goWithContext(function () use ($context) {
             $eventDispatcher = $context->getDeepByClassName(EventDispatcher::class);
             $channel = $eventDispatcher->listen(ConfigChangeEvent::ConfigChangeEvent);
-            $channel->popWhile(function ($result) {
+            $channel->popLoop(function ($result) {
                 $this->loggerConfig->merge();
                 $this->handler->setLevel($this->loggerConfig->getLevel());
             });

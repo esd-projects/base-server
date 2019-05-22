@@ -36,7 +36,7 @@ class DefaultProcess extends Process
         }
         $channel = $this->eventDispatcher->listen("testEvent");
         goWithContext(function () use ($channel) {
-            $channel->popWhile(function (Event $event) {
+            $channel->popLoop(function (Event $event) {
                 $this->log->info("[Event] {$event->getData()}");
             });
         });
