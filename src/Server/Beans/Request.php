@@ -8,7 +8,7 @@
 
 namespace ESD\BaseServer\Server\Beans;
 
-use ESD\BaseServer\Exception;
+use ESD\BaseServer\ParamException;
 
 /**
  * HTTP请求对象
@@ -138,7 +138,7 @@ class Request
     {
         $result = $this->get[$key] ?? null;
         if ($result == null) {
-            throw new Exception("缺少参数$key");
+            throw new ParamException("缺少参数 $key");
         }
         return $result;
     }
@@ -179,7 +179,7 @@ class Request
     {
         $result = $this->post[$key] ?? null;
         if ($result == null) {
-            throw new Exception("缺少参数$key");
+            throw new ParamException("缺少参数 $key");
         }
         return $result;
     }
@@ -215,7 +215,7 @@ class Request
     {
         $result = $this->get[$key] ?? $this->post[$key] ?? null;
         if ($result == null) {
-            throw new Exception("缺少参数$key");
+            throw new ParamException("缺少参数 $key");
         }
         return $result;
     }
@@ -229,7 +229,7 @@ class Request
     {
         $result = $this->post[$key] ?? $this->get[$key] ?? null;
         if ($result == null) {
-            throw new Exception("缺少参数$key");
+            throw new ParamException("缺少参数 $key");
         }
         return $result;
     }
