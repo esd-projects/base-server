@@ -63,7 +63,7 @@ class Context
     {
         if ($value == null) return;
         if (isset($this->contain[$name]) && !$overwrite) {
-            throw new Exception("已经存在相同名字的上下文");
+            throw new Exception("已经存在相同名字的上下文:$name");
         }
         $this->contain[$name] = $value;
         if (!is_string($value) && !is_int($value) && !is_bool($value) && !is_float($value) && !is_double($value) && !is_array($value) && !is_callable($value) && !is_long($value)) {

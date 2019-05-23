@@ -144,12 +144,13 @@ function getContextValueByClassName($key)
  * 获取上下文值
  * @param $key
  * @param $value
+ * @param bool $overwrite
  * @return mixed
  * @throws \ESD\BaseServer\Exception
  */
-function setContextValue($key, $value)
+function setContextValue($key, $value, $overwrite = false)
 {
-    getContext()->add($key, $value);
+    getContext()->add($key, $value, $overwrite);
 }
 
 /**
