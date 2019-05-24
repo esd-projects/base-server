@@ -6,7 +6,7 @@
  * Time: 17:54
  */
 
-namespace ESD\BaseServer\Plugins\Logger;
+namespace ESD\Core\Logger;
 
 use ESD\Core\Server\Server;
 use ESD\Coroutine\Co;

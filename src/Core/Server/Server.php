@@ -9,8 +9,6 @@
 namespace ESD\Core\Server;
 
 use DI\Container;
-use ESD\BaseServer\Plugins\Logger\Logger;
-use ESD\BaseServer\Plugins\Logger\LoggerPlugin;
 use ESD\Core\Config\ConfigContext;
 use ESD\Core\Config\ConfigException;
 use ESD\Core\Config\ConfigStarter;
@@ -19,6 +17,8 @@ use ESD\Core\Context\ContextBuilder;
 use ESD\Core\Context\ContextManager;
 use ESD\Core\DI\DI;
 use ESD\Core\Event\EventDispatcher;
+use ESD\Core\Logger\Logger;
+use ESD\Core\Logger\LoggerStarter;
 use ESD\Core\PlugIn\PluginInterfaceManager;
 use ESD\Core\Server\Beans\ClientInfo;
 use ESD\Core\Server\Beans\Request;
@@ -86,10 +86,6 @@ abstract class Server
      */
     protected $plugManager;
 
-    /**
-     * @var PluginInterfaceManager
-     */
-    protected $basePlugManager;
 
     /**
      * 是否已配置
@@ -129,9 +125,7 @@ abstract class Server
      * @param string $defaultPortClass
      * @param string $defaultProcessClass
      * @throws \ESD\Core\Exception
-     * @throws \DI\DependencyException
      * @throws \ReflectionException
-     * @throws \DI\NotFoundException
      */
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
@@ -152,17 +146,12 @@ abstract class Server
         $configStarter = new ConfigStarter();
         $this->configContext = $configStarter->getConfigContext();
         $this->serverConfig->merge();
+        //初始化Logger
+        $loggerStart = new LoggerStarter();
+        $this->log = $loggerStart->getLogger();
         //-------------------------------------------------------------------------------------
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
-        $this->basePlugManager = new PluginInterfaceManager($this);
-        //初始化默认插件添加Logger插件
-        $this->basePlugManager->addPlug(new LoggerPlugin());
-        $this->basePlugManager->order();
-        $this->basePlugManager->init($this->context);
-        $this->basePlugManager->beforeServerStart($this->context);
-        //获取上面这些后才能初始化plugManager
-        $this->plugManager = new PluginInterfaceManager($this);
         //配置DI容器
         $this->container->set(Logger::class, $this->log);
         $this->container->set(\Monolog\Logger::class, $this->log);
@@ -170,13 +159,20 @@ abstract class Server
         $this->container->set(ConfigContext::class, $this->configContext);
         $this->container->set(PortManager::class, $this->portManager);
         $this->container->set(ProcessManager::class, $this->processManager);
-        $this->container->set(PluginInterfaceManager::class, $this->getPlugManager());
         $this->container->set(Response::class, new ResponseProxy());
         $this->container->set(Request::class, new RequestProxy());
+        //设置Context
+        $this->context->add("Logger", $this->log);
+        $this->context->add("EventDispatcher", $this->eventDispatcher);
+        $this->context->add("ConfigContext", $this->configContext);
         set_exception_handler(function ($e) {
             $this->log->error($e);
         });
         print_r($serverConfig->getBanner() . "\n");
+
+        //获取上面这些后才能初始化plugManager
+        $this->plugManager = new PluginInterfaceManager($this);
+        $this->container->set(PluginInterfaceManager::class, $this->getPlugManager());
     }
 
     /**
@@ -752,14 +748,6 @@ abstract class Server
     }
 
     /**
-     * @return PluginInterfaceManager
-     */
-    public function getBasePlugManager(): PluginInterfaceManager
-    {
-        return $this->basePlugManager;
-    }
-
-    /**
      * @return Logger
      */
     public function getLog(): Logger
@@ -781,37 +769,5 @@ abstract class Server
     public function getContainer(): ?Container
     {
         return $this->container;
-    }
-
-    /**
-     * @param EventDispatcher $eventDispatcher
-     */
-    public function setEventDispatcher(EventDispatcher $eventDispatcher): void
-    {
-        $this->eventDispatcher = $eventDispatcher;
-    }
-
-    /**
-     * @param ConfigContext $configContext
-     */
-    public function setConfigContext(ConfigContext $configContext): void
-    {
-        $this->configContext = $configContext;
-    }
-
-    /**
-     * @param Container $container
-     */
-    public function setContainer(Container $container): void
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * @param Logger $log
-     */
-    public function setLog(Logger $log): void
-    {
-        $this->log = $log;
     }
 }

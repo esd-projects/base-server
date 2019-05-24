@@ -6,7 +6,7 @@
  * Time: 11:56
  */
 
-namespace ESD\BaseServer\Plugins\Logger;
+namespace ESD\Core\Logger;
 
 
 use ESD\Core\Exception;

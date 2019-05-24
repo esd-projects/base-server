@@ -6,7 +6,7 @@
  * Time: 14:55
  */
 
-namespace ESD\BaseServer\Plugins\Logger;
+namespace ESD\Core\Logger;
 
 use Monolog\Processor\ProcessorInterface;
 

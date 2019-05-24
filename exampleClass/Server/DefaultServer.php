@@ -8,13 +8,12 @@
 
 namespace ESD\ExampleClass\Server;
 
-
-use ESD\BaseServer\Plugins\Logger\Logger;
+use ESD\Core\Logger\Logger;
 use ESD\Core\Server\Config\ServerConfig;
 use ESD\Core\Server\Process\Process;
-use ESD\Core\Server\Server;
+use ESD\CoServer\CoServer;
 
-class DefaultServer extends Server
+class DefaultServer extends CoServer
 {
 
     /**
@@ -23,8 +22,6 @@ class DefaultServer extends Server
      * @param ServerConfig $serverConfig
      * @param string $portClass
      * @param string $processClass
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      * @throws \ESD\Core\Exception
      * @throws \ReflectionException
      */
@@ -42,7 +39,7 @@ class DefaultServer extends Server
      */
     public function configureReady()
     {
-        $this->log = getDeepContextValueByClassName(Logger::class);
+
     }
 
     public function onStart()

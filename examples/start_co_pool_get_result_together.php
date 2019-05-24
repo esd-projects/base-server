@@ -1,8 +1,8 @@
 <?php
 
-use ESD\BaseServer\Coroutine\Co;
-use ESD\BaseServer\Coroutine\CoPoolFactory;
-use ESD\BaseServer\Coroutine\Pool\Runnable;
+use ESD\CoServer\Coroutine\Co;
+use ESD\CoServer\Coroutine\CoPoolFactory;
+use ESD\CoServer\Coroutine\Pool\Runnable;
 
 require __DIR__ . '/../vendor/autoload.php';
 enableRuntimeCoroutine();

@@ -6,7 +6,7 @@
  * Time: 10:21
  */
 
-namespace ESD\BaseServer\Plugins\Logger;
+namespace ESD\Core\Logger;
 
 use ESD\Core\Server\Server;
 use Monolog\Logger;

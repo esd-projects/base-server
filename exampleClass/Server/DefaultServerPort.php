@@ -8,8 +8,7 @@
 
 namespace ESD\ExampleClass\Server;
 
-
-use ESD\BaseServer\Plugins\Logger\Logger;
+use ESD\Core\Logger\Logger;
 use ESD\Core\Server\Beans\Request;
 use ESD\Core\Server\Beans\Response;
 use ESD\Core\Server\Beans\WebSocketFrame;

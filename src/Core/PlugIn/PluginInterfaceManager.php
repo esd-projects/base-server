@@ -9,13 +9,13 @@
 namespace ESD\Core\PlugIn;
 
 use DI\ContainerBuilder;
-use ESD\BaseServer\Plugins\Logger\Logger;
 use ESD\Core\Channel\Channel;
 use ESD\Core\Context\Context;
 use ESD\Core\Event\EventDispatcher;
 use ESD\Core\Exception;
 use ESD\Core\Order\OrderOwnerTrait;
 use ESD\Core\Server\Server;
+use ESD\CoServer\Plugins\Logger\Logger;
 
 /**
  * 插件管理器

@@ -8,9 +8,8 @@
 
 namespace ESD\ExampleClass\Server;
 
-
-use ESD\BaseServer\Plugins\Logger\GetLogger;
 use ESD\Core\Event\Event;
+use ESD\Core\Logger\GetLogger;
 use ESD\Core\Message\Message;
 use ESD\Core\Server\Process\Process;
 
@@ -35,10 +34,8 @@ class DefaultProcess extends Process
             $this->sendMessage($message, $process);
         }
         $channel = $this->eventDispatcher->listen("testEvent");
-        goWithContext(function () use ($channel) {
-            $channel->popLoop(function (Event $event) {
-                $this->log->info("[Event] {$event->getData()}");
-            });
+        $channel->call(function (Event $event) {
+            $this->log->info("[Event] {$event->getData()}");
         });
         if ($this->getProcessId() == 0) {
             sleep(1);

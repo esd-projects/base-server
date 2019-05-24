@@ -6,11 +6,8 @@
  * Time: 13:52
  */
 
-namespace ESD\BaseServer\Plugins\Logger;
+namespace ESD\Core\Logger;
 
-use ESD\Core\Config\ConfigChangeEvent;
-use ESD\Core\Context\Context;
-use ESD\Core\PlugIn\AbstractPlugin;
 use ESD\Core\Server\Server;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
@@ -19,9 +16,8 @@ use Monolog\Handler\StreamHandler;
 /**
  * Log 插件加载器
  * Class EventPlug
- * @package ESD\BaseServer\Plugins\Event
  */
-class LoggerPlugin extends AbstractPlugin
+class LoggerStarter
 {
     /**
      * @var Logger
@@ -40,26 +36,27 @@ class LoggerPlugin extends AbstractPlugin
     /**
      * LoggerPlugin constructor.
      * @param LoggerConfig|null $loggerConfig
-     * @throws \DI\DependencyException
+     * @throws \ESD\Core\Config\ConfigException
+     * @throws \ESD\Core\Exception
      * @throws \ReflectionException
-     * @throws \DI\NotFoundException
      */
     public function __construct(?LoggerConfig $loggerConfig = null)
     {
-        parent::__construct();
         if ($loggerConfig == null) {
             $loggerConfig = new LoggerConfig();
 
         }
         $this->loggerConfig = $loggerConfig;
+        $this->loggerConfig->merge();
+        $this->buildLogger();
+        $this->handler->setLevel($this->loggerConfig->getLevel());
     }
 
     /**
-     * @param Context $context
      * @throws \ESD\Core\Exception
      * @throws \Exception
      */
-    private function buildLogger(Context $context)
+    private function buildLogger()
     {
         $this->logger = new Logger($this->loggerConfig->getName());
         $formatter = new LineFormatter($this->loggerConfig->getOutput(),
@@ -78,47 +75,6 @@ class LoggerPlugin extends AbstractPlugin
         $this->logger->pushProcessor(new GoSwooleProcessor($this->loggerConfig->isColor()));
         $this->logger->pushProcessor(new GoIntrospectionProcessor());
         $this->logger->pushHandler($this->handler);
-        $context->add("logger", $this->logger);
-        Server::$instance->setLog($this->logger);
-    }
-
-    /**
-     * 在服务启动前
-     * @param Context $context
-     * @throws \ESD\Core\Exception
-     * @throws \Exception
-     */
-    public function beforeServerStart(Context $context)
-    {
-        $this->loggerConfig->merge();
-        $this->buildLogger($context);
-        $this->handler->setLevel($this->loggerConfig->getLevel());
-    }
-
-    /**
-     * 在进程启动前
-     * @param Context $context
-     */
-    public function beforeProcessStart(Context $context)
-    {
-        //监控配置更新
-        goWithContext(function () use ($context) {
-            $channel = Server::$instance->getEventDispatcher()->listen(ConfigChangeEvent::ConfigChangeEvent);
-            $channel->call(function ($result) {
-                $this->loggerConfig->merge();
-                $this->handler->setLevel($this->loggerConfig->getLevel());
-            });
-        });
-        $this->ready();
-    }
-
-    /**
-     * 获取插件名字
-     * @return string
-     */
-    public function getName(): string
-    {
-        return "Logger";
     }
 
     /**

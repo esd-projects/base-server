@@ -256,9 +256,6 @@ abstract class Process
             $this->server->getProcessManager()->setCurrentProcessId($this->processId);
             $this->processPid = getmypid();
             $this->server->getProcessManager()->setCurrentProcessPid($this->processPid);
-            //基础插件初始化
-            $this->server->getBasePlugManager()->beforeProcessStart($this->context);
-            $this->server->getBasePlugManager()->waitReady();
             //用户插件初始化
             $this->server->getPlugManager()->beforeProcessStart($this->context);
             $this->server->getPlugManager()->waitReady();

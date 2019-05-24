@@ -10,14 +10,11 @@ namespace ESD\Core\DI;
 
 
 use DI\ContainerBuilder;
-use ESD\Core\Channel\Channel;
-use ESD\Core\Event\EventCall;
 use ESD\Core\Server\Config\ServerConfig;
-use ESD\Coroutine\Channel\ChannelFactory;
-use ESD\Coroutine\Event\EventCallFactory;
 
 class DI
 {
+    public static $definitions = [];
     /**
      * @var DI
      */
@@ -47,10 +44,7 @@ class DI
             $builder->enableCompilation($cacheDir);
             $builder->writeProxiesToFile(true, $cacheProxiesDir);
         }
-        $builder->addDefinitions([
-            EventCall::class => new EventCallFactory(),
-            Channel::class => new ChannelFactory()
-        ]);
+        $builder->addDefinitions(self::$definitions);
         $builder->useAnnotations(true);
         $this->container = $builder->build();
     }
