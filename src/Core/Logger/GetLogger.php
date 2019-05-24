@@ -13,7 +13,6 @@ use ESD\Core\Server\Server;
 /**
  * 帮助获取logger实例
  * Class GetLogger
- * @package ESD\BaseServer\Plugins\Logger
  */
 trait GetLogger
 {
