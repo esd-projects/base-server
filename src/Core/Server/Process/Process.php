@@ -12,6 +12,7 @@ use ESD\Core\Context\Context;
 use ESD\Core\Context\ContextBuilder;
 use ESD\Core\Context\ContextManager;
 use ESD\Core\Event\EventDispatcher;
+use ESD\Core\Event\EventMessageProcessor;
 use ESD\Core\Message\Message;
 use ESD\Core\Message\MessageProcessor;
 use ESD\Core\Server\Server;
@@ -236,6 +237,7 @@ abstract class Process
 
     /**
      * 进程启动的回调
+     * @throws \ESD\Core\Exception
      */
     public function _onProcessStart()
     {
@@ -244,6 +246,8 @@ abstract class Process
         });
         $this->log = Server::$instance->getLog();
         $this->eventDispatcher = Server::$instance->getEventDispatcher();
+        //注册事件派发处理函数
+        MessageProcessor::addMessageProcessor(new EventMessageProcessor($this->eventDispatcher));
         try {
             Server::$isStart = true;
             if ($this->processName != null) {
