@@ -8,14 +8,9 @@
 
 namespace ESD\Coroutine;
 
-use ESD\Core\Channel\Channel;
 use ESD\Core\Context\Context;
 use ESD\Core\Context\ContextManager;
-use ESD\Core\DI\DI;
-use ESD\Core\Event\EventCall;
 use ESD\Core\Runtime;
-use ESD\Coroutine\Channel\ChannelFactory;
-use ESD\Coroutine\Event\EventCallFactory;
 use ESD\Coroutine\Pool\Runnable;
 
 class Co
@@ -28,10 +23,6 @@ class Co
     {
         Runtime::$enableCo = true;
         ContextManager::getInstance()->registerContext(new CoroutineContextBuilder());
-        DI::$definitions = [
-            EventCall::class => new EventCallFactory(),
-            Channel::class => new ChannelFactory()
-        ];
     }
 
     /**
