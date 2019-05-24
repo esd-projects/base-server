@@ -8,8 +8,8 @@
 
 namespace ESD\BaseServer\Server\Config;
 
-use ESD\BaseServer\Plugins\Config\BaseConfig;
 use ESD\BaseServer\Server\Exception\ConfigException;
+use ESD\Core\Config\BaseConfig;
 
 /**
  * 端口配置

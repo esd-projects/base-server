@@ -6,7 +6,7 @@
  * Time: 10:42
  */
 
-namespace ESD\BaseServer\Plugins\Event;
+namespace ESD\Core\Event;
 
 
 use ESD\BaseServer\Server\Message\Message;

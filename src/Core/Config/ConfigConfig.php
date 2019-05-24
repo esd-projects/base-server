@@ -6,7 +6,7 @@
  * Time: 14:19
  */
 
-namespace ESD\BaseServer\Plugins\Config;
+namespace ESD\Core\Config;
 
 
 class ConfigConfig

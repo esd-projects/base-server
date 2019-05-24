@@ -9,13 +9,13 @@
 namespace ESD\BaseServer\Server\PlugIn;
 
 use DI\ContainerBuilder;
-use ESD\BaseServer\Plugins\Event\EventDispatcher;
 use ESD\BaseServer\Plugins\Logger\Logger;
 use ESD\BaseServer\Server\Server;
+use ESD\Core\Channel\Channel;
 use ESD\Core\Context\Context;
+use ESD\Core\Event\EventDispatcher;
 use ESD\Core\Exception;
 use ESD\Core\Order\OrderOwnerTrait;
-use ESD\Coroutine\Channel;
 
 /**
  * 插件管理器
@@ -51,11 +51,14 @@ class PluginInterfaceManager implements PluginInterface
      */
     private $containerBuilder;
 
+    /**
+     * PluginInterfaceManager constructor.
+     * @param Server $server
+     */
     public function __construct(Server $server)
     {
         $this->server = $server;
-        $this->readyChannel = new Channel();
-        //baseManager是获取不到的，只有用户插件管理才能获取到
+        $this->readyChannel = DIGet(Channel::class);
         $this->log = $this->server->getContext()->getDeepByClassName(Logger::class);
         $this->eventDispatcher = $this->server->getContext()->getDeepByClassName(EventDispatcher::class);
         $this->containerBuilder = $this->server->getContext()->getDeepByClassName(ContainerBuilder::class);

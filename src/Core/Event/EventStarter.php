@@ -8,35 +8,26 @@
 
 namespace ESD\BaseServer\Plugins\Event;
 
-
-use ESD\BaseServer\Plugins\DI\DIPlugin;
 use ESD\BaseServer\Server\Message\MessageProcessor;
-use ESD\BaseServer\Server\PlugIn\AbstractPlugin;
 use ESD\BaseServer\Server\Server;
 use ESD\Core\Context\Context;
+use ESD\Core\Event\EventDispatcher;
 
 /**
  * Event 插件加载器
  * Class EventPlug
  * @package ESD\BaseServer\Plugins\Event
  */
-class EventPlugin extends AbstractPlugin
+class EventStarter
 {
     /**
      * @var EventDispatcher
      */
     private $eventDispatcher;
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->atAfter(DIPlugin::class);
-    }
-
     /**
      * 在服务启动前
      * @param Context $context
-     * @throws \ESD\Core\Exception
      */
     public function beforeServerStart(Context $context)
     {
@@ -59,14 +50,5 @@ class EventPlugin extends AbstractPlugin
         MessageProcessor::addMessageProcessor(new EventMessageProcessor($this->eventDispatcher));
         //ready
         $this->ready();
-    }
-
-    /**
-     * 获取插件名字
-     * @return string
-     */
-    public function getName(): string
-    {
-        return "Event";
     }
 }

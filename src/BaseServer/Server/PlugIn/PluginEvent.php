@@ -8,8 +8,7 @@
 
 namespace ESD\BaseServer\Server\PlugIn;
 
-
-use ESD\BaseServer\Plugins\Event\Event;
+use ESD\Core\Event\Event;
 
 class PluginEvent extends Event
 {

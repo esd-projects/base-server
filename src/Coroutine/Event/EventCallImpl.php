@@ -1,17 +1,19 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: 白猫
- * Date: 2019/4/24
- * Time: 9:43
+ * User: administrato
+ * Date: 2019/5/24
+ * Time: 15:46
  */
 
-namespace ESD\BaseServer\Plugins\Event;
+namespace ESD\Coroutine\Event;
 
 
-use ESD\Coroutine\Channel;
+use ESD\Core\Event\EventCall;
+use ESD\Core\Event\EventDispatcher;
+use ESD\Coroutine\Channel\ChannelImpl;
 
-class EventChannel extends Channel
+class EventCallImpl extends ChannelImpl implements EventCall
 {
     /**
      * @var string
@@ -28,9 +30,9 @@ class EventChannel extends Channel
      */
     private $eventDispatcher;
 
-    public function __construct(EventDispatcher $eventDispatcher, string $type, bool $once = false, int $capacity = 1)
+    public function __construct(EventDispatcher $eventDispatcher, string $type, bool $once = false)
     {
-        parent::__construct($capacity);
+        parent::__construct(1);
         $this->type = $type;
         $this->once = $once;
         $this->eventDispatcher = $eventDispatcher;
@@ -68,20 +70,34 @@ class EventChannel extends Channel
         $this->once = $once;
     }
 
-    public function pop(float $timeout = 0)
-    {
-        $result = parent::pop($timeout);
-        if ($this->once) {
-            $this->eventDispatcher->remove($this->type, $this);
-        }
-        return $result;
-    }
-
     /**
      * @return EventDispatcher
      */
     public function getEventDispatcher(): EventDispatcher
     {
         return $this->eventDispatcher;
+    }
+
+    public function call(callable $fuc, $timeout = 5)
+    {
+        $result = $this->pop($timeout);
+        if ($this->once) {
+            $this->eventDispatcher->remove($this->type, $this);
+        }
+        $fuc($result);
+    }
+
+    public function destroy()
+    {
+        $this->close();
+    }
+
+    /**
+     * @param $data
+     * @return mixed
+     */
+    public function send($data)
+    {
+        $this->push($data);
     }
 }

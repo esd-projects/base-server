@@ -9,13 +9,13 @@
 namespace ESD\Coroutine\Pool;
 
 
-use ESD\Coroutine\Channel;
+use ESD\Coroutine\ChannelImpl;
 use ESD\Coroutine\Co;
 
 abstract class Runnable
 {
     /**
-     * @var Channel
+     * @var ChannelImpl
      */
     private $channel;
 
@@ -27,7 +27,7 @@ abstract class Runnable
     public function __construct(bool $needResult = false)
     {
         if ($needResult) {
-            $this->channel = new Channel();
+            $this->channel = new ChannelImpl();
         }
     }
 

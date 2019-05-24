@@ -6,7 +6,7 @@
  * Time: 16:12
  */
 
-namespace ESD\BaseServer\Plugins\Event;
+namespace ESD\Core\Event;
 
 
 class ProcessEvent extends Event

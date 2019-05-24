@@ -9,12 +9,6 @@
 namespace ESD\BaseServer\Server;
 
 use DI\Container;
-use ESD\BaseServer\Plugins\Config\ConfigContext;
-use ESD\BaseServer\Plugins\Config\ConfigPlugin;
-use ESD\BaseServer\Plugins\DI\DIPlugin;
-use ESD\BaseServer\Plugins\Event\ApplicationEvent;
-use ESD\BaseServer\Plugins\Event\EventDispatcher;
-use ESD\BaseServer\Plugins\Event\EventPlugin;
 use ESD\BaseServer\Plugins\Logger\Logger;
 use ESD\BaseServer\Plugins\Logger\LoggerPlugin;
 use ESD\BaseServer\Server\Beans\ClientInfo;
@@ -30,9 +24,14 @@ use ESD\BaseServer\Server\Exception\ConfigException;
 use ESD\BaseServer\Server\PlugIn\PluginInterfaceManager;
 use ESD\BaseServer\Server\ServerProcess\ManagerProcess;
 use ESD\BaseServer\Server\ServerProcess\MasterProcess;
+use ESD\Core\Config\ConfigContext;
+use ESD\Core\Config\ConfigStarter;
 use ESD\Core\Context\Context;
 use ESD\Core\Context\ContextBuilder;
 use ESD\Core\Context\ContextManager;
+use ESD\Core\DI\DI;
+use ESD\Core\Event\ApplicationEvent;
+use ESD\Core\Event\EventDispatcher;
 
 /**
  * Class Server
@@ -129,11 +128,14 @@ abstract class Server
      * @throws \ESD\Core\Exception
      * @throws \DI\DependencyException
      * @throws \ReflectionException
+     * @throws \DI\NotFoundException
      */
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
         self::$instance = $this;
         $this->serverConfig = $serverConfig;
+        //获取DI容器
+        $this->container = DI::getInstance($this->serverConfig)->getContainer();
         date_default_timezone_set('Asia/Shanghai');
         //注册Process的ContextBuilder
         $contextBuilder = ContextManager::getInstance()->getContextBuilder(ContextBuilder::SERVER_CONTEXT,
@@ -141,19 +143,21 @@ abstract class Server
                 return new ServerContextBuilder($this);
             });
         $this->context = $contextBuilder->build();
+        //初始化Event
+        $this->eventDispatcher = new EventDispatcher($this);
+        //初始化Config
+        $configStarter = new ConfigStarter();
+        $this->configContext = $configStarter->getConfigContext();
+        $this->serverConfig->merge();
+        //-------------------------------------------------------------------------------------
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
         $this->basePlugManager = new PluginInterfaceManager($this);
-        //初始化默认插件添加DI/Config/Logger/Event插件
-        $this->basePlugManager->addPlug(new DIPlugin());
-        $this->basePlugManager->addPlug(new ConfigPlugin());
+        //初始化默认插件添加Logger插件
         $this->basePlugManager->addPlug(new LoggerPlugin());
-        $this->basePlugManager->addPlug(new EventPlugin());
         $this->basePlugManager->order();
         $this->basePlugManager->init($this->context);
         $this->basePlugManager->beforeServerStart($this->context);
-        //合并ServerConfig配置
-        $this->serverConfig->merge();
         //获取上面这些后才能初始化plugManager
         $this->plugManager = new PluginInterfaceManager($this);
         //配置DI容器

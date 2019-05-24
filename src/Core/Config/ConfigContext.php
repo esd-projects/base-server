@@ -6,10 +6,10 @@
  * Time: 14:55
  */
 
-namespace ESD\BaseServer\Plugins\Config;
+namespace ESD\Core\Config;
 
-use ESD\BaseServer\Plugins\Event\EventDispatcher;
 use ESD\BaseServer\Server\Server;
+use ESD\Core\Event\EventDispatcher;
 use Symfony\Component\Yaml\Yaml;
 
 /**

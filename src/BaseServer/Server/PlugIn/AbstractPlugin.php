@@ -10,9 +10,9 @@ namespace ESD\BaseServer\Server\PlugIn;
 
 
 use ESD\BaseServer\Server\Server;
+use ESD\Core\Channel\Channel;
 use ESD\Core\Context\Context;
 use ESD\Core\Order\Order;
-use ESD\Coroutine\Channel;
 
 /**
  * 基础插件，插件类需要继承
@@ -36,7 +36,7 @@ abstract class AbstractPlugin extends Order implements PluginInterface
      */
     public function __construct()
     {
-        $this->readyChannel = new Channel();
+        $this->readyChannel = DIGet(Channel::class);
         if (Server::$instance->getContainer() != null) {
             //注入DI
             Server::$instance->getContainer()->injectOn($this);

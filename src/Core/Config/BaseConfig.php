@@ -6,7 +6,7 @@
  * Time: 9:46
  */
 
-namespace ESD\BaseServer\Plugins\Config;
+namespace ESD\Core\Config;
 
 
 use ESD\BaseServer\Server\Exception\ConfigException;
@@ -71,7 +71,7 @@ class BaseConfig
         }
         $config = $this->toConfigArray();
         //添加到配置上下文中
-        Server::$instance->getConfigContext()->appendDeepConfig($this->config, ConfigPlugin::ConfigDeep);
+        Server::$instance->getConfigContext()->appendDeepConfig($this->config, ConfigStarter::ConfigDeep);
         //合并回配置
         $this->config = Server::$instance->getConfigContext()->get($prefix);
         $this->buildFromConfig($this->config);

@@ -6,16 +6,12 @@
  * Time: 14:16
  */
 
-namespace ESD\BaseServer\Plugins\Config;
+namespace ESD\Core\Config;
 
-use ESD\BaseServer\Plugins\DI\DIPlugin;
-use ESD\BaseServer\Plugins\Event\EventPlugin;
-use ESD\BaseServer\Server\PlugIn\AbstractPlugin;
 use ESD\BaseServer\Server\Server;
-use ESD\Core\Context\Context;
 use Symfony\Component\Yaml\Yaml;
 
-class ConfigPlugin extends AbstractPlugin
+class ConfigStarter
 {
     //手动设置的Config配置
     const ConfigDeep = 10;
@@ -45,11 +41,9 @@ class ConfigPlugin extends AbstractPlugin
      * ConfigPlugin constructor.
      * @param ConfigConfig|null $configConfig
      * @throws \ESD\Core\Exception
-     * @throws \DI\DependencyException
      */
     public function __construct(?ConfigConfig $configConfig = null)
     {
-        parent::__construct();
         if ($configConfig == null) {
             if (defined("RES_DIR")) {
                 $path = RES_DIR;
@@ -60,28 +54,6 @@ class ConfigPlugin extends AbstractPlugin
         }
         $this->configConfig = $configConfig;
         $this->configContext = new ConfigContext();
-        Server::$instance->setConfigContext($this->configContext);
-        $this->atAfter(EventPlugin::class);
-        $this->atAfter(DIPlugin::class);
-    }
-
-    /**
-     * 获取插件名字
-     * @return string
-     */
-    public function getName(): string
-    {
-        return "Config";
-    }
-
-    /**
-     * 在服务启动前
-     * @param Context $context
-     * @return mixed
-     * @throws \ESD\Core\Exception
-     */
-    public function beforeServerStart(Context $context)
-    {
         $bootstrapFile = $this->configConfig->getConfigDir() . "/bootstrap.yml";
         if (is_file($bootstrapFile)) {
             $this->configContext->addDeepConfig(Yaml::parseFile($bootstrapFile), self::BootstrapDeep);
@@ -97,17 +69,6 @@ class ConfigPlugin extends AbstractPlugin
                 $this->configContext->addDeepConfig(Yaml::parseFile($applicationActiveFile), self::ApplicationActiveDeep);
             }
         }
-        setContextValue("configContext", $this->configContext);
-    }
-
-    /**
-     * 在进程启动前
-     * @param Context $context
-     * @return mixed
-     */
-    public function beforeProcessStart(Context $context)
-    {
-        $this->ready();
     }
 
     /**
@@ -117,5 +78,4 @@ class ConfigPlugin extends AbstractPlugin
     {
         return $this->configContext;
     }
-
 }

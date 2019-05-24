@@ -8,7 +8,7 @@
 
 namespace ESD\Coroutine\Pool;
 
-use ESD\Coroutine\Channel;
+use ESD\Coroutine\ChannelImpl;
 use ESD\Coroutine\Co;
 
 /**
@@ -20,7 +20,7 @@ class CoroutinePoolExecutor
 {
     /**
      * 通道
-     * @var Channel
+     * @var ChannelImpl
      */
     private $channel;
 
@@ -69,7 +69,7 @@ class CoroutinePoolExecutor
      */
     public function __construct(int $corePoolSize, int $maximumPoolSize, float $keepAliveTime)
     {
-        $this->channel = new Channel($corePoolSize);
+        $this->channel = new ChannelImpl($corePoolSize);
         $this->cids = [];
         $this->corePoolSize = $corePoolSize;
         $this->maximumPoolSize = $maximumPoolSize;

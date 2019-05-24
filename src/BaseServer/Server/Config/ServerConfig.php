@@ -8,8 +8,8 @@
 
 namespace ESD\BaseServer\Server\Config;
 
-use ESD\BaseServer\Plugins\Config\BaseConfig;
 use ESD\BaseServer\Server\Exception\ConfigException;
+use ESD\Core\Config\BaseConfig;
 use ESD\Core\Exception;
 
 /**
@@ -215,6 +215,7 @@ class ServerConfig extends BaseConfig
      * @var bool
      */
     protected $debug = true;
+
     /**
      * Banner
      * @var string

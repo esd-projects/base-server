@@ -6,12 +6,11 @@
  * Time: 9:20
  */
 
-namespace ESD\BaseServer\Plugins\Event;
+namespace ESD\Core\Event;
 
 use ESD\BaseServer\Plugins\Logger\Logger;
 use ESD\BaseServer\Server\Process;
 use ESD\BaseServer\Server\Server;
-use ESD\Coroutine\Channel;
 
 /**
  * 事件派发器
@@ -20,7 +19,7 @@ use ESD\Coroutine\Channel;
  */
 class EventDispatcher
 {
-    private $eventChannels = [];
+    private $eventCalls = [];
     /**
      * @var Logger
      */
@@ -41,39 +40,39 @@ class EventDispatcher
      * Registers an event listener at a certain object.
      *
      * @param string $type
-     * @param EventChannel|null $channel
+     * @param EventCall|null $eventCall
      * @param bool $once 是否仅仅一次
-     * @return Channel
+     * @return EventCall
      */
-    public function listen($type, $channel = null, $once = false): Channel
+    public function listen($type, ?EventCall $eventCall = null, $once = false): EventCall
     {
-        if (!array_key_exists($type, $this->eventChannels)) {
-            $this->eventChannels [$type] = [];
+        if (!array_key_exists($type, $this->eventCalls)) {
+            $this->eventCalls [$type] = [];
         }
-        if ($channel == null) {
-            $channel = new EventChannel($this, $type, $once);
+        if ($eventCall == null) {
+            $eventCall = DIGet(EventCall::class, [$this, $type, $once]);
         }
-        array_push($this->eventChannels[$type], $channel);
-        return $channel;
+        array_push($this->eventCalls[$type], $eventCall);
+        return $eventCall;
     }
 
     /**
      * Removes an event listener from the object.
      *
      * @param string $type
-     * @param Channel $channel
+     * @param EventCall $eventCall
      */
-    public function remove($type, Channel $channel)
+    public function remove($type, EventCall $eventCall)
     {
-        if ($channel != null) $channel->close();
-        if (array_key_exists($type, $this->eventChannels)) {
-            $index = array_search($channel, $this->eventChannels [$type]);
+        if ($eventCall != null) $eventCall->destroy();
+        if (array_key_exists($type, $this->eventCalls)) {
+            $index = array_search($eventCall, $this->eventCalls [$type]);
             if ($index !== null) {
-                unset ($this->eventChannels [$type] [$index]);
+                unset ($this->eventCalls [$type] [$index]);
             }
-            $numListeners = count($this->eventChannels [$type]);
+            $numListeners = count($this->eventCalls [$type]);
             if ($numListeners == 0) {
-                unset ($this->eventChannels [$type]);
+                unset ($this->eventCalls [$type]);
             }
         }
     }
@@ -87,9 +86,9 @@ class EventDispatcher
     public function removeAll($type = null)
     {
         if ($type) {
-            unset ($this->eventChannels [$type]);
+            unset ($this->eventCalls [$type]);
         } else {
-            $this->eventChannels = array();
+            $this->eventCalls = array();
         }
     }
 
@@ -122,7 +121,7 @@ class EventDispatcher
         if (Server::$instance->getProcessManager() != null) {
             $event->setProcessId(Server::$instance->getProcessManager()->getCurrentProcessId());
         }
-        if (!array_key_exists($event->getType(), $this->eventChannels)) {
+        if (!array_key_exists($event->getType(), $this->eventCalls)) {
             return; // no need to do anything
         }
         $this->invokeEvent($event);
@@ -139,15 +138,15 @@ class EventDispatcher
      */
     private function invokeEvent($event)
     {
-        if (array_key_exists($event->getType(), $this->eventChannels)) {
-            $channels = $this->eventChannels [$event->getType()];
+        if (array_key_exists($event->getType(), $this->eventCalls)) {
+            $calls = $this->eventCalls [$event->getType()];
         } else {
             return;
         }
-        foreach ($channels as $channel) {
-            if ($channel instanceof Channel) {
-                goWithContext(function () use ($channel, $event) {
-                    $channel->push($event);
+        foreach ($calls as $call) {
+            if ($call instanceof EventCall) {
+                goWithContext(function () use ($call, $event) {
+                    $call->send($event);
                 });
             }
         }

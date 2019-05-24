@@ -8,8 +8,7 @@
 
 namespace ESD\BaseServer\Plugins\Logger;
 
-
-use ESD\BaseServer\Plugins\Config\BaseConfig;
+use ESD\Core\Config\BaseConfig;
 
 class LoggerConfig extends BaseConfig
 {

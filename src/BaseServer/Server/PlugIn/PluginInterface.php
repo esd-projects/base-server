@@ -9,8 +9,8 @@
 namespace ESD\BaseServer\Server\PlugIn;
 
 
+use ESD\Core\Channel\Channel;
 use ESD\Core\Context\Context;
-use ESD\Coroutine\Channel;
 
 interface PluginInterface
 {

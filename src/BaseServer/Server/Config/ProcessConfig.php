@@ -8,9 +8,9 @@
 
 namespace ESD\BaseServer\Server\Config;
 
-use ESD\BaseServer\Plugins\Config\BaseConfig;
 use ESD\BaseServer\Server\Exception\ConfigException;
 use ESD\BaseServer\Server\Process;
+use ESD\Core\Config\BaseConfig;
 
 /**
  * 进程配置

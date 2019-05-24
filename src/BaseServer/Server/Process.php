@@ -8,13 +8,13 @@
 
 namespace ESD\BaseServer\Server;
 
-use ESD\BaseServer\Plugins\Event\EventDispatcher;
-use ESD\BaseServer\Plugins\Event\ProcessEvent;
 use ESD\BaseServer\Server\Message\Message;
 use ESD\BaseServer\Server\Message\MessageProcessor;
 use ESD\Core\Context\Context;
 use ESD\Core\Context\ContextBuilder;
 use ESD\Core\Context\ContextManager;
+use ESD\Core\Event\EventDispatcher;
+use ESD\Core\Event\ProcessEvent;
 use Monolog\Logger;
 
 /**

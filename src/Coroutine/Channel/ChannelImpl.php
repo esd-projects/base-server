@@ -6,18 +6,19 @@
  * Time: 13:21
  */
 
-namespace ESD\Coroutine;
+namespace ESD\Coroutine\Channel;
 
+use ESD\Core\Channel\Channel;
 use ESD\Coroutine\Beans\ChannelStats;
 
 /**
  * 通道，类似于go语言的chan，支持多生产者协程和多消费者协程。
  * 底层自动实现了协程的切换和调度。
  * 通道与PHP的Array类似，仅占用内存，没有其他额外的资源申请，所有操作均为内存操作，无IO消耗。
- * Class Channel
+ * Class ChannelImpl
  * @package ESD\Coroutine
  */
-class Channel implements \ESD\Core\Psr\Channel
+class ChannelImpl implements Channel
 {
     const CHANNEL_OK = SWOOLE_CHANNEL_OK;
     const CHANNEL_TIMEOUT = SWOOLE_CHANNEL_TIMEOUT;

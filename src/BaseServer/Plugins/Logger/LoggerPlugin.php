@@ -8,11 +8,9 @@
 
 namespace ESD\BaseServer\Plugins\Logger;
 
-use ESD\BaseServer\Plugins\Config\ConfigChangeEvent;
-use ESD\BaseServer\Plugins\Config\ConfigPlugin;
-use ESD\BaseServer\Plugins\Event\EventDispatcher;
 use ESD\BaseServer\Server\PlugIn\AbstractPlugin;
 use ESD\BaseServer\Server\Server;
+use ESD\Core\Config\ConfigChangeEvent;
 use ESD\Core\Context\Context;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
@@ -44,11 +42,11 @@ class LoggerPlugin extends AbstractPlugin
      * @param LoggerConfig|null $loggerConfig
      * @throws \DI\DependencyException
      * @throws \ReflectionException
+     * @throws \DI\NotFoundException
      */
     public function __construct(?LoggerConfig $loggerConfig = null)
     {
         parent::__construct();
-        $this->atAfter(ConfigPlugin::class);
         if ($loggerConfig == null) {
             $loggerConfig = new LoggerConfig();
 
@@ -105,9 +103,8 @@ class LoggerPlugin extends AbstractPlugin
     {
         //监控配置更新
         goWithContext(function () use ($context) {
-            $eventDispatcher = $context->getDeepByClassName(EventDispatcher::class);
-            $channel = $eventDispatcher->listen(ConfigChangeEvent::ConfigChangeEvent);
-            $channel->popLoop(function ($result) {
+            $channel = Server::$instance->getEventDispatcher()->listen(ConfigChangeEvent::ConfigChangeEvent);
+            $channel->call(function ($result) {
                 $this->loggerConfig->merge();
                 $this->handler->setLevel($this->loggerConfig->getLevel());
             });

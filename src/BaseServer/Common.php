@@ -7,6 +7,8 @@
  */
 
 use ESD\Core\Context\ContextManager;
+use ESD\Core\DI\DI;
+use ESD\Core\DI\Factory;
 use ESD\Core\Runtime;
 const HOOK_TCP = SWOOLE_HOOK_TCP;//TCP Socket类型的stream
 const HOOK_UDP = SWOOLE_HOOK_UDP;//UDP Socket类型的stream
@@ -183,4 +185,13 @@ function clearDir($path = null)
             }
         }
     }
+}
+
+function DIGet($name, $params = [])
+{
+    $result = DI::getInstance()->getContainer()->get($name);
+    if ($result instanceof Factory) {
+        $result = $result->create($params);
+    }
+    return $result;
 }

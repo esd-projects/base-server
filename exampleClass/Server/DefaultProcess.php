@@ -9,10 +9,10 @@
 namespace ESD\ExampleClass\Server;
 
 
-use ESD\BaseServer\Plugins\Event\Event;
 use ESD\BaseServer\Plugins\Logger\GetLogger;
 use ESD\BaseServer\Server\Message\Message;
 use ESD\BaseServer\Server\Process;
+use ESD\Core\Event\Event;
 
 class DefaultProcess extends Process
 {

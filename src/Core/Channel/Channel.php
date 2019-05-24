@@ -6,7 +6,7 @@
  * Time: 13:44
  */
 
-namespace ESD\Core\Psr;
+namespace ESD\Core\Channel;
 
 
 interface Channel
@@ -22,4 +22,6 @@ interface Channel
     public function isFull(): bool;
 
     public function getCapacity(): int;
+
+    public function close();
 }
