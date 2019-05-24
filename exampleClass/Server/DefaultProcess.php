@@ -6,7 +6,7 @@
  * Time: 17:39
  */
 
-namespace ESD\BaseServer\ExampleClass\Server;
+namespace ESD\ExampleClass\Server;
 
 
 use ESD\BaseServer\Plugins\Event\Event;

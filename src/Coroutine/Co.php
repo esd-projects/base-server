@@ -6,14 +6,25 @@
  * Time: 14:10
  */
 
-namespace ESD\BaseServer\Coroutine;
+namespace ESD\Coroutine;
 
-use ESD\BaseServer\Coroutine\Pool\Runnable;
-use ESD\BaseServer\Server\Context;
-use ESD\BaseServer\Server\Server;
+use ESD\Core\Context\Context;
+use ESD\Core\Context\ContextManager;
+use ESD\Core\Runtime;
+use ESD\Coroutine\Pool\Runnable;
 
 class Co
 {
+
+    /**
+     * 使能协程
+     */
+    public static function enableCo(): void
+    {
+        Runtime::$enableCo = true;
+        ContextManager::getInstance()->registerContext(new CoroutineContextBuilder());
+    }
+
     /**
      * 协程设置
      * @param $data
@@ -76,12 +87,7 @@ class Co
     {
         $result = self::getSwooleContext()[Context::storageKey] ?? null;
         if ($result == null) {
-            //每次获取的父类都先默认为进程的Context
-            $parentContext = null;
-            if (Server::$isStart) {
-                $parentContext = Server::$instance->getProcessManager()->getCurrentProcess()->getContext();
-            }
-            self::getSwooleContext()[Context::storageKey] = new Context(Server::$instance, $parentContext);
+            self::getSwooleContext()[Context::storageKey] = new Context(null);
         }
         return self::getSwooleContext()[Context::storageKey];
     }

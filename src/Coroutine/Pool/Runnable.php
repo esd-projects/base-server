@@ -6,11 +6,11 @@
  * Time: 13:44
  */
 
-namespace ESD\BaseServer\Coroutine\Pool;
+namespace ESD\Coroutine\Pool;
 
 
-use ESD\BaseServer\Coroutine\Channel;
-use ESD\BaseServer\Coroutine\Co;
+use ESD\Coroutine\Channel;
+use ESD\Coroutine\Co;
 
 abstract class Runnable
 {

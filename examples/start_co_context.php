@@ -1,7 +1,12 @@
 <?php
 
+
+use ESD\Coroutine\Co;
+
 require __DIR__ . '/../vendor/autoload.php';
 enableRuntimeCoroutine();
+
+Co::enableCo();
 
 goWithContext(function () {
     //设置上下文

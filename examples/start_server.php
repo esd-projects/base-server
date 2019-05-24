@@ -1,17 +1,17 @@
 <?php
 
-use ESD\BaseServer\ExampleClass\Server\DefaultServer;
 use ESD\BaseServer\Server\Config\PortConfig;
 use ESD\BaseServer\Server\Config\ServerConfig;
+use ESD\ExampleClass\Server\DefaultServer;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-class MyPort extends \ESD\BaseServer\ExampleClass\Server\DefaultServerPort
+class MyPort extends \ESD\ExampleClass\Server\DefaultServerPort
 {
 
 }
 
-class MyProcess extends \ESD\BaseServer\ExampleClass\Server\DefaultProcess
+class MyProcess extends \ESD\ExampleClass\Server\DefaultProcess
 {
 
 }

@@ -9,11 +9,11 @@
   },
   "autoload": {
     "psr-4": {
-      "ESD\\BaseServer\\": "src/",
-      "ESD\\BaseServer\\ExampleClass\\": "exampleClass/"
+      "ESD\\": "src/",
+      "ESD\\ExampleClass\\": "exampleClass/"
     },
     "files": [
-      "src/Common.php"
+      "src/BaseServer/Common.php"
     ]
   },
   "authors": [

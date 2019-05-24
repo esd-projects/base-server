@@ -6,15 +6,15 @@
  * Time: 13:16
  */
 
-namespace ESD\BaseServer\Coroutine;
+namespace ESD\Coroutine;
 
 
-use ESD\BaseServer\Coroutine\Pool\CoroutinePoolExecutor;
+use ESD\Coroutine\Pool\CoroutinePoolExecutor;
 
 /**
  * 协程池工厂
  * Class CoPoolFactory
- * @package ESD\BaseServer\Coroutine
+ * @package ESD\Coroutine
  */
 class CoPoolFactory
 {

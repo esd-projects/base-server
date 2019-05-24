@@ -6,11 +6,11 @@
  * Time: 13:56
  */
 
-namespace ESD\BaseServer\Coroutine\Beans;
+namespace ESD\Coroutine\Beans;
 /**
  * 通道的状态
  * Class ChannelStats
- * @package ESD\BaseServer\Coroutine\Beans
+ * @package ESD\Coroutine\Beans
  */
 class ChannelStats
 {

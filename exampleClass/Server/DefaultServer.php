@@ -6,7 +6,7 @@
  * Time: 17:41
  */
 
-namespace ESD\BaseServer\ExampleClass\Server;
+namespace ESD\ExampleClass\Server;
 
 
 use ESD\BaseServer\Plugins\Logger\Logger;
