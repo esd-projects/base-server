@@ -17,8 +17,6 @@ use ESD\Core\Context\ContextBuilder;
 use ESD\Core\Context\ContextManager;
 use ESD\Core\DI\DI;
 use ESD\Core\Event\EventDispatcher;
-use ESD\Core\Logger\Logger;
-use ESD\Core\Logger\LoggerStarter;
 use ESD\Core\PlugIn\PluginInterfaceManager;
 use ESD\Core\Server\Beans\ClientInfo;
 use ESD\Core\Server\Beans\Request;
@@ -35,6 +33,7 @@ use ESD\Core\Server\Process\ManagerProcess;
 use ESD\Core\Server\Process\MasterProcess;
 use ESD\Core\Server\Process\Process;
 use ESD\Core\Server\Process\ProcessManager;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Server
@@ -109,7 +108,7 @@ abstract class Server
     protected $configContext;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     protected $log;
 
@@ -125,7 +124,6 @@ abstract class Server
      * @param string $defaultPortClass
      * @param string $defaultProcessClass
      * @throws \ESD\Core\Exception
-     * @throws \ReflectionException
      */
     public function __construct(ServerConfig $serverConfig, string $defaultPortClass, string $defaultProcessClass)
     {
@@ -147,14 +145,12 @@ abstract class Server
         $this->configContext = $configStarter->getConfigContext();
         $this->serverConfig->merge();
         //初始化Logger
-        $loggerStart = new LoggerStarter();
-        $this->log = $loggerStart->getLogger();
+        $this->log = DIGet(LoggerInterface::class);
         //-------------------------------------------------------------------------------------
         $this->portManager = new PortManager($this, $defaultPortClass);
         $this->processManager = new ProcessManager($this, $defaultProcessClass);
         //配置DI容器
-        $this->container->set(Logger::class, $this->log);
-        $this->container->set(\Monolog\Logger::class, $this->log);
+        $this->container->set(LoggerInterface::class, $this->log);
         $this->container->set(EventDispatcher::class, $this->eventDispatcher);
         $this->container->set(ConfigContext::class, $this->configContext);
         $this->container->set(PortManager::class, $this->portManager);
@@ -748,9 +744,9 @@ abstract class Server
     }
 
     /**
-     * @return Logger
+     * @return LoggerInterface
      */
-    public function getLog(): Logger
+    public function getLog(): LoggerInterface
     {
         return $this->log;
     }

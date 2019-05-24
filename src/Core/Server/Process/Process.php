@@ -16,7 +16,7 @@ use ESD\Core\Event\EventMessageProcessor;
 use ESD\Core\Message\Message;
 use ESD\Core\Message\MessageProcessor;
 use ESD\Core\Server\Server;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 /**
  * 进程
@@ -90,7 +90,7 @@ abstract class Process
     private $socket;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     protected $log;
 

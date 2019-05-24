@@ -8,14 +8,13 @@
 
 namespace ESD\Core\PlugIn;
 
-use DI\ContainerBuilder;
 use ESD\Core\Channel\Channel;
 use ESD\Core\Context\Context;
 use ESD\Core\Event\EventDispatcher;
 use ESD\Core\Exception;
 use ESD\Core\Order\OrderOwnerTrait;
 use ESD\Core\Server\Server;
-use ESD\CoServer\Plugins\Logger\Logger;
+use Psr\Log\LoggerInterface;
 
 /**
  * 插件管理器
@@ -32,7 +31,7 @@ class PluginInterfaceManager implements PluginInterface
     private $server;
 
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $log;
 
@@ -46,10 +45,6 @@ class PluginInterfaceManager implements PluginInterface
      */
     private $readyChannel;
 
-    /**
-     * @var ContainerBuilder
-     */
-    private $containerBuilder;
 
     /**
      * PluginInterfaceManager constructor.
@@ -59,9 +54,8 @@ class PluginInterfaceManager implements PluginInterface
     {
         $this->server = $server;
         $this->readyChannel = DIGet(Channel::class);
-        $this->log = $this->server->getContext()->getDeepByClassName(Logger::class);
-        $this->eventDispatcher = $this->server->getContext()->getDeepByClassName(EventDispatcher::class);
-        $this->containerBuilder = $this->server->getContext()->getDeepByClassName(ContainerBuilder::class);
+        $this->log = $this->server->getLog();
+        $this->eventDispatcher = $this->server->getEventDispatcher();
     }
 
     /**
@@ -100,7 +94,7 @@ class PluginInterfaceManager implements PluginInterface
         foreach ($this->orderList as $plug) {
             if ($plug instanceof PluginInterface) {
                 if ($this->log != null) {
-                    $this->log->log(Logger::DEBUG, "加载[{$plug->getName()}]插件");
+                    $this->log->debug("加载[{$plug->getName()}]插件");
                 }
                 $plug->init($context);
             }

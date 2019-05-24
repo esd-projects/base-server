@@ -6,7 +6,7 @@
  * Time: 14:55
  */
 
-namespace ESD\Core\Logger;
+namespace ESD\CoServer\Logger;
 
 use Monolog\Processor\ProcessorInterface;
 

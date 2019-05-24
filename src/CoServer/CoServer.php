@@ -16,6 +16,8 @@ use ESD\Core\Server\Server;
 use ESD\Coroutine\Channel\ChannelFactory;
 use ESD\Coroutine\Co;
 use ESD\Coroutine\Event\EventCallFactory;
+use ESD\CoServer\Logger\LoggerStarter;
+use Psr\Log\LoggerInterface;
 
 abstract class CoServer extends Server
 {
@@ -24,7 +26,11 @@ abstract class CoServer extends Server
         Co::enableCo();
         DI::$definitions = [
             EventCall::class => new EventCallFactory(),
-            Channel::class => new ChannelFactory()
+            Channel::class => new ChannelFactory(),
+            LoggerInterface::class => function () {
+                $loggerStarter = new LoggerStarter();
+                return $loggerStarter->getLogger();
+            }
         ];
         parent::__construct($serverConfig, $defaultPortClass, $defaultProcessClass);
     }

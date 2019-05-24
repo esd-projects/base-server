@@ -6,7 +6,7 @@
  * Time: 9:33
  */
 
-namespace ESD\Core\Logger;
+namespace ESD\CoServer\Logger;
 
 use ESD\Core\Config\BaseConfig;
 

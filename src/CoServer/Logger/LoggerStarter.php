@@ -6,7 +6,7 @@
  * Time: 13:52
  */
 
-namespace ESD\Core\Logger;
+namespace ESD\CoServer\Logger;
 
 use ESD\Core\Server\Server;
 use Monolog\Formatter\LineFormatter;

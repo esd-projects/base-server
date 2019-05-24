@@ -8,10 +8,10 @@
 
 namespace ESD\ExampleClass\Server;
 
-use ESD\Core\Logger\Logger;
 use ESD\Core\Server\Config\ServerConfig;
 use ESD\Core\Server\Process\Process;
 use ESD\CoServer\CoServer;
+use ESD\CoServer\Logger\Logger;
 
 class DefaultServer extends CoServer
 {

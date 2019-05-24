@@ -15,18 +15,19 @@ use ESD\Core\Server\Beans\WebSocketFrame;
 use ESD\Core\Server\Config\PortConfig;
 use ESD\Core\Server\Port\ServerPort;
 use ESD\Core\Server\Server;
+use Psr\Log\LoggerInterface;
 
 class DefaultServerPort extends ServerPort
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $log;
 
     public function __construct(Server $server, PortConfig $portConfig)
     {
         parent::__construct($server, $portConfig);
-        $this->log = getDeepContextValueByClassName(Logger::class);
+        $this->log = Server::$instance->getLog();
         $this->log->info("{$this->getPortConfig()->getTypeName()}\t[{$this->getPortConfig()->getHost()}]\t[{$this->getPortConfig()->getPort()}]");
     }
 

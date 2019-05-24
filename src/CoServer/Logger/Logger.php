@@ -6,7 +6,7 @@
  * Time: 11:56
  */
 
-namespace ESD\Core\Logger;
+namespace ESD\CoServer\Logger;
 
 
 use ESD\Core\Exception;

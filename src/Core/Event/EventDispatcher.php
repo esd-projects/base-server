@@ -10,7 +10,6 @@ namespace ESD\Core\Event;
 
 use ESD\Core\Server\Process\Process;
 use ESD\Core\Server\Server;
-use ESD\CoServer\Plugins\Logger\Logger;
 
 /**
  * 事件派发器
@@ -20,10 +19,6 @@ use ESD\CoServer\Plugins\Logger\Logger;
 class EventDispatcher
 {
     private $eventCalls = [];
-    /**
-     * @var Logger
-     */
-    private $log;
 
     /**
      * @var Server
@@ -33,7 +28,6 @@ class EventDispatcher
     public function __construct(Server $server)
     {
         $this->server = $server;
-        $this->log = $server->getContext()->getDeepByClassName(Logger::class);
     }
 
     /**
