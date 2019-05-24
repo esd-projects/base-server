@@ -8,7 +8,7 @@
 
 namespace ESD\Core\Event;
 
-use ESD\BaseServer\Server\Message\Message;
+use ESD\Core\Message\Message;
 
 /**
  * Event消息

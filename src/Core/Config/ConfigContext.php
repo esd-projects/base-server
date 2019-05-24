@@ -8,8 +8,8 @@
 
 namespace ESD\Core\Config;
 
-use ESD\BaseServer\Server\Server;
 use ESD\Core\Event\EventDispatcher;
+use ESD\Core\Server\Server;
 use Symfony\Component\Yaml\Yaml;
 
 /**

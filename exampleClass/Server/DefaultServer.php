@@ -10,9 +10,9 @@ namespace ESD\ExampleClass\Server;
 
 
 use ESD\BaseServer\Plugins\Logger\Logger;
-use ESD\BaseServer\Server\Config\ServerConfig;
-use ESD\BaseServer\Server\Process;
-use ESD\BaseServer\Server\Server;
+use ESD\Core\Server\Config\ServerConfig;
+use ESD\Core\Server\Process\Process;
+use ESD\Core\Server\Server;
 
 class DefaultServer extends Server
 {
@@ -23,9 +23,10 @@ class DefaultServer extends Server
      * @param ServerConfig $serverConfig
      * @param string $portClass
      * @param string $processClass
-     * @throws \ESD\BaseServer\Exception
-     * @throws \ReflectionException
      * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \ESD\Core\Exception
+     * @throws \ReflectionException
      */
     public function __construct(?ServerConfig $serverConfig = null, string $portClass = DefaultServerPort::class, string $processClass = DefaultProcess::class)
     {

@@ -8,7 +8,7 @@
 
 namespace ESD\BaseServer\Plugins\Logger;
 
-use ESD\BaseServer\Server\Server;
+use ESD\Core\Server\Server;
 use Monolog\Logger;
 
 /**

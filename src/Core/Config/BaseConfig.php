@@ -9,8 +9,7 @@
 namespace ESD\Core\Config;
 
 
-use ESD\BaseServer\Server\Exception\ConfigException;
-use ESD\BaseServer\Server\Server;
+use ESD\Core\Server\Server;
 use ReflectionClass;
 
 /**

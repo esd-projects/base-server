@@ -10,9 +10,9 @@ namespace ESD\Core\DI;
 
 
 use DI\ContainerBuilder;
-use ESD\BaseServer\Server\Config\ServerConfig;
 use ESD\Core\Channel\Channel;
 use ESD\Core\Event\EventCall;
+use ESD\Core\Server\Config\ServerConfig;
 use ESD\Coroutine\Channel\ChannelFactory;
 use ESD\Coroutine\Event\EventCallFactory;
 

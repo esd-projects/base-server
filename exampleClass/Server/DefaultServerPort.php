@@ -10,12 +10,12 @@ namespace ESD\ExampleClass\Server;
 
 
 use ESD\BaseServer\Plugins\Logger\Logger;
-use ESD\BaseServer\Server\Beans\Request;
-use ESD\BaseServer\Server\Beans\Response;
-use ESD\BaseServer\Server\Beans\WebSocketFrame;
-use ESD\BaseServer\Server\Config\PortConfig;
-use ESD\BaseServer\Server\Server;
-use ESD\BaseServer\Server\ServerPort;
+use ESD\Core\Server\Beans\Request;
+use ESD\Core\Server\Beans\Response;
+use ESD\Core\Server\Beans\WebSocketFrame;
+use ESD\Core\Server\Config\PortConfig;
+use ESD\Core\Server\Port\ServerPort;
+use ESD\Core\Server\Server;
 
 class DefaultServerPort extends ServerPort
 {

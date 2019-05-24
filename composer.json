@@ -13,7 +13,7 @@
       "ESD\\ExampleClass\\": "exampleClass/"
     },
     "files": [
-      "src/BaseServer/Common.php"
+      "src/Core/Common.php"
     ]
   },
   "authors": [

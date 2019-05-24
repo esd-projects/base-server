@@ -9,8 +9,8 @@
 namespace ESD\Core\Event;
 
 
-use ESD\BaseServer\Server\Message\Message;
-use ESD\BaseServer\Server\Message\MessageProcessor;
+use ESD\Core\Message\Message;
+use ESD\Core\Message\MessageProcessor;
 
 /**
  * 事件派发处理器

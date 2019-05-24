@@ -1,7 +1,7 @@
 <?php
 
-use ESD\BaseServer\Server\Config\PortConfig;
-use ESD\BaseServer\Server\Config\ServerConfig;
+use ESD\Core\Server\Config\PortConfig;
+use ESD\Core\Server\Config\ServerConfig;
 use ESD\ExampleClass\Server\DefaultServer;
 
 require __DIR__ . '/../vendor/autoload.php';

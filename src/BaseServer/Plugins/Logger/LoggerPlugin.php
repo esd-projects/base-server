@@ -8,10 +8,10 @@
 
 namespace ESD\BaseServer\Plugins\Logger;
 
-use ESD\BaseServer\Server\PlugIn\AbstractPlugin;
-use ESD\BaseServer\Server\Server;
 use ESD\Core\Config\ConfigChangeEvent;
 use ESD\Core\Context\Context;
+use ESD\Core\PlugIn\AbstractPlugin;
+use ESD\Core\Server\Server;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
